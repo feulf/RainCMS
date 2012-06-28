@@ -1,0 +1,12 @@
+
+/* Tabs */
+.tabs{}
+.tabs_btn{border-bottom:1px solid #ccc;overflow:hidden;padding-right:20px}
+.tabs_btn div{display:block;float:right;margin:1px;padding:8px;cursor:pointer;background:#eee;color:#666;text-shadow:1px 1px 1px #fff;border-radius: 5px 5px 0 0;-moz-border-radius: 5px 5px 0 0;}
+.tabs_btn div:hover{background:#f3f3f3;color:#666;text-shadow:1px 1px 1px #fff}
+.tabs_btn .selected{background:#69c;color:#fff;text-shadow:1px 1px 1px #369;}
+.tabs_btn .selected:hover{background:#7ad;color:#fff;text-shadow:1px 1px 1px #369;}
+
+.tabs_contents{padding: 20px 0}
+.tabs_content{display:none;}
+.tabs_contents .cont_selected{display:block;}

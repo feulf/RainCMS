@@ -1,0 +1,5 @@
+#date_list div{float:left;clear:both;margin-bottom:5px;}
+#date_list div .place_holder{width:10px;height:20px;background:#ccc;margin-right:10px}
+#date_list div input{float:left;width:90px;margin-right:10px;}
+#date_list div img{float:left;margin:5px;}
+.add_date_list{float:left;clear:both;}

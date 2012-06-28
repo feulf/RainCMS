@@ -1,0 +1,13 @@
+<div class="content">
+	<h1>{$title}</h1>
+	<div class="text">{$content}</div>
+</div>
+
+{loop="content_list"}
+<div class="content_list">
+	<a href="{$value.link}"><h2>{$value.title}</h2></a>
+	<div class="text">
+		{$value.content|cut_html:100}
+	</div>
+</div>
+{/loop}

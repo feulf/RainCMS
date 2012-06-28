@@ -1,0 +1,10 @@
+{
+    "plugins_load" : [
+                      {"gzip" : "enabled"},
+                      {"cache" : "disabled"}
+                     ],
+    "plugins" : [
+                    {"compress":"disabled"}
+                ]
+
+}

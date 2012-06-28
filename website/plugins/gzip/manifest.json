@@ -1,0 +1,11 @@
+{
+  // Required
+  "name": "GZip",
+  "version": "1",
+  "manifest_version": 1,
+  "author": "Federico Ulfo",
+  "email": "rainelemental@gmail.com",
+  // Recommended
+  "description": "Enable the GZip compression for this HTML",
+  "dependencies": {},
+}

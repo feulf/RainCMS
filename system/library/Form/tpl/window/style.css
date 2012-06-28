@@ -1,0 +1,13 @@
+.form{}
+.window{margin-top:100px;width:100%;}
+.window .title{font-size:22px;text-align:left;width:300px;margin-bottom:5px;color:#fff;}
+.window .form_box{padding:10px;text-align:left;width:300px;background:#eee;-moz-border-radius:10px;-webkit-border-radius:10px;border:5px solid #003366;border-top:0px;border-left:0px;}
+.window .form_box div{margin:10px;font-weight:bold;}
+.window .form_box span{text-shadow:1px 1px 1px #fff;}
+.window input[type=text],.window input[type=password]{font-size:14px;border:1px solid #ccc;padding:5px 5px 5px 5px;width:268px;display:block;-moz-border-radius:5px;-webkit-border-radius:5px;}
+.window select{border:1px solid #ccc;font-size:13px;padding:3px;display:block;-moz-border-radius:5px;-webkit-border-radius:5px;}
+.window option{font-size:13px}
+.window input[type=submit]{border:1px solid #333399;background:#3366cc;height:40px;padding:10px;color:#fff;text-transform:uppercase;font-weight:bold;-moz-border-radius:5px;-webkit-border-radius:5px;width:100px;text-shadow:1px 1px 1px #036;}
+
+.window label.error{color:#f00;text-align:right;width:280px;position:absolute;}
+.window input.error{}
