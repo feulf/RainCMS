@@ -125,6 +125,8 @@
                 }
 
                 $this->params = array($params);
+                
+                echo 1;exit;
             }
 
             // if the content exists and is published load it
@@ -366,8 +368,9 @@
             // - LOAD AREA ----
             // wrap all the blocks in a load area
             $load_area = array();
-            foreach ($this->load_area as $load_area_name => $blocks)
-                $load_area[$load_area_name] = $this->_blocks_wrapper($blocks, $load_area_name);
+            if( $this->load_area )
+                foreach ($this->load_area as $load_area_name => $blocks)
+                    $load_area[$load_area_name] = $this->_blocks_wrapper($blocks, $load_area_name);
             $tpl->assign("load_area", $load_area);
 
 
