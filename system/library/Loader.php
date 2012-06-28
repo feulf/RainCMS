@@ -221,7 +221,7 @@
                 View::configure("path_replace", true);
             }
             else
-                $this->_page_not_found("theme_not_found");
+                $this->_page_not_found("theme not found");
         }
 
         function load_head() {
@@ -294,12 +294,12 @@
 
             header("HTTP/1.0 404 Not Found");
 
-            $this->load_area['content'] = $msg;
             $this->set_layout("layout." . $this->not_found_layout);
 
             if (empty($this->theme_dir))
                 $this->theme();
 
+            $this->assign("not_found_msg", $msg );
             $this->load_menu();
             $this->draw();
             die;

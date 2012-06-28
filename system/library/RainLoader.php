@@ -109,7 +109,7 @@
 
                     $path = $this->_check_route($path) . "/";
                     if (strlen($path) == 1) {
-                        $this->_page_not_found();
+                        $this->_page_not_found("content not found");
                     }
                 } while (!$content = Content::get_content_by_path($path));
 
@@ -139,7 +139,7 @@
                 $this->layout       = "layout." . $this->content['layout'];
                 $this->content_path = Content::get_path($this->content_id);
             } else {
-                $this->_page_not_found("content_not_found");
+                $this->_page_not_found("content not found");
             }
 
             $this->selected_module = $this->module;
@@ -246,7 +246,7 @@
                     $controller_obj = new $controller_class($init_params);
 
                     if (!is_callable(array($controller_obj, $action)))
-                        $this->_page_not_found();
+                        $this->_page_not_found("module not found");
 
                     ob_start(); // start the output buffer
                     call_user_func_array(array($controller_obj, $action), $params);            // call the selected action
@@ -433,12 +433,12 @@
             $this->layout_id = LAYOUT_ID_NOT_FOUND;
             $this->type_id = null;
             $this->layout = Content::get_layout($this->layout_id);
-            $this->load_area['content'] = $msg;
             $this->layout = "layout." . $this->layout['template'];
 
             if (empty($this->theme_dir))
                 $this->init_theme();
 
+            $this->assign("not_found_msg", get_msg( $msg ) );
             $this->load_menu();
             $this->load_blocks($this->layout_id);
             $this->draw();
