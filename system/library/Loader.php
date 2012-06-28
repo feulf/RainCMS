@@ -311,7 +311,7 @@
                 mkdir($load_area_dir, 0777, $recursive = true);
 
             $layout_file = $this->theme_dir . $this->layout . '.html';
-            $load_area_file = $load_area_dir . "load_area." . $this->layout . md5($this->theme) . ".json";
+            $load_area_file = $load_area_dir . "load_area." . $this->layout . "." . md5($this->theme) . ".json";
 
             if (!file_exists($load_area_file) || filemtime($load_area_file) < filemtime($layout_file)) {
                 preg_match_all('/\{\$load_area\.(.*?)\}/si', file_get_contents($layout_file), $match);
@@ -321,6 +321,7 @@
                     $load_area[$l] = array();
 
                 $load_area_json = json_encode( $load_area );
+                
                 file_put_contents($load_area_file, $load_area_json );
             }
             else{
