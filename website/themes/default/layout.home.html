@@ -44,6 +44,9 @@
             <ul class="nav">
             {loop="menu"}<li {$value.selected?'class="active"':null}><a href="{$value.link}">{$value.name}</a></li>{/loop}
             </ul>
+            <ul class="nav pull-right">
+                <li><a href="/signin">Signin</a></li>
+            </ul>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -54,26 +57,20 @@
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
           <h1>{"website_name"|get_setting}</h1>
-          {$load_area.center}
+          <p>{$description}</p>
         <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
       </div>
 
       <!-- Example row of columns -->
       <div class="row">
         <div class="span4">
-          <h2>Heading</h2>
-           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
+            {$load_area.left}
         </div>
         <div class="span4">
-          <h2>Heading</h2>
-           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
+            {$load_area.center}
        </div>
         <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
+            {$load_area.right}
         </div>
       </div>
 
