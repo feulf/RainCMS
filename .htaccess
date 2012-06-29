@@ -67,12 +67,12 @@ AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css a
         #RewriteCond %{REQUEST_FILENAME} !-f
         #RewriteCond %{HTTP_HOST} ^admin\.rain\.com
         #RewriteCond %{QUERY_STRING} (.*)
-        #RewriteRule ^(.*)$ edit.php?path=$1&%1 [L]
+        #RewriteRule ^(.*)$ edit.php/$1?%1 [L]
 
         RewriteCond %{REQUEST_FILENAME} !-f
         RewriteCond %{HTTP_COOKIE} ^.*admin_check=1.*$ [NC]
         RewriteCond %{QUERY_STRING} (.*)
-        RewriteRule ^(.*)$ edit.php?path=$1&%1 [L]
+        RewriteRule ^(.*)$ edit.php/$1?%1 [L]
 
     # contents
     RewriteCond %{REQUEST_FILENAME} !-f

@@ -7,9 +7,9 @@
         protected $edit_mode = false,
                   $cache_enabled = false;
 
-
         function __construct() {
-            $this->edit_mode = cookie("edit_mode");
+            $this->edit_mode = true; 
+            cookie("edit_mode");
             parent::__construct();
         }
 
