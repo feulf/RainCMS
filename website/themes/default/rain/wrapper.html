@@ -1,0 +1,34 @@
+<div class="rain_load_area_edit">
+<div class="rain_load_area_edit_title">{$load_area_name}</div>
+    <div class="rain_load_area_edit_content" id="rain_load_area-{$load_area_name}">
+        
+        {loop="block"}
+        
+            {if="isset($value.content.block_id)"}
+        
+                {if="isset($value.content.content_id)"}
+                    <div class="rain_block_edit rain_block_editable rain_content_{$value.content.content_id}" id="rain_block_{$value.content.block_id}">
+                {else}
+                    <div class="rain_block_edit" id="rain_block_{$value.content.block_id}">
+                {/if}
+
+                        <div class="rain_block_edit_title">{$value.content.title}<span class="icon"><a href="javascript:block_setting('{$value.content.block_id}');">Setting</a></span></div>
+                        <div class="rain_block_content">{$value.html}</div>
+                    </div>
+                
+              {else}
+              
+                {if="isset($value.content.content_id)"}
+                    <div class="rain_block_edit rain_block_editable rain_content_{$value.content.content_id}" id="rain_block_main">
+                {else}
+                    <div class="rain_block_edit" id="rain_block_main">
+                {/if}
+                        <div class="rain_block_edit_title">{$value.content.title}</div>
+                        <div class="rain_block_content">{$value.html}</div>
+                    </div>                
+              {/if}
+            
+         {/loop}
+        
+     </div>
+</div>
