@@ -1,0 +1,22 @@
+	<div id="comment">
+		<a name="comments"></a>
+		<ul>
+			{loop="comment_list"}
+			<li class="row{$counter%2+1}" id="comment_{$value.comment_id}">
+				<a name="comment_{$value.comment_id}"></a>{$counter+1}. <span class="name">{$value.name}</span> <span class="date">{$value.date|time_format:DATE_TIME_FORMAT}</span>
+				<div class="comment">{$value.comment|auto_link}</div>
+			</li>
+			{/loop}
+		</ul>
+		
+		{if="User::get_user_id()"}
+			<form id="comment_form" action="{#AJAX_URL#}comment/add/{$content_id}/" class="box box_grey" method="post">
+				{"comment"|get_msg}<br/>
+				<textarea name="comment" rows="6" class="required input-xlarge"></textarea><br>
+				<input type="submit" id="submit_comment" class="btn btn-primary" value="{"comment"|get_msg}">
+			</form>
+		{else}
+			Login to comment
+		{/if}
+
+	</div>
