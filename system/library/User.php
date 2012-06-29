@@ -153,6 +153,11 @@
                         set_cookie("password", $salt_and_pw, YEAR );
                     }
 
+                    if ($user['status'] >= USER_ADMIN) {
+                        set_cookie("admin_check", 1, DAY);
+                    }
+
+
                     $user['check'] = $_SESSION['user']['check'] = BASE_NAME;
                     $user['level'] = get_msg(strtolower($GLOBALS['user_level'][$user['status']]));
 

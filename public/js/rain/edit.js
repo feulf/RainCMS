@@ -358,29 +358,6 @@
         
     }
 
-
-
-
-
-    function user_logout(){
-        $.get( url+"admin/Login/logout/", function(){
-            location.reload(true);
-        })
-    }
-
-
-    function edit_mode_off( edit_mode, link ){
-        $.post( ajax_file + "rain_edit/edit_mode/Off/", function(html){
-            location.reload(true);
-        })
-    }
-
-    function edit_mode_on( edit_mode, link ){
-        $.post( ajax_file + "rain_edit/edit_mode/On/", function(html){
-            location.reload(true);
-        })
-    }
-
     function toolbox_position(){
         if( $("#toolbox").css('top') == "0px" ){
             $("#toolbox").css("bottom", "0px" )

@@ -1,6 +1,13 @@
 # activate the rewrite engine
 RewriteEngine On
 
+# Security ---
+
+    # disable directory browsing
+    Options All -Indexes
+
+
+
 # Cache ---
 
     # 480 weeks
@@ -12,6 +19,11 @@ RewriteEngine On
     <filesMatch "\.(xml|txt)$">
         Header set Cache-Control "max-age=172800, public, must-revalidate"
     </filesMatch>
+
+    # unset cache for specific files
+    <FilesMatch ".(html|pl|php|cgi|spl|scgi|fcgi)$">
+        Header unset Cache-Control
+    </FilesMatch>
 
 
 
@@ -64,13 +76,8 @@ AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css a
 
 
     # WYSIWYG Edit ---
-        #RewriteCond %{REQUEST_FILENAME} !-f
-        #RewriteCond %{HTTP_HOST} ^admin\.rain\.com
-        #RewriteCond %{QUERY_STRING} (.*)
-        #RewriteRule ^(.*)$ edit.php/$1?%1 [L]
-
         RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteCond %{HTTP_COOKIE} ^.*admin_check=1.*$ [NC]
+        RewriteCond %{QUERY_STRING} ^.*edit_mode=1.*$ [NC]
         RewriteCond %{QUERY_STRING} (.*)
         RewriteRule ^(.*)$ edit.php/$1?%1 [L]
 

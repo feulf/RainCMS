@@ -2,8 +2,9 @@
 
     class UserAjaxModule extends Module {
 
-        function index() {
-            
+        function signout(){
+            User::logout();
+            echo true;
         }
 
     }

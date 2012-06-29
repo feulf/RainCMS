@@ -1,0 +1,10 @@
+<div class="content">
+    <h1>{"Installer"|get_msg}</h1>
+    <div>{"list of installed modules"|get_msg}</div>
+    <br>
+    <ul class="nav nav-tabs nav-stacked">
+        {loop="installed_modules"}
+        <li class="{if="$value.published"}{/if}"><a>{$value.module}</a></li>
+        {/loop}
+    </ul>
+</div>
