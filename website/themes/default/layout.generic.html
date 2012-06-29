@@ -27,6 +27,9 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+    
+    {$head}
+
   </head>
 
   <body>
@@ -45,7 +48,11 @@
             {loop="menu"}<li {$value.selected?'class="active"':null}><a href="{$value.link}">{$value.name}</a></li>{/loop}
             </ul>
             <ul class="nav pull-right">
+                {if="User::get_user_id()"}
                 <li><a href="/signin">Signin</a></li>
+                {else}
+                <li><a>Welcome {$user}</a></li>
+                {/if}
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -81,6 +88,8 @@
     <script src="assets/js/bootstrap-collapse.js"></script>
     <script src="assets/js/bootstrap-carousel.js"></script>
     <script src="assets/js/bootstrap-typeahead.js"></script>
+
+    {$foot}
 
   </body>
 </html>
