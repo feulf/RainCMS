@@ -1,0 +1,7 @@
+{
+    "module"        :"Content",
+    "version"       :"1.0",
+    "description"   :"Manage contents",
+    "author"        :"Federico Ulfo",
+    "dependency"    :["comment"]
+}
