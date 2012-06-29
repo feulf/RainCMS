@@ -30,7 +30,7 @@
                     $type,
                     $type_id,
                     $layout,
-                    $layout_id,
+                    $layout_id = LAYOUT_ID_GENERIC,
                     $selected_module;
 
         
@@ -161,8 +161,11 @@
 
             require LIBRARY_DIR     . "Content.php";
 
-            // path
-            $this->path = get('path');
+            // get the path
+            require_once LIBRARY_DIR . "Router.php";
+            $router = new Router;
+            $this->path = $router->get_route();
+            
 
             // if null path = ""
             if (null === $this->path)
@@ -175,6 +178,7 @@
                 $this->action = $content['action'] ? $content['action'] : "draw";
                 $this->params = array();
             }
+
             // Content not found for that path
             else {
 
@@ -187,9 +191,12 @@
                 do {
 
                     $path = $this->_check_route($path) . "/";
+                    
+                    // no more element in the path
                     if (strlen($path) == 1) {
-                        $this->_page_not_found("content not found");
+                        break;
                     }
+
                 } while (!$content = Content::get_content_by_path($path));
 
                 $this->content = $content;
@@ -216,12 +223,22 @@
                 $this->module       = $this->content['module'];
                 $this->layout       = "layout." . $this->content['layout'];
                 $this->content_path = Content::get_path($this->content_id);
+                $this->selected_module = $this->module;
+                User::init_localization($this->path, $this->content_id);
             } else {
-                $this->_page_not_found("content not found");
+
+                $this->module = $router->get_controller();
+                $this->action = $router->get_action();
+                $this->params = $router->get_params();
+                
+                $layout = Content::get_layout( $this->layout_id );
+                $this->layout = "layout." . $layout["template"];
+
+                $this->load_module( $this->module, $this->action, $this->params );
+                User::init_localization($this->path, 0 );
+
             }
 
-            $this->selected_module = $this->module;
-            User::init_localization($this->path, $this->content_id);
         }
 
         
@@ -334,7 +351,7 @@
                     $this->_page_not_found("content not found");
 
                 if (!is_callable(array($controller_obj, $action)))
-                    $this->_page_not_found("module not found");
+                    $this->_page_not_found("content not found");
 
                 ob_start(); // start the output buffer
                 call_user_func_array(array($controller_obj, $action), $params);            // call the selected action
@@ -344,7 +361,7 @@
                 $this->loaded_modules[] = array("module" => $module, "execution_time" => $time, "execution_memory" => $memory);
 
             } else {
-                $this->_page_not_found("module not found");
+                $this->_page_not_found("content not found");
             }
 
 
@@ -354,6 +371,7 @@
             else {
                 $this->load_area_array[$load_area][] = array("html" => $html, "module" => $module, "content" => $content);
             }
+
         }
 
 

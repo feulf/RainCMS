@@ -77,4 +77,4 @@ AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css a
     # contents
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{QUERY_STRING} (.*)
-    RewriteRule (.*) index.php?path=$1&%1 [L]
+    RewriteRule (.*) index.php/$1?%1 [L]
