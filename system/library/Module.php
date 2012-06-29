@@ -11,7 +11,6 @@
 
         // init Module parameters
         function __construct($init_params) {
-
             $this->loader = $init_params['loader'];
             $this->selected = $init_params['selected'];
             $this->content = isset($init_params['content']) ? $init_params['content'] : array();

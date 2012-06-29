@@ -1,35 +1,98 @@
 <?php
 
     require CONSTANTS_DIR   . "rain.constants.php";
-    require LIBRARY_DIR     . "Loader.php";
+    require CONSTANTS_DIR   . "constants.php";
+    require LIBRARY_DIR     . "functions.php";
+    require LIBRARY_DIR     . "Plugin.php";
 
-    class RainLoader extends Loader {
 
-        protected static $controllers_dir = MODULES_DIR,
-                         $controller_extension = MODULE_EXTENSION,
-                         $controller_class_name = MODULE_CLASS_NAME;
+    /**
+     * 
+     * RainLoader is the main class that load all the component of Rain 
+     * 
+     */
+    class RainLoader{
+
+        protected static $modules_dir        = MODULES_DIR,
+                         $module_extension        = MODULE_EXTENSION,
+                         $module_class_name = MODULE_CLASS_NAME;
+
+        protected   $params = array(),
+                    $loaded_modules = array();
+
+        protected   $ajax_mode,
+                    $head,
+                    $layout_vars,
+                    $content,
+                    $content_id,
+                    $content_path,
+                    $path,
+                    $type,
+                    $type_id,
+                    $layout,
+                    $layout_id,
+                    $selected_module;
+
         
-        protected   $ajax_mode = false,
-                    $head = "",
-                    $layout_vars = "",
-                    $loaded_controller = array(),
-                    $content_id = null,
-                    $type_id = null,
-                    $type = null,
-                    $layout = null,
-                    $layout_id = null,
-                    $content_path = null,
-                    $selected_module = null,
-                    $content = null,
-                    $module = null,
-                    $action = null,
-                    $params = null,
-                    $path = "";
-
+        
+        /**
+         *  Start the benchmark 
+         */
         function __construct() {
             $this->_start_benchmark();
         }
         
+        
+        
+        /**
+         * Load the plugins
+         * @param string $manifest_filename You can chose which plugins set to load, for example the plugins loaded in the admin area will be different by the plugins loaded on the frontend
+         */
+        function load_plugins( $manifest_filename = "default" ){
+
+            $plugins_filepath = PLUGINS_DIR . $manifest_filename . ".json";
+            $plugins_json = file_get_contents( $plugins_filepath );
+            $plugins = json_decode($plugins_json, $assoc=true);
+
+            foreach( $plugins["plugins_load"] as $plugin => $plugin_status ){
+                if( $plugin_status == "enabled" )
+                    require PLUGINS_DIR . $plugin . "/" . $plugin . ".php";
+            }
+            load_actions( "plugin_loaded", array("loader"=>$this) );
+            
+            foreach( $plugins["plugins"] as $plugin => $plugin_status ){
+                if( $plugin_status == "enabled" )
+                    require PLUGINS_DIR . $plugin . "/" . $plugin . ".php";
+            }
+
+            load_actions( "after_init", array("loader"=>$this) );
+
+        }
+
+        
+        
+        /**
+         * Initialize the session 
+         */
+        function init_session() {
+            session_start();
+        }
+
+        
+
+        /**
+         * Initialize the database 
+         */
+        function init_db() {
+            require LIBRARY_DIR . "DB.php";
+            db::init();
+        }
+        
+        
+        /**
+         * Initialize the settings
+         * @global type $settings The settings are saved in a global var accessible for example with get_setting("website_domain");
+         */
         function init_settings() {
             global $settings;
             $settings_list = DB::get_all("SELECT * FROM setting");    // load global settings
@@ -42,6 +105,21 @@
             require CONFIG_DIR . "url.php";
         }
 
+
+
+        /**
+         * Authenticate the user 
+         */
+        function auth_user() {
+            require LIBRARY_DIR . "User.php";
+            User::login(post('login'), post('password'), post('cookie'), get_post('logout'));
+        }
+        
+        
+
+        /**
+         * Initialize the language of the website 
+         */
         function init_language() {
 
             if ($language_list = DB::get_all("SELECT * FROM " . DB_PREFIX . "language WHERE published=1", array(), 'lang_id')) {
@@ -73,6 +151,8 @@
                 $this->_page_not_found('Language not installed');
             }
         }
+
+        
 
         /**
         * Loads the information of the selected content
@@ -144,21 +224,11 @@
             User::init_localization($this->path, $this->content_id);
         }
 
-        // check route
-        function _check_route($path) {
+        
 
-            // if last char is slash, remove it
-            if ($path && $path[strlen($path) - 1] == "/")
-                $path = substr($path, 0, -1);
-
-            // remove the last part of the path
-            $path_array = explode("/", $path);
-            array_pop($path_array);
-
-            // new path
-            return implode("/", $path_array);
-        }
-
+        /**
+         * Initialize the theme 
+         */
         function init_theme() {
 
             require LIBRARY_DIR . "View.php";
@@ -184,32 +254,49 @@
             View::configure("path_replace", true);
         }
 
+        
+        
+        /**
+         * Load all the javascript and stylesheet 
+         */
         function load_head() {
             // add javascript
             add_script("jquery.min.js", JQUERY_DIR, JQUERY_URL);
             add_javascript("var url='" . URL . "';");
         }
+
         
-        function auto_load_controller(){
-            require_once LIBRARY_DIR . "Module.php";
-            require_once LIBRARY_DIR . "Content.php";
-            parent::auto_load_controller();
-        }
+        
+        /**
+         * Load the selected module
+         * 
+         * @param string $module Module to load
+         * @param string $action Action to load 
+         * @param array $params Parameters of the module
+         * @param string $load_area Where is loaded
+         * @param bool $selected Is the module selected?
+         * @param array $content Content selected for this module
+         * @param string $module_extension Filename of the module
+         * @param string $module_class_name Classname of the module
+         */
+        function load_module($module = null, $action = null, $params = array(), $load_area = "center", $selected = true, $content = null, $module_extension = null, $module_class_name = null) {
 
-        function load_module($module = null, $action = null, $params = array(), $load_area = "center", $selected = true, $content = null, $controller_extension = null, $controller_class_name = null) {
-
+            // load the Module class
             require_once LIBRARY_DIR     . "Module.php";
 
-            if (!$controller_extension)
-                $controller_extension = self::$controller_extension;
+            // set the module name
+            if (!$module_extension) 
+                $module_extension = self::$module_extension;
 
-            if (!$controller_class_name)
-                $controller_class_name = self::$controller_class_name;
+            // set the class name
+            if (!$module_class_name) 
+                $module_class_name = self::$module_class_name;
 
 
-            // - SET INFO ------
+            // - Set info ------
             if ($module === null && $this->module)
                 $module = $this->module;
+
             if ($content === null && $this->content)
                 $content = $this->content;
 
@@ -218,46 +305,46 @@
             load_lang( $module );
 
             // - LOAD MODULE ------
-            if (file_exists($module_filepath = self::$controllers_dir . $module . "/" . $module . $controller_extension)) {
+            if (file_exists( $module_filepath = self::$modules_dir . $module . "/" . $module . $module_extension)) {
                 require_once $module_filepath;
 
+                
+
                 // - RENDER THE MODULE ------
-                try {
 
-                    $this->_start_benchmark("module");
+                $this->_start_benchmark("module");
 
-                    // define module class
-                    $controller_class = $module . $controller_class_name;
+                // define module class
+                $controller_class = $module . $module_class_name;
 
-                    // action
-                    if (!$action)
-                        $action = $this->action;
+                // action
+                if (!$action)
+                    $action = $this->action;
+                
+                // params
+                if (!$params)
+                    $params = $this->params;
 
-                    // params
-                    if (!$params)
-                        $params = $this->params;
+                // init module object
+                $init_params = array("loader" => $this, "selected" => $selected, "content" => $content );
 
-
-                    // init module object
-                    $init_params = array("loader" => $this, "selected" => $selected, "content" => $content );
-
+                if( class_exists($controller_class) )
                     $controller_obj = new $controller_class($init_params);
+                else
+                    $this->_page_not_found("content not found");
 
-                    if (!is_callable(array($controller_obj, $action)))
-                        $this->_page_not_found("module not found");
+                if (!is_callable(array($controller_obj, $action)))
+                    $this->_page_not_found("module not found");
 
-                    ob_start(); // start the output buffer
-                    call_user_func_array(array($controller_obj, $action), $params);            // call the selected action
-                    $html = ob_get_clean();    // close the output buffer
+                ob_start(); // start the output buffer
+                call_user_func_array(array($controller_obj, $action), $params);            // call the selected action
+                $html = ob_get_clean();    // close the output buffer
 
-                    list( $time, $memory ) = $this->_get_benchmark("module");
-                    $this->loaded_controller[] = array("module" => $module, "execution_time" => $time, "execution_memory" => $memory);
-                } catch (Exception $e) {
-                    $html = null;
-                    echo "error " . $e->getMessage();
-                }
+                list( $time, $memory ) = $this->_get_benchmark("module");
+                $this->loaded_modules[] = array("module" => $module, "execution_time" => $time, "execution_memory" => $memory);
+
             } else {
-                $html = get_msg("module not found");
+                $this->_page_not_found("module not found");
             }
 
 
@@ -269,6 +356,11 @@
             }
         }
 
+
+
+        /**
+         * Load the blocks of the page
+         */
         function load_blocks() {
 
             require_once LIBRARY_DIR     . "Module.php";
@@ -284,13 +376,24 @@
             
         }
 
+        
+
+        /**
+         * Load the selected block
+         * @param string $block 
+         */
         function block($block) {
             // get the settings and the parameters
             $params = Content::get_block_settings( $block["block_id"] );
             $this->load_module($block['module'], $action = "draw", $params, $block['load_area'], $selected = false, $block, BLOCK_EXTENSION, BLOCK_CLASS_NAME);
 
         }
-        
+
+
+
+        /**
+         * Load the menu for this page
+         */
         function load_menu() {
             $this->assign("menu", db::get_all("SELECT c.content_id, c.title AS name, c.path AS link, IF( ? LIKE CONCAT(c.path,'%') AND ( c.path != '' OR ? = '' ), 1, 0 ) AS selected 
                                                FROM " . DB_PREFIX . "content c
@@ -311,13 +414,26 @@
             );
         }
 
+        
+        /**
+         * Assign a value to the layout
+         * 
+         * @param string $variable Name of the variable
+         * @param mixed $value Value
+         */
         function assign($variable, $value = null) {
             if (is_array($variable))
                 $this->layout_vars += $variable;
             else
                 $this->layout_vars[$variable] = $value;
         }
-
+        
+        
+        
+        /**
+         * Draw the website
+         * @param boolean $to_string Set true if you want to get the page in a string
+         */
         function draw($to_string = false) {
 
             $tpl = new View;
@@ -353,7 +469,7 @@
             list( $timer, $memory ) = $this->_get_benchmark();
             $tpl->assign("execution_time", $timer);
             $tpl->assign("memory_used", $memory);
-            $tpl->assign("loaded_controller", $this->loaded_controller);
+            $tpl->assign("loaded_modules", $this->loaded_modules);
             $tpl->assign("included_files", get_included_files());
             $tpl->assign("n_query", class_exists("DB") ? DB::get_executed_query() : null );
             $html = $tpl->draw( $this->layout, $to_string = true);
@@ -366,15 +482,31 @@
             
         }
 
+        
+        
+        /**
+         * Enable the ajax_mode
+         * 
+         * @param boolean $load_javascript
+         * @param boolean $load_style
+         * @param boolean $ajax_mode 
+         */
         function ajax_mode($load_javascript = false, $load_style = false, $ajax_mode = true) {
             $this->ajax_mode = $ajax_mode;
             $this->load_javascript = $load_javascript;
             $this->load_style = $load_style;
         }
 
-        // for ajax call
-        function auto_load_load_module() {
 
+
+        /**
+         * Load the module 
+         */
+        function auto_load_module() {
+
+            // load the Content class
+            require_once LIBRARY_DIR . "Content.php";
+            
             // load the Router library and get the URI
             require_once LIBRARY_DIR . "Router.php";
             $router = new Router;
@@ -382,15 +514,28 @@
             $module = $router->get_controller();
             $action = $router->get_action();
             $params = $router->get_params();
-
-            $this->load_module($module, $action, $params);
+            
+            $this->load_module( $module, $action, $params );
         }
 
+
+
+        /**
+         * Set the layout of the page
+         * @param string $layout Layout
+         */
         function set_layout($layout) {
             $this->layout           = $layout;
             $this->load_area_array  = $this->_get_load_area();
         }
 
+
+
+        /**
+         * Configure the loader
+         * @param string $setting
+         * @param mixed $value 
+         */
         static function configure($setting, $value) {
             if (is_array($setting))
                 foreach ($setting as $key => $value)
@@ -399,6 +544,12 @@
                 static::$$setting = $value;
         }
 
+
+
+        /**
+         * Draw the Page Not Found
+         * @param string $msg Message printed on the page
+         */
         function _page_not_found($msg = null) {
 
             header("HTTP/1.0 404 Not Found");
@@ -420,6 +571,15 @@
             die;
         }
 
+        
+        
+        /**
+         * Wrap the blocks to give space
+         * 
+         * @param type $block_array
+         * @param type $load_area_name
+         * @return type 
+         */
         protected function _blocks_wrapper($block_array = array(), $load_area_name) {
             $html = "";
             if (is_array($block_array))
@@ -428,6 +588,12 @@
             return $html;
         }
 
+        
+        /**
+         * If ajax_mode is true this function is called on draw
+         * 
+         * @param type $html 
+         */
         protected function _draw_ajax($html = null) {
             echo $this->load_style ? get_style() : null;
             echo $this->load_javascript ? get_javascript() : null;
@@ -435,13 +601,79 @@
             die;
         }
 
+        
+        /**
+         * Start the benchmark
+         * @param string $benchmark Benchmark name
+         */
         protected function _start_benchmark($benchmark = null) {
             timer_start($benchmark);
             memory_usage_start($benchmark);
         }
 
+
+
+        /**
+         * Get the benchmark results
+         * @param type $benchmark
+         * @return type 
+         */
         protected function _get_benchmark($benchmark = null) {
             return array(timer($benchmark), memory_usage($benchmark));
+        }
+
+        
+        
+        /**
+         * Get all the load area of the selected layout
+         * @return mixed Load Area
+         */
+        protected function _get_load_area() {
+
+            if (!is_dir($load_area_dir = CACHE_DIR . THEMES_DIR))
+                mkdir($load_area_dir, 0777, $recursive = true);
+
+            $layout_file = $this->theme_dir . $this->layout . '.html';
+            $load_area_file = $load_area_dir . "load_area." . $this->layout . "." . md5($this->theme) . ".json";
+
+            if (!file_exists($load_area_file) || filemtime($load_area_file) < filemtime($layout_file)) {
+                preg_match_all('/\{\$load_area\.(.*?)\}/si', file_get_contents($layout_file), $match);
+
+                // write on file the load_area found
+                foreach($match[1] as $l)
+                    $load_area[$l] = array();
+
+                $load_area_json = json_encode( $load_area );
+                
+                file_put_contents($load_area_file, $load_area_json );
+            }
+            else{
+                $load_area_json = file_get_contents( $load_area_file );
+                $load_area = json_decode( $load_area_json, $assoc=true );
+            }
+
+            return $load_area;
+        }
+        
+        
+
+        /**
+         * Remove the last part of the 
+         * @param type $path
+         * @return type 
+         */
+        function _check_route($path) {
+
+            // if last char is slash, remove it
+            if ($path && $path[strlen($path) - 1] == "/")
+                $path = substr($path, 0, -1);
+
+            // remove the last part of the path
+            $path_array = explode("/", $path);
+            array_pop($path_array);
+
+            // new path
+            return implode("/", $path_array);
         }
 
     }

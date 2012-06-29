@@ -5,8 +5,8 @@
     // init loader
     $loader = new RainLoader();
 
-    RainLoader::configure("controller_extension", AJAX_MODULE_EXTENSION);
-    RainLoader::configure("controller_class_name", AJAX_MODULE_CLASS_NAME);
+    RainLoader::configure("module_extension", AJAX_MODULE_EXTENSION);
+    RainLoader::configure("module_class_name", AJAX_MODULE_CLASS_NAME);
 
     $loader->ajax_mode();
 
@@ -22,6 +22,6 @@
 
     $loader->init_theme();
 
-    $loader->auto_load_controller();
+    $loader->auto_load_module();
 
     // -- end
