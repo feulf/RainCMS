@@ -234,7 +234,6 @@
                 $layout = Content::get_layout( $this->layout_id );
                 $this->layout = "layout." . $layout["template"];
 
-                $this->load_module( $this->module, $this->action, $this->params );
                 User::init_localization($this->path, 0 );
 
             }
@@ -490,6 +489,7 @@
             $tpl->assign("loaded_modules", $this->loaded_modules);
             $tpl->assign("included_files", get_included_files());
             $tpl->assign("n_query", class_exists("DB") ? DB::get_executed_query() : null );
+            $tpl->assign("user", User::get_user() );
             $html = $tpl->draw( $this->layout, $to_string = true);
             
             $context = load_actions( "before_draw", array( "loader"=>$this, "html"=>$html ) );
