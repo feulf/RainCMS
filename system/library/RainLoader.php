@@ -17,7 +17,6 @@
                     $type_id = null,
                     $type = null,
                     $layout = null,
-                    $page_settings = null,
                     $layout_id = null,
                     $content_path = null,
                     $selected_module = null,
@@ -25,7 +24,7 @@
                     $module = null,
                     $action = null,
                     $params = null,
-                    $load_area = array();
+                    $path = "";
 
         function __construct() {
             $this->_start_benchmark();
@@ -125,8 +124,7 @@
                 }
 
                 $this->params = array($params);
-                
-                echo 1;exit;
+
             }
 
             // if the content exists and is published load it
@@ -267,7 +265,7 @@
             if ($this->ajax_mode)
                 $this->_draw_ajax($html);
             else {
-                $this->load_area[$load_area][] = array("html" => $html, "module" => $module, "content" => $content);
+                $this->load_area_array[$load_area][] = array("html" => $html, "module" => $module, "content" => $content);
             }
         }
 
@@ -284,9 +282,6 @@
                 }
             }
             
-            // load the default blocks of a theme
-            $this->_load_theme_default_blocks();
-
         }
 
         function block($block) {
@@ -296,26 +291,6 @@
 
         }
         
-        function _load_theme_default_blocks(){
-            // load the block configured for this page
-            if ($this->page_settings["load_area"]) {
-                foreach ($this->page_settings["load_area"] as $load_area => $load_area_array) {
-                    if ($load_area_array["default_blocks"]) {
-                        foreach ($load_area_array["default_blocks"] as $module => $block) {
-
-                            $params = isset($block["params"]) ? $block["params"] : array();
-                            $action = isset($block["action"]) ? $block["action"] : "draw";
-                            $block += Content::get_content_by_module($module);
-                            if ($module) {
-                                $this->load_module($module, $action, $params, $load_area, $selected = false, $block, BLOCK_EXTENSION, BLOCK_CLASS_NAME);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-
         function load_menu() {
             $this->assign("menu", db::get_all("SELECT c.content_id, c.title AS name, c.path AS link, IF( ? LIKE CONCAT(c.path,'%') AND ( c.path != '' OR ? = '' ), 1, 0 ) AS selected 
                                                FROM " . DB_PREFIX . "content c
@@ -368,8 +343,8 @@
             // - LOAD AREA ----
             // wrap all the blocks in a load area
             $load_area = array();
-            if( $this->load_area )
-                foreach ($this->load_area as $load_area_name => $blocks)
+            if( $this->load_area_array )
+                foreach ($this->load_area_array as $load_area_name => $blocks)
                     $load_area[$load_area_name] = $this->_blocks_wrapper($blocks, $load_area_name);
             $tpl->assign("load_area", $load_area);
 
@@ -412,9 +387,8 @@
         }
 
         function set_layout($layout) {
-            $this->layout = $layout;
-            $this->_get_load_area();
-            $this->_get_page_settings();
+            $this->layout           = $layout;
+            $this->load_area_array  = $this->_get_load_area();
         }
 
         static function configure($setting, $value) {
@@ -429,11 +403,11 @@
 
             header("HTTP/1.0 404 Not Found");
 
-
             $this->layout_id = LAYOUT_ID_NOT_FOUND;
             $this->type_id = null;
             $this->layout = Content::get_layout($this->layout_id);
             $this->layout = "layout." . $this->layout['template'];
+            $this->load_area_array = $this->_get_load_area();
 
             if (empty($this->theme_dir))
                 $this->init_theme();
@@ -443,14 +417,6 @@
             $this->load_blocks($this->layout_id);
             $this->draw();
             die;
-        }
-
-        // get all the page info as default blocks, default text etc
-        protected function _get_page_settings() {
-            $layout_json = $this->theme_dir . $this->layout . '.json';
-            if (file_exists($layout_json)) {
-                $this->page_settings = json_decode(file_get_contents($layout_json), $as_array = true);
-            }
         }
 
         protected function _blocks_wrapper($block_array = array(), $load_area_name) {

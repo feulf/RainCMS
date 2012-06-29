@@ -137,20 +137,21 @@
 
             require_once LIBRARY_DIR . "Controller.php";
 
-            try {
-                $controller = strtolower($controller);
-                require_once $controller_file = static::$controllers_dir . "$controller/$controller" . static::$controller_extension;
-            } catch (Exception $e) {
+            $controller = strtolower($controller);
+            $controller_file = static::$controllers_dir . "$controller/$controller" . static::$controller_extension;
+            if( file_exists($controller_file) )
+                require $controller_file;
+            else
                 $this->_page_not_found("File $controller_file not found");
-            }
 
-            try {
-                $class = $controller . static::$controller_class_name;
+            $class = $controller . static::$controller_class_name;
+
+            if( class_exists($class) ){
                 $init_params = array("loader" => $this, "selected" => true);
                 $controller_obj = new $class($init_params);
-            } catch (Exception $e) {
-                $this->_page_not_found("Controller class $class not found");
             }
+            else
+                $this->_page_not_found("Controller class $class not found");
 
             if ($action) {
 
@@ -177,9 +178,9 @@
                     $this->_draw_ajax($html);
                 } else {
                     // save the output into the load_area array
-                    if (!isset($this->load_area[$load_area]))
-                        $this->load_area[$load_area] = array();
-                    $this->load_area[$load_area][] = array("controller" => $controller, "html" => $html);
+                    if (!isset($this->load_area_array[$load_area]))
+                        $this->load_area_array[$load_area] = array();
+                    $this->load_area_array[$load_area][] = array("controller" => $controller, "html" => $html);
                 }
             }
         }
@@ -255,7 +256,7 @@
             // - LOAD AREA ----
             // wrap all the blocks in a load area
             $load_area = array();
-            foreach ($this->load_area as $load_area_name => $blocks)
+            foreach ($this->load_area_array as $load_area_name => $blocks)
                 $load_area[$load_area_name] = $this->_blocks_wrapper($blocks, $load_area_name);
             $tpl->assign("load_area", $load_area);
 
@@ -273,7 +274,7 @@
 
         function set_layout($layout) {
             $this->layout = $layout;
-            $this->_get_load_area();
+            $this->load_area_array = $this->_get_load_area();
         }
 
         function ajax_mode($load_javascript = false, $load_style = false, $ajax_mode = true) {
@@ -329,7 +330,7 @@
                 $load_area = json_decode( $load_area_json, $assoc=true );
             }
 
-            $this->load_area = $load_area;
+            return $load_area;
         }
 
         protected function _blocks_wrapper($block_array = array(), $load_area_name) {
