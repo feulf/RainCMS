@@ -48,7 +48,13 @@
             {loop="menu"}<li {$value.selected?'class="active"':null}><a href="{$value.link}">{$value.name}</a></li>{/loop}
             </ul>
             <ul class="nav pull-right">
+                <li><a class="rain_update_content">Update Content</a></li>
+                <li><a>|</a></li>
+                {if="!User::get_user_id()"}
                 <li><a href="/signin">Signin</a></li>
+                {else}
+                <li><a>Welcome {$user.name}</a></li>
+                {/if}
             </ul>
           </div><!--/.nav-collapse -->
         </div>
