@@ -3,15 +3,10 @@
     require "RainLoader.php";
 
     class RainEditLoader extends RainLoader {
-
-        protected $edit_mode = false,
+        
+        protected $edit_mode = true,
                   $cache_enabled = false;
 
-        function __construct() {
-            $this->edit_mode = true; 
-            cookie("edit_mode");
-            parent::__construct();
-        }
 
         function init_language() {
             parent::init_language();
