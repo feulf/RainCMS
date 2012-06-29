@@ -274,7 +274,7 @@
                                                         FROM " . DB_PREFIX . "content_type 
                                                         WHERE published=1", array(), "type_id" );
             }
-            return self::$content_type_list[$type_id];
+            return isset( self::$content_type_list[$type_id] ) ? self::$content_type_list[$type_id] : null;
         }
 
         // return content type child
@@ -301,6 +301,24 @@
                             $multilanguage_query .
                             " ORDER BY position", array(":type_id" => $type_id)
             );
+        }
+
+        static function get_content_type_field( $type_id, $field ){
+            return DB::get_row( "SELECT * 
+                                 FROM ".DB_PREFIX."content_type_field f
+                                 WHERE type_id=:type_id AND name=:field
+                                 ",
+                                 array(":type_id"=>$type_id, ":field"=>$field)
+                              );
+        }
+
+        static function get_content_type_tree( $type_id, $parent_id ){
+            return DB::get_row( "SELECT * 
+                                 FROM ".DB_PREFIX."content_type_tree t
+                                 WHERE type_id=:type_id AND parent_id=:parent_id
+                                 ",
+                                 array(":type_id"=>$type_id, ":parent_id"=>$parent_id)
+                              );
         }
 
         static function get_content_last_position($parent_id) {
@@ -561,6 +579,28 @@
                             , "n");
         }
 
+        
+
+        //-------------------------------------------------------------
+        //
+        //        Module
+        //
+        //-------------------------------------------------------------
+
+        static function get_module($module) {
+            return db::get_row("SELECT *
+                                FROM " . DB_PREFIX . "module m
+                                WHERE module=?"
+                            , array($module));
+        }
+
+        static function get_module_list() {
+            return db::get_all("SELECT *
+                                FROM " . DB_PREFIX . "module m
+                                ORDER BY module"
+                              );
+        }
+        
     }
 
     // -- end
