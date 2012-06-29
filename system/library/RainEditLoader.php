@@ -2,7 +2,7 @@
 
     require "RainLoader.php";
 
-    class RainEditPageLoader extends RainLoader {
+    class RainEditLoader extends RainLoader {
 
         protected $edit_mode = false,
                   $cache_enabled = false;

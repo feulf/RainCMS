@@ -1,9 +1,9 @@
 <?php
 
-    require LIBRARY_DIR . "RainEditPageLoader.php";
+    require LIBRARY_DIR . "RainEditLoader.php";
 
     // init loader
-    $loader = new RainEditPageLoader();
+    $loader = new RainEditLoader();
 
     $loader->load_plugins( "edit_mode" );
     
