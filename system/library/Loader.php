@@ -22,9 +22,10 @@
                 $controller_class_name = CONTROLLER_CLASS_NAME,
                 $models_dir = MODELS_DIR;
         protected $theme = "", // default theme
-                $layout = "index", // default page layout
-                $not_found_layout = "not_found", // default page layout not found
-                $head = "";           // css and javascript
+                  $theme_dir = "", // default theme directory
+                  $layout = "index", // default page layout
+                  $not_found_layout = "not_found", // default page layout not found
+                  $head = "";           // css and javascript
         // ajax variables
         protected $ajax_mode = false,
                 $load_javascript = false,

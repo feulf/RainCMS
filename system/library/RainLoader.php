@@ -168,7 +168,7 @@
 
             // if theme is not found load the default theme
             if (!is_dir($this->theme_dir))
-                $this->theme_dir = THEMES_DIR . "default_theme/";
+                $this->theme_dir = THEMES_DIR . "default/";
 
             if (!$this->ajax_mode)
                 $this->set_layout($this->layout);
@@ -407,10 +407,11 @@
             $this->type_id = null;
             $this->layout = Content::get_layout($this->layout_id);
             $this->layout = "layout." . $this->layout['template'];
-            $this->load_area_array = $this->_get_load_area();
 
             if (empty($this->theme_dir))
                 $this->init_theme();
+
+            $this->load_area_array = $this->_get_load_area();
 
             $this->assign("not_found_msg", get_msg( $msg ) );
             $this->load_menu();
