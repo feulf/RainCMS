@@ -1,1 +1,20 @@
-Change content accessible for ALL users
+Todo:
+
+Frontend
+- "Add Content" and "Edit content settings" button
+- "Add Block" and "Edit block settings" button
+- Edit mode accessible to all users to create different revisions (like wiki)
+- Content editable: images and content on the theme should be editable as well
+- Menu editable, menu should be editable from the front end
+- File module to see the list of files uploaded
+- Add sitemap on toolbar, site map should drag and drop nodes
+- Installer module
+- Change Aloha with Etch
+- Content_type module to add new content type
+- Automatic Upgrade
+- Production mode, fatal error should bring to 404
+- User list should be improved
+- Search, should save the user search to create the autocomplete
+- Automatic Google translate, Plugin
+- Block filter, add a new block type where you can create your query, example:
+last 10 content, of content_type news, template content_list.
