@@ -1,25 +1,3 @@
-
-    // init tooltip
-    function init_tooltip(){
-    /*
-        $( '.tooltip' ).tooltip({
-            track: true,
-            showURL: false,
-            fixPNG: true,
-            showBody: " - ",
-            top: 8,
-            left: 4,
-            fade: 300,
-            delay: 400
-        });
-    */
-    }
-
-    // init lightbox
-    function init_lightbox(){
-        $('a[rel*=lightbox]').lightBox();
-    }
-
     // init aloha editor
     function init_aloha(){
         var $ = Aloha.jQuery;
