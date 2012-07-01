@@ -7,8 +7,17 @@
         }
         
         function signin(){
-            $view = new View();
-            $view->draw( "signin/signin" );
+            
+            if( User::get_user_id() ){
+                $view = new View();
+                $view->draw( "user/info" );
+                
+            }
+            else{
+                $this->loader->set_layout("layout.user");
+            
+            }
+
         }
 
     }
