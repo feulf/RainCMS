@@ -14,8 +14,8 @@
     class RainLoader{
 
         protected static $modules_dir        = MODULES_DIR,
-                         $module_extension        = MODULE_EXTENSION,
-                         $module_class_name = MODULE_CLASS_NAME;
+                         $module_extension   = MODULE_EXTENSION,
+                         $module_class_name  = MODULE_CLASS_NAME;
 
         protected   $params = array(),
                     $loaded_modules = array();
@@ -48,6 +48,7 @@
          * Load the plugins
          * @param string $manifest_filename You can chose which plugins set to load, for example the plugins loaded in the admin area will be different by the plugins loaded on the frontend
          */
+        
         function load_plugins( $manifest_filename = "default" ){
 
             $plugins_filepath = PLUGINS_DIR . $manifest_filename . ".json";
@@ -122,7 +123,7 @@
          */
         function init_language() {
 
-            if ($language_list = DB::get_all("SELECT * FROM " . DB_PREFIX . "language WHERE published=1", array(), 'lang_id')) {
+            if ( $language_list = DB::get_all( "SELECT * FROM " . DB_PREFIX . "language WHERE published=1", array(), "lang_id") ) {
 
                 // get the language
                 if (get('set_lang_id'))

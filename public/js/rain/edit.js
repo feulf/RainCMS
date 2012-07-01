@@ -268,7 +268,6 @@
             block_setting_close();
         });
 
-        $('.rain_popup_window').css("marginLeft", "0" ).css("marginTop", "0" ).css( "left", $(this).offset().left ).css( "top", $(this).offset().top + 40 );
         $('.rain_popup').fadeIn("fast");
 
         new_content_list();
@@ -277,29 +276,21 @@
 
     function new_content_list(){
 
-        var json = [{
-            name:'New Content'
-        },{
-            name:'New Event'
-        },{
-            name:'New Blog Post'
-        },{
-            name:'News Section'
-        },{
-            name:'Registration Page'
-        }];
-        var html = '<div class="new_content_list"><ul>';
-        for( var i in json){
-            var data = json[i]
-            if( data )
-                html += '<li>'+data.name+'</li>';
-        }
-        html += '</ul></div>';
+        $.getJSON( ajax_file + "rain_edit/content_type_childs/" + content_id, function( type_childs ){
 
-        $('.rain_popup_window_content').html( html );
-        $('.new_content_list li').click( function(){
-            new_content_setting( $(this).index() );
-        });
+            var html = 'New Content under: <div class="new_content_list"><ul>';
+            for( var i = 0, n=type_childs.length; i<n; i++ ){
+                html += '<li>'+type_childs[i].type+'</li>';
+            }
+            html += '</ul></div>';
+
+            $('.rain_popup_window_content').html( html );
+            $('.new_content_list li').click( function(){
+                parent_id=content_id;
+                new_content_setting( type_childs[$(this).index()].type_id, parent_id );
+            });
+        })
+
 
         new_content_list_select();
 
@@ -319,14 +310,15 @@
     }
     
 
-    function new_content_setting( i ){
+    function new_content_setting( type_id, parent_id ){
         if( !$('.new_content_setting').html() ){
             var html = '<div class="new_content_setting"><a href="javascript:new_content_list_select();">Back</a><div class="content_form"></div></div>';
             $('.rain_popup_window_content').append( html );
         }
         new_content_setting_select();
 
-        html = '<form>';
+        html = '<form action="'+ajax_file+'rain_edit/content_new/'+parent_id+'/" method="post">';
+        html += '<input type="hidden" name="type_id" value="'+type_id+'">';
         html += 'Title <br><input type="text" name="title" value=""/><br>';
         html += 'Content <br><textarea width=100%></textarea>';
         html += '<input type="submit" value="SAVE" class="btn btn-primary"/>';

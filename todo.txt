@@ -1,6 +1,5 @@
 Todo:
 
-Frontend
 - "Add Content" and "Edit content settings" button
 - "Add Block" and "Edit block settings" button
 - Edit mode accessible to all users to create different revisions (like wiki)
@@ -18,3 +17,9 @@ Frontend
 - Automatic Google translate, Plugin
 - Block filter, add a new block type where you can create your query, example:
 last 10 content, of content_type news, template content_list.
+
+
+- prepare documentation of Rain:
+-- how to create a website and manage the contents
+-- how to create a theme
+-- how to create a module and how to add a content_type
