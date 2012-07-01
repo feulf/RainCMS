@@ -61,7 +61,6 @@
                 add_script('jquery.form.js', JQUERY_DIR, JQUERY_URL);   // form
 
                 add_javascript("init_aloha();", $on_load = true);
-                add_javascript("init_tooltip();", $on_load = true);
 
                 // block sort
                 add_script('ui/jquery-ui-1.8.16.custom.js', JQUERY_DIR, JQUERY_URL); // all jquery ui

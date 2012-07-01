@@ -14,7 +14,7 @@ $('.rain_user_signout').live('click',function(){
 
 // Add remove edit mode
 function enable_disable_edit_mode(){
-    document.location.href = document.location.href.replace(/(.*)/, '?edit_mode=1');
+    document.location.href += '?edit_mode=1';
 }
 
 function signout(){
