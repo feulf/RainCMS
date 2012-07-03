@@ -15,6 +15,12 @@
             $this->selected = $init_params['selected'];
             $this->content = isset($init_params['content']) ? $init_params['content'] : array();
         }
+        
+        function load_library($library) {
+            $obj = strtolower($library);
+            require_once LIBRARY_DIR . ucfirst(strtolower($library)) . ".php";
+            $this->$obj = new $library;
+        }
 
         function get($key = null) {
             return $this->selected ? get($key) : null;

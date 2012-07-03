@@ -1,0 +1,203 @@
+<script type="text/javascript">
+
+	//	PERMISSION EDIT
+	var user_id = '{$user_id}';
+	var permission_counter = 0
+
+	var content_list = new Array()
+	{loop="content_list"}
+		content_list[{$value.id}] = '{$value.title|addslashes}';
+	{/loop}
+
+	function changeUserStatus( status ){
+		if( status >= {#USER_ADMIN#} )
+			$('#permission').show(); 
+		else 
+			$('#permission').hide();
+
+		if( status >= {#USER_REGISTERED#} )
+			$('#signup_info').show(); 
+		else 
+			$('#signup_info').hide();
+	}
+
+	$(document).ready( function(){
+
+		$.validator.messages.required 	= "{'necessary_field'|get_msg}";
+		$.validator.messages.email 		= "{'email_field'|get_msg}";
+
+		$("#account_edit").validate({
+			debug:true,
+			submitHandler: function(form){
+				$('#account_edit_loading').fadeIn('fast')
+				$('#account_edit').hide()
+				$('#form_result').html('').fadeOut()
+				$(form).ajaxSubmit({
+					target: '#form_result',
+					complete:function( dataxml ){
+						$('#a_{$user_id}>span').html( $('input[name=name]').attr('value') )
+						$('#account_edit_loading').hide()
+						$('#account_edit').fadeIn('slow')
+						$('#form_result').hide().fadeIn('slow');
+						updatePermission()
+					}
+				});
+			}
+		});
+	});
+</script>
+
+<div>
+	<div class="toolbar">
+		<a onclick="open_group_list('{$group_id}', '{$user_id}', '{"user_add_to_group_msg"|get_msg}', '{"user_remove_from_group_msg"|get_msg}')"><img src="../aimg/user/group.gif"> {"user_button_group_list"|get_msg}</a><div id="button_group_list"></div>
+		<a onclick="openAccount('{$user_id}',0, '{$group_id}')" class="tooltip" title="{"user_button_cancel_caption"|get_msg}"><img src="../aimg/action_back.gif"> {"user_button_cancel"|get_msg}</a>
+		<a onclick="$('#account_edit').submit();"><img src="../aimg/save.gif"> {"save"|get_msg}</a>
+		{ignore}<a onclick="newUserMail();"><img src="../aimg/email/email.gif"> {"email"|get_msg}</a>{/ignore}
+		<a onclick="user_delete('{"user_button_delete_msg"|get_msg}');" class="delete_button"><img src="../aimg/del.gif"> {"user_button_delete"|get_msg}</a>
+	</div>
+
+	<div id="account_info">
+ 
+        <form name="account_edit" id="account_edit" action="{#URL#}admin.ajax.php/user/account_save/" method="post">
+
+            <div id="account_edit_loading" style="display:none;"><img src="../aimg/loading.gif" alt="loading"/>Loading</div>
+			<input name="user_id" value="{$user_id}" type="hidden">
+            
+            <label>{$level}</label>
+            <input type="text" name="name" value="{$name}" class="name"/>
+            
+			{if="$is_registered"}
+                <h2>{"user_detail"|get_msg}</h2>
+			{/if}
+            
+			<table cellspacing="0" cellpadding="5">
+				<tr>
+					<td>
+						<label>{"firstname"|get_msg}</label><br>
+						<input name="firstname" class="required input" value="{$firstname}" type="text">
+					</td>
+					<td width="5"></td>
+					<td>
+						<label>{"lastname"|get_msg}</label><br>
+						<input name="lastname" class="required input" value="{$lastname}" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<label>{"email"|get_msg}</label><br>
+						<input name="email" class="email required input long"  value="{$email}" type="text" onkeyup="$('[name=user_login]').val(this.value)">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<label>{"company"|get_msg}</label><br>
+						<input name="company" class="input long"  value="{$company}" type="text"><br><br>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label>{"tel"|get_msg}</label><br>
+						<input name="tel" class="input"  value="{$tel}" type="text"><br>
+					</td>
+					<td width="5"></td>
+					<td>
+						<label>{"mobile"|get_msg}</label><br>
+						<input name="mobile" class="input"  value="{$mobile}" type="text"><br>
+					</td>
+				</tr>
+			</table>
+			<br><br>
+
+			<label>{"user_level"|get_msg}</label><br>
+			<select name="status" class="required select" onchange="changeUserStatus(this.value)">
+			{loop="user_level"}
+				<option value="{$key}" {if="$key==$status"}selected="selected" class="selected"{/if}>{$value}</option>
+			{/loop}
+			</select>
+
+			<div id="signup_info" {if="!$is_registered"}style="display:none;"{/if}>
+				<!-- <input type="checkbox" name="change_pw" id="change_pw"><label for="change_pw">{"change_password"|get_msg}</div> -->
+				<br>
+				<label>{"password"|get_msg}</label><br>
+				<a href="javascript:editAccountPw('{$user_id}', '{"user_cp_password"|get_msg}')">{"change_password"|get_msg}</a>
+			</div>
+
+
+			<h2>{"permission"|get_msg}</h2>
+			<div id="permission" {if="!$is_registered"}style="display:none;"{/if}>
+				<label>{"user_edit_permission"|get_msg}</label>
+				<div id="permission_list">
+					<script>
+					{loop="permission_list"}
+						addPermission( {$value.permission_id}, {$value.id}, {$value.content_access}, {$value.subcontent_access} );
+					{/loop}
+					</script>
+				</div>
+				<img src="../aimg/lock.png" /> <a href="javascript:addPermission()">{"user_add_permission"|get_msg}</a>
+			 </div>
+
+        </form>
+
+    {if="isset($user_localization_id)"}
+        <div id="user_localization_info">
+            <h2>
+            {if="$user_id"}
+                {"user_online"|get_msg}
+            {else}
+                {"guest_online"|get_msg}
+            {/if}
+            </h2>
+
+            <table cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>
+                        <label>{"visit"|get_msg}</label><br>
+                        <span>{$time_first_click|time_format}</span>
+                    </td>
+                    <td width="5"></td>
+                    <td>
+                        <label>{"ip"|get_msg}</label><br>
+                        <span>{$last_ip}</span><br><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label>{"location"|get_msg}</label><br>
+                        <span>{$city_name} {$zip} {$region_name} {$country_name}</span><br><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>{"timezone"|get_msg}</label><br>
+                        <span>{$timezone_name}</label>
+                    </td>
+                    <td width="5"></td>
+                    <td>
+                        <label>{"coordinate"|get_msg}</label><br>
+                        <span>{$latitude} {$longitude}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label>{"last_page"|get_msg}</label><br>
+                        <span><a href="{$url}" target="_blank">{$url}</a></span><br><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label>{"browser"|get_msg}</label><br>
+                        <span>{$browser}<span><br><br>
+                    </td>
+                    <td width="5"></td>
+                    <td>
+                        <label>{"os"|get_msg}</label><br>
+                        <span>{$os}</span>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    {/if}
+
+        
+</div>

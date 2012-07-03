@@ -1,0 +1,27 @@
+{if="$group_id > 0"}
+<div>
+	<div class="toolbar">
+		<a onclick="editGroup('{$group_id}')">{"user_button_group_edit"|get_msg}<img src="../aimg/edit.gif"></a>
+		<a onclick="group_delete({$group_id}, '{"user_button_group_delete_msg"|get_msg}');" class="delete_button"><img src="../aimg/del.gif"> {"user_button_group_delete"|get_msg}</a>
+	</div>
+	<div class="margin_20">
+		<h3>{$name}</h3>
+
+		{if="$permission_list"}
+			This group 
+			{loop="permission_list"}
+				{if="$value.id>0"}
+					{"user_has_permission_in"|get_msg} <a href="?id={$value.id}">{$value.name}</a> {"user_has_permission_to"|get_msg}{if="$value.content_access"}<b>{"user_permission_manage_this_content"|get_msg}</b>{/if} {if="$value.content_access && $value.subcontent_access"} {"and"|get_msg} {/if} {if="$value.subcontent_access"}<b>{"user_permission_subcontent"|get_msg}</b>{/if}<br> 
+				{else}
+					{"user_permission_all"|get_msg}<br>
+				{/if}
+			{/loop}
+		{/if}
+	
+	</div>
+</div>
+{else}
+<div class="text">
+	<h3>{if="$group_id=='all'"}{"user_all"|get_msg}{elseif="$group_id=='registered'"}{"user_all_registered"|get_msg}{elseif="$group_id=='online'"}{"user_online"|get_msg}{/if}</h3>
+</div>
+{/if}

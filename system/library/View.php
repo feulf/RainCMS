@@ -29,8 +29,7 @@ class View{
     // -------------------------
 
     // template object
-    private $tpl_obj,
-            $view_obj;
+    protected static $view_obj;
 
 
 
@@ -42,10 +41,10 @@ class View{
      */
     function __construct(){
         require_once self::$library_dir . self::$view_class_dir . self::$view_class . '.php';
-        $this->view_obj = new self::$view_class();
-        $this->view_obj->configure( "tpl_dir", self::$tpl_dir );
-        $this->view_obj->configure( "cache_dir", self::$cache_dir );
-        $this->view_obj->configure( "base_url", self::$base_url );
+        self::$view_obj = new self::$view_class();
+        self::$view_obj->configure( "tpl_dir", self::$tpl_dir );
+        self::$view_obj->configure( "cache_dir", self::$cache_dir );
+        self::$view_obj->configure( "base_url", self::$base_url );
     }
 
     /**
@@ -53,7 +52,7 @@ class View{
      *
      */
     function assign( $variable, $value = null ){
-        $this->view_obj->assign( $variable, $value );
+        self::$view_obj->assign( $variable, $value );
     }
 
 
@@ -62,17 +61,9 @@ class View{
      *
      */
     function draw( $template, $return_string = false ){
-        return $this->view_obj->draw( $template, $return_string );
+        return self::$view_obj->draw( $template, $return_string );
     }
 
-
-    /**
-     * Return true if the template is cached
-     *
-     */
-    function is_cached( $template, $expire_time = HOUR, $cache_id = null ){
-        return $this->view_obj->is_cached( $template, $expire_time, $cache_id );
-    }
 
 
     /**
@@ -85,6 +76,7 @@ class View{
                 $this->configure( $key, $value );
         else if( property_exists( __CLASS__, $setting ) )
             self::$$setting = $value;
+        
     }
 
 

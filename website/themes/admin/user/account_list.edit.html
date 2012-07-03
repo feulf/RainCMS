@@ -1,0 +1,28 @@
+<div class="toolbar">
+	<a onclick="open_group_list('{$group_id}', '{$user_list_id}', '{"user_add_to_group_msg"|get_msg}', '{"user_remove_from_group_msg"|get_msg}')"><img src="../aimg/user/group.gif"> {"user_button_group_list"|get_msg}</a><div id="button_group_list"></div>
+	<a onclick="newUserMail();"><img src="../aimg/email/email.gif"> {"email"|get_msg}</a>
+	<a onclick="user_delete('{"user_button_delete_msg"|get_msg}');" class="delete_button"><img src="../aimg/del.gif"> {"user_button_delete"|get_msg}</a>
+</div>
+<div class="padding_20">
+	{if="$account_list"}
+		<b>{"user_selected"|get_msg}:</b><br>
+	    {loop="account_list"}
+	    {if="$counter>0"},{/if}
+			{if="$value.name"}
+			<span>{$value.name}</span>
+			{else}
+			<span>{$value.email}</span>
+			{/if}
+    	{/loop}
+	{/if}
+
+	{if="$group_list"}
+		<br><br>
+		<b>{"user_are_in_groups"|get_msg}:</b><br>
+	    {loop="group_list"}
+	    {if="$counter>0"},{/if}
+		<span>{$value.name}</span>
+    	{/loop}
+	{/if}
+
+</div>

@@ -1,0 +1,32 @@
+<div id="address_book">
+	
+	<div id="form_result" style="display:none;"></div>
+	<div id="address_button">
+		<a href="javascript:editAccount(0);void(0);"><img src="../aimg/user/user_new.gif">{"user_button_new_user"|get_msg}</a>
+		<a href="javascript:new_group('{"user button new group msg"|get_msg}');void(0)"><img src="../aimg/user/group_new.gif"> {"user_button_new_group"|get_msg}</a>
+		<a href="javascript:import_account();void(0);"><img src="../aimg/import.gif"> {"user_button_import_user"|get_msg}</a>
+	</div>
+
+	<table id="address_book_table" cellpadding="0" cellspacing="0">
+		<tr>
+			<td id="group_list">
+				<ul>
+					<li id="g_online" onclick="openGroup('online')">{"user_online"|get_msg} ({$nuser_online})</li>
+					<li id="g_registered" onclick="openGroup('registered')" href="#group/registered">{"user_all_registered"|get_msg}</li>
+					<li id="g_all" onclick="openGroup('all')" class="selected" href="#group/all">{"user_all"|get_msg}</li>
+				    {loop="group_list"}
+				    	<li id="g_{$value.group_id}" onclick="openGroup({$value.group_id})" href="#group/{$value.group_id}">{$value.name}</li>
+			    	{/loop}
+				</ul>
+			</td>				
+
+			<td id="account_list">
+			</td>
+			
+			<td id="account_detail">
+			    <div class="text">{"user_not_selected"|get_msg}</div>
+			</td>
+		</tr>
+	</table>
+
+</div>

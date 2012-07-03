@@ -8,7 +8,7 @@
 
     /**
      * 
-     * RainLoader is the main class that load all the component of Rain 
+     * RainLoader is the main class that load all the component6 of Rain 
      * 
      */
     class RainLoader{
@@ -241,7 +241,7 @@
 
         }
 
-        
+
 
         /**
          * Initialize the theme 
@@ -260,15 +260,11 @@
             if (!$this->ajax_mode)
                 $this->set_layout($this->layout);
 
-            // selected theme
-            define("THEME", $this->theme);
-
-            View::configure("tpl_dir", $this->theme_dir);
             View::configure("cache_dir", CACHE_DIR . THEMES_DIR);
             View::configure("link_url", URL);
             View::configure("file_url", URL);
-            View::configure( "base_url", URL );
-            View::configure("path_replace", true);
+            View::configure("base_url", URL );
+            View::configure("tpl_dir", $this->theme_dir);
         }
 
         
@@ -663,7 +659,7 @@
             $layout_file = $this->theme_dir . $this->layout . '.html';
             $load_area_file = $load_area_dir . "load_area." . $this->layout . "." . md5($this->theme) . ".json";
 
-            if (!file_exists($load_area_file) || filemtime($load_area_file) < filemtime($layout_file)) {
+            if ( !file_exists($load_area_file) || (file_exists($layout_file) && filemtime($load_area_file) < filemtime($layout_file) ) ) {
                 preg_match_all('/\{\$load_area\.(.*?)\}/si', file_get_contents($layout_file), $match);
 
                 // write on file the load_area found
