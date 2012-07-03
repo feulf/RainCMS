@@ -115,7 +115,7 @@
          * Save the change of the content into the page
          * @param int $content_id 
          */
-        function content_edit( $content_id ) {
+        function content_wysiwyg_update( $content_id ) {
 
             $title = stripslashes( post("title") );
             $content = stripslashes( post("content") );
@@ -273,6 +273,230 @@
             }
             
         }
+        
+        
+        function content_edit($content_id){
+            load_lang("admin.content");
+            echo $this->_content_edit($content_id);
+        }
+        /**
+         * Content edit
+         */
+        function _content_edit($content_id) {
+
+            // GET CONTENT
+            if (!$content_id or !$content_row = Content::get_content($content_id))
+                return draw_msg("content_not_found", WARNING);
+
+            // CHECK ACCESS
+            //if( !content_access( $content_id ) )
+            //        return draw_msg( "access_denied", WARNING );
+            // GET TYPE
+            $type = Content::get_content_type($type_id = $content_row['type_id']);
+            $mod = get_msg("{$type['lang_index']},MODULE,NAME") ? get_msg("{$type['lang_index']},MODULE,NAME") : $type['type'];
+
+
+            // INIT CONTROL PANEL
+            $this->load_library("form");
+            $this->form->init_form(URL . "admin.ajax.php/content/save/$content_id/", "post");
+
+            // INIT LANG
+            $installed_lang = DB::get_all( "SELECT * FROM ".DB_PREFIX."language ORDER BY position" );
+            
+            
+            foreach ($installed_lang as $lang)
+                $langs[$lang["lang_id"]] = $lang["language"];
+            if (!load_lang("admin." . $type["type"]))
+                $type["lang_index"] = "content";
+
+            // GET FIELD
+            $multilanguage_field_list = Content::get_content_type_fields($type_id, $only_published = true, $multilanguage = true);
+
+            // CREATE MULTILANGUAGE FIELD
+            foreach ($langs as $lang_id => $lang) {
+
+                // GET CONTENT
+                $content_row_lang = Content::get_content($content_id, $lang_id);
+
+                // PARAMS
+                $param_array = array("content_id" => $content_id, "content_id" => $content_row['content_id'], "css" => URL . THEMES_DIR . get_setting('theme') . '/css/style.css');
+
+                // CONTROL PANEL
+                $lang_icon = ( count($langs) > 1 ? "<a href=\"index.php?id=$content_id&lang_id=$lang_id\" class=\"tooltip\" title=\"" . get_msg("content_form_lang") . "\">" . $lang . " <img src=" . LANG_DIR . "$lang_id/$lang_id.gif></a>" : null );
+                $this->form->open_table("content_form_table", $lang_icon, "table");
+                $this->form->add_item("text", $lang_id . "_title", "content_form_title", "content_form_title_field", $content_row_lang['title'], LANG_ID == $lang_id ? "required" : null, $param_array);
+
+                if ($multilanguage_field_list)
+                    foreach ($multilanguage_field_list as $field) {
+
+                        //type_id, field_name, field_type, validation, command, param, layout, position, published
+                        extract($field);
+
+                        // PARAMS
+                        $param_array = array("content_id" => $content_id, "content_id" => $content_row['content_id'], "css" => URL . THEMES_DIR . get_setting('theme') . '/css/style.css');
+                        parse_str($param, $field_param_array);
+                        $param_array += $field_param_array;
+
+
+                        $input_layout = $layout ? $layout : "layout";
+                        $title = $type['lang_index'] . "_form_" . $name;
+                        $description = $type['lang_index'] . "_form_" . $name . "_field";
+                        $input_name = $lang_id . "_" . $name;
+                        $value = $content_row_lang[$name];
+
+                        $validation = LANG_ID == $lang_id ? $validation : null;
+
+                        switch ($field_type) {
+                            case 'date':
+                                $value = $value ? time_format($value, DATE_FORMAT_SIMPLE) : null;
+                                $param_array += array('dateFormat' => SDATE_FORMAT);
+                                break;
+                        }
+
+                        $this->form->add_item($field_type, $input_name, $title, $description, $value, $validation, $param_array, $input_layout);
+                    }
+
+
+                if ($type['tags_enabled'])
+                    $this->form->add_item("text", $lang_id . "_tags", "content_form_tags", "content_form_tags_field", $content_row_lang['tags'], null, $param_array);
+                $this->form->add_item("yes", $lang_id . "_published", "content_form_published", "content_form_published_field", $content_row_lang['published'], null, $param_array);   // pubblica si/no
+                $this->form->close_table();
+            }
+            // !CREATE MULTILANGUAGE FIELD
+            // CONTENT INFO
+            $this->form->open_table("content_form_table_info");
+
+
+            // Check if this content allow copy.
+            // Copy are usefull for example for products that can be added to more than one categories
+            // LINKED COPY
+            if ($type['linked_copy']) {
+
+
+                // LIST OF CONTENTS WHERE THIS CONTENT CAN BE COPIED
+                DB::get_all("SELECT id, title
+                                                            FROM " . DB_PREFIX . "content AS c
+                                                            WHERE type_id IN
+                                                            ( SELECT parent_id
+                                                            FROM " . DB_PREFIX . "content_type_tree AS t
+                                                            WHERE type_id = ? )
+                                                            ORDER BY c.position;", array($type['type_id']), "content_id", "title"
+                );
+
+                // LIST OF CONTENTS WHERE THIS CONTENT IS COPIED
+                $value = DB::get_all("SELECT parent_id, id
+                                                        FROM " . DB_PREFIX . "content
+                                                        WHERE content_id = ?", array($content_row['content_id']), "parent_id", "content_id"
+                );
+
+                $this->form->add_item("linked_copy", "linked_copy", "{$type['lang_index']}_form_linked_copy", "{$type['lang_index']}_form_linked_copy_field", $value, null, array('options' => $options, 'content_id' => $content_row['parent_id']), "row");
+            }
+            // LINKED COPY
+            // FIELD
+            $field_list = Content::get_content_type_fields($type_id, $only_published = true, $multilanguage = false);
+
+            if ($field_list) {
+
+                foreach ($field_list as $field) {
+
+                    //type_id, name, field_name, field_type, validation, command, param, layout, position, published
+                    extract($field);
+
+                    // PARAMS
+                    $param_array = array("content_id" => $content_id, "css" => URL . THEMES_DIR . get_setting('theme') . 'css/style.tinymce.css');
+                    parse_str($param, $field_param_array);
+                    $param_array += $field_param_array;
+
+
+                    $input_layout = $layout ? $layout : "layout";
+                    $title = $type['lang_index'] . "_form_" . $name;
+                    $description = $type['lang_index'] . "_form_" . $name . "_field";
+                    $input_name = $name;
+                    $value = $content_row[ $name ];
+
+                    switch ($field_type) {
+                        case 'date':
+                            $value = $value ? time_format($value, DATE_FORMAT_SIMPLE) : null;
+                            $param_array += array('dateFormat' => SDATE_FORMAT);
+                            break;
+                        case 'word':
+                            $param_array += array('css' => URL . VIEWS_DIR . 'aimg/style.tinymce.css', "content_id" => $content_row['content_id'], "module" => "content");
+                            break;
+                        case 'cover':
+                            $param_array += array('content_id' => $content_id, 'cover'=>$content_row['cover'], 'cover_thumbnail'=>$content_row['cover_thumbnail']);
+                    }
+
+                    $this->form->add_item($field_type, $input_name, $title, $description, $value, $validation, $param_array, $input_layout);
+                }
+            }
+            // FIELD
+            // PAGE LAYOUT
+
+            if ((count($layout_list = Content::get_layout_list()) > 1) && User::is_super_admin()) {
+
+                foreach ($layout_list as $content_id => $layout_row)
+                    $layout_list_temp[$content_id] = $layout_row['name'];
+                $layout_list = $layout_list_temp;
+                $this->form->add_item("select", "layout_id", "content_form_layout", "content_form_layout_field", $content_row['layout_id'], "required", array('options' => $layout_list));
+            } elseif (isset($layout_list[$content_row['layout_id']]))
+                $this->form->add_hidden("layout_id", $content_row['layout_id']);
+            else
+                $this->form->add_hidden("layout_id", LAYOUT_ID_GENERIC);
+            // PAGE LAYOUT
+            // CONTENT TEMPLATE
+            $template_index = THEMES_DIR . get_setting('theme') . "/" . ( $type['template_index'] ? $type['template_index'] : null );
+            $template_list_temp = glob($template_index . "*");
+            $strlen_index = strlen($template_index);
+
+            for ($i = 0, $template_list = array(); $i < count($template_list_temp); $i++) {
+                $l = file_name(substr($template_list_temp[$i], $strlen_index));
+                // i get all layout that has not "block." in the name
+                if (!preg_match('#^block\.#', $l) && !is_dir($template_list_temp[$i]))
+                    $template_list[$l] = $l;
+            }
+
+            if (count($template_list) > 1)
+                $this->form->add_item("select", "template", "content_form_template", "content_form_template_field", $content_row['template'], null, array('options' => $template_list));
+            else
+                $this->form->add_hidden("template", array_shift($template_list));
+
+            // CONTENT TEMPLATE
+            // MENU
+            if ($content_row['parent_id'] == 0)
+                $this->form->add_item("select", "menu_id", "content_form_menu", "content_form_menu_field", $content_row['menu_id'], null, array('options' => array(NO => get_msg("no"), PRINCIPAL_MENU_ID => get_msg("principal_menu"), SECONDARY_MENU_ID => get_msg("secondary_menu"))));
+            // MENU
+            // ACCESS
+            //$this->form->add_item( "select", "read_access", _CONTENT_form_READ_ACCESS_ , get_msg('CONTENT,CP,READ_ACCESS,FIELD,') ,$content_row['read_access'], null, array('options'=> $read_access = array( USER_UNREGISTERED => _USER_ALL_, USER_REGISTERED => _USER_REGISTERED_, USER_ADMIN => _USER_ADMIN_ ) ) );
+            // ACCESS
+            // SITEMAPS
+            if (User::is_super_admin()) {
+                global $changefreq;
+                foreach ($changefreq as $k => &$v) {
+                    if ($k == $type['changefreq'])
+                        $changefreq_array[$k] = $v . " &nbsp;&nbsp; (" . get_msg("default") . ")";
+                    else
+                        $changefreq_array[$k] = $v;
+                }
+                $this->form->add_item("select", "changefreq", "content_form_changefreq", "content_form_changefreq_field", $content_row['changefreq'], null, array('options' => $changefreq_array));
+
+                for ($i = 0.1; $i < 1.0; $i+= 0.1)
+                    if ("$i" == $type['priority'])
+                        $priority["$i"] = $i . " &nbsp;&nbsp; (" . get_msg("default") . ")";
+                    else
+                        $priority["$i"] = $i;
+
+                $this->form->add_item("select", "priority", "content_form_priority", "content_form_priority_field", $content_row['priority'], null, array('options' => $priority));
+            }
+            // SITEMAPS
+
+            $this->form->add_button("save");
+
+            $this->form->close_table();
+            // !CONTENT INFO
+
+            return $this->form->draw($ajax = true, $string = true);
+        }
+
         
         
         /**

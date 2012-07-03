@@ -152,7 +152,7 @@
                 var content_text = $('.rain_content_' + content_id + ' .content>.text' ).html();
                 var content_title = $('.rain_content_' + content_id + ' .content>.title' ).html();
                 var content_summary = $('.rain_content_' + content_id + ' .content>.summary' ).html();
-                $.post( ajax_file + "rain_edit/content_edit/"+content_id, {
+                $.post( ajax_file + "rain_edit/content_wysiwyg_update/"+content_id, {
                     title:content_title, 
                     content:content_text,
                     summary:content_summary
@@ -171,33 +171,13 @@
     function admin_toolbox( id, edit_mode, _control_panel_msg_, _edit_page_msg_ ){
 
         $("body").append( '<div id="toolbox"></div><div id="toolbox_user"></div>' );
-
         $('#toolbox').append( '<a href="'+admin_file+'" class="tooltip_popup logo" title="'+_control_panel_msg_+'"></a>' );
         //$('#toolbox').append( '<a href="'+admin_file+'" class="tooltip_popup" title="'+_control_panel_msg_+'">'+_control_panel_msg_+'</a>' );
-
-        if( edit_mode ){
-            $('#toolbox').append( '<a id="edit_mode_button" class="tooltip_popup edit_mode_off" title="Disable edit mode">Edit Mode off</a>' );
-            $('#toolbox').append( '<a href="'+admin_file+'Content/edit/'+id+'" class="tooltip_popup" title="'+_edit_page_msg_+'">'+_edit_page_msg_+'</a>' );
-            //$('#toolbox').append( '<a id="edit_mode_blocks" class="tooltip_popup" title="Show list of blocks">Blocks</a>' );
-            //$('#toolbox').append( '<a id="edit_mode_themes" class="tooltip_popup" title="Show list of Themes">Themes</a>' );
-            //$('#toolbox').append( '<a id="edit_mode_pages" class="tooltip_popup" title="Show list of Pages">Layout</a>' );
-            //$('#toolbox').append( '<a id="edit_mode_html" class="tooltip_popup" title="Edit HTML">Edit HTML</a>' );
-            $('#toolbox').append( '<a id="edit_mode_new_content" class="tooltip_popup" title="New Content">New Content</a>' );
-            $('#toolbox').append( '<a id="save_changes_button" class="tooltip_popup disabled" title="Enable/disable edit mode">Save Changes</a>' );
-
-        }
-        else{
-            $('#toolbox').append( '<a id="edit_mode_button" class="toolbox_popup tooltip_popup edit_mode_on" title="Disable edit mode">Edit Mode</a>' );
-            $('#toolbox').append( '<a href="'+admin_file+'Content/edit/'+id+'" class="tooltip_popup" title="'+_edit_page_msg_+'">'+_edit_page_msg_+'</a>' );
-            $('#toolbox').append( '<a id="edit_mode_new_content" class="tooltip_popup" title="New Content">New Content</a>' );
-        }
-
-        $('#edit_mode_button').click( function(){ 
-            if( edit_mode )
-                edit_mode_off(); 
-            else
-                edit_mode_on();
-        });
+        //$('#toolbox').append( '<a id="edit_mode_blocks" class="tooltip_popup" title="Show list of blocks">Blocks</a>' );
+        //$('#toolbox').append( '<a id="edit_mode_themes" class="tooltip_popup" title="Show list of Themes">Themes</a>' );
+        //$('#toolbox').append( '<a id="edit_mode_pages" class="tooltip_popup" title="Show list of Pages">Layout</a>' );
+        //$('#toolbox').append( '<a id="edit_mode_html" class="tooltip_popup" title="Edit HTML">Edit HTML</a>' );
+        $('#toolbox').append( '<a id="save_changes_button" class="tooltip_popup disabled" title="Enable/disable edit mode">Save Changes</a>' );
 
 
         $('#toolbox_user').append( 'Welcome <b>'+user_name+'</b> <a href="javascript:user_logout()">Sign out</a>' );
@@ -256,59 +236,6 @@
             })
         }
     });
-
-    $('#edit_mode_new_content').live( "click", function(){
-
-        $("html,body").css("overflow","hidden");
-        $('body').append('<div class="rain_popup new_content"><div class="rain_popup_bg"></div><div class="rain_popup_window"><div class="rain_popup_close"></div><h1 class="rain_popup_window_title">Add new content</h1><div class="rain_popup_window_content"></div></div>');
-        $('.rain_popup_bg').click( function(){
-            block_setting_close();
-        });
-        $('.rain_popup_close').click( function(){
-            block_setting_close();
-        });
-
-        $('.rain_popup').fadeIn("fast");
-
-        new_content_list();
-
-    });
-
-    function new_content_list(){
-
-        $.getJSON( ajax_file + "rain_edit/content_type_childs/" + content_id, function( type_childs ){
-
-            var html = 'New Content under: <div class="new_content_list"><ul>';
-            for( var i = 0, n=type_childs.length; i<n; i++ ){
-                html += '<li>'+type_childs[i].type+'</li>';
-            }
-            html += '</ul></div>';
-
-            $('.rain_popup_window_content').html( html );
-            $('.new_content_list li').click( function(){
-                parent_id=content_id;
-                new_content_setting( type_childs[$(this).index()].type_id, parent_id );
-            });
-        })
-
-
-        new_content_list_select();
-
-    }
-    
-    function new_content_list_select(){
-        $('.new_content_list').show();
-        $('.new_content_setting').hide();
-    }
-    
-    function new_content_setting_select(){
-        $('.new_content_list').hide();
-        $('.new_content_setting').show();
-        $('.rain_popup_window').width('600');
-        $('.rain_popup_window').height('400');
-        $('.rain_popup_window_content').css("height","auto");
-    }
-    
 
     function new_content_setting( type_id, parent_id ){
         if( !$('.new_content_setting').html() ){

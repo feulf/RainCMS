@@ -5,7 +5,6 @@
 
 var RainEdit = {
 
-
     // initialize all the button for Rain
     init: function(){
         $('.rain_new_content').live( "click", function(){
@@ -15,22 +14,22 @@ var RainEdit = {
             RainEdit.edit_mode();
         });
         $('.rain_edit_settings').live( "click", function(){
-            RainEdit.edit_settings();
+            RainEdit.advanced_editing();
+        });
+        $('.rain_user_sign_out').live( "click", function(){
+            RainEdit.sign_out();
         });
     },
-
 
     // load dynamically a script
     add_script: function( url ){
         $('<script type="text/javascript" src="' + url + '" />').appendTo('body');
     },
 
-
     // load dynamically a stylesheet
     add_css: function( url ){
         $('<link rel="stylesheet" type="text/css" href="' + url + '" />').appendTo('head');
     },
-
 
     // enable edit mode
     edit_mode: function(){
@@ -81,14 +80,21 @@ var RainEdit = {
 
     },
     
-    edit_settings: function(){
+    advanced_editing: function(){
         RainEdit.add_script( javascript_url + "jquery/jquery.form.min.js" );
         RainEdit.add_script( javascript_url + "jquery/jquery.validate.min.js" );
+
+        // get the type childs list
+        $.get( ajax_file + "rain_edit/content_edit/" + content_id, function( form ){
+            var html = '';
+            html += form;
+            html += '<hr><a href="javascript:RainEdit.delete_content()" class="btn btn-danger">Delete</a>';
+            RainPopup.html(html);
+        });
+        
+        RainPopup.init( "Settings" );
         
         
-        var html = '<a href="javascript:RainEdit.delete_content()" class="btn btn-danger">Delete</a>';
-        
-        RainPopup.init( "Settings", html );
     },
     
     delete_content: function(){
@@ -160,7 +166,7 @@ var RainPopup = {
     },
     popupClose: function(){
         $('.rain_popup').fadeOut("fast", function(){
-            $("html,body").css("overflow","scroll");
+            $("body").css("overflow","scroll");
             $(this).remove();
         })
     },
@@ -180,7 +186,7 @@ var RainPopup = {
         if( !html ) html = "";
         if( !width ) width = 500;
         if( !height ) height = 300;
-        $("html,body").css("overflow","hidden");
+        $("body").css("overflow","hidden");
         $('body').append('<div class="rain_popup new_content" id="'+this.id+'"><div class="rain_popup_bg"></div><div class="rain_popup_window"><div class="rain_popup_close"></div><h1 class="rain_popup_window_title">'+title+'</h1><div class="rain_popup_window_content">'+html+'</div></div>');
         $('.rain_popup_bg').click( function(){
             RainPopup.popupClose();

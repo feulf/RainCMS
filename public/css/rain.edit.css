@@ -16,7 +16,7 @@
     .rain_popup{width:100%;height:100%;position:fixed;z-index:10000;top:0;left:0;display:none;}
     .rain_popup .rain_popup_bg{background:#fff;opacity: 0.4;width:100%;height:100%;}
     .rain_popup .rain_popup_close{background:url(../img/rain/close_box.png) no-repeat center center;width:20px;height:20px;position:absolute;right:5px;top:5px;cursor:pointer;}
-    .rain_popup .rain_popup_window{margin:0 auto;width:400px;height:200px;position:absolute;background:#fff;top:50%;margin-top:-250px;left:50%;margin-left:-200px;border-radius: 5px;-moz-border-radius: 5px;-moz-box-shadow: 0 0 10px 1px #666;-webkit-box-shadow: 0 0 10px 1px #666;box-shadow: 0 0 10px 1px #666;}
+    .rain_popup .rain_popup_window{margin:0 auto;width:400px;position:absolute;background:#fff;top:50%;margin-top:-250px;left:50%;margin-left:-200px;border-radius: 5px;-moz-border-radius: 5px;-moz-box-shadow: 0 0 10px 1px #666;-webkit-box-shadow: 0 0 10px 1px #666;box-shadow: 0 0 10px 1px #666;}
     .rain_popup .rain_popup_window_inner{padding:20px;}
     .rain_popup input[type=submit]{clear:both;float:right;}
     .rain_popup .delete{position:absolute;bottom:20px;}
@@ -24,7 +24,7 @@
     .rain_popup.new_content {}
     .rain_popup.new_content .rain_popup_window{}
     .rain_popup.new_content .rain_popup_window_title{margin:20px 20px 0;}
-    .rain_popup.new_content .rain_popup_window_content{height:auto;overflow:scroll;margin: 5px;padding:20px}
+    .rain_popup.new_content .rain_popup_window_content{overflow:scroll;margin: 5px;padding:20px}
     .rain_popup.new_content .rain_popup_window_content input[type="text"], 
     .rain_popup.new_content .rain_popup_window_content textarea {width: 440px;}
     .rain_popup.new_content .rain_popup_window_content ul {list-style:none;padding:0;margin:0;}
