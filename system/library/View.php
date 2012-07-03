@@ -29,7 +29,7 @@ class View{
     // -------------------------
 
     // template object
-    protected static $view_obj;
+    private $view_obj;
 
 
 
@@ -41,10 +41,10 @@ class View{
      */
     function __construct(){
         require_once self::$library_dir . self::$view_class_dir . self::$view_class . '.php';
-        self::$view_obj = new self::$view_class();
-        self::$view_obj->configure( "tpl_dir", self::$tpl_dir );
-        self::$view_obj->configure( "cache_dir", self::$cache_dir );
-        self::$view_obj->configure( "base_url", self::$base_url );
+        $this->view_obj = new self::$view_class();
+        $this->view_obj->configure( "tpl_dir", self::$tpl_dir );
+        $this->view_obj->configure( "cache_dir", self::$cache_dir );
+        $this->view_obj->configure( "base_url", self::$base_url );
     }
 
     /**
@@ -52,7 +52,7 @@ class View{
      *
      */
     function assign( $variable, $value = null ){
-        self::$view_obj->assign( $variable, $value );
+        $this->view_obj->assign( $variable, $value );
     }
 
 
@@ -61,9 +61,8 @@ class View{
      *
      */
     function draw( $template, $return_string = false ){
-        return self::$view_obj->draw( $template, $return_string );
+        return $this->view_obj->draw( $template, $return_string );
     }
-
 
 
     /**
@@ -76,7 +75,6 @@ class View{
                 $this->configure( $key, $value );
         else if( property_exists( __CLASS__, $setting ) )
             self::$$setting = $value;
-        
     }
 
 
