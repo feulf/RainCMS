@@ -180,7 +180,7 @@
             db::query("DELETE FROM " . DB_PREFIX . "content WHERE content_id=?", array($content_id));
             
             //delete content event
-            db::query("DELETE FROM " . DB_PREFIX . "content_event_date WHERE content_id=?", array($content_id));
+            //db::query("DELETE FROM " . DB_PREFIX . "content_event_date WHERE content_id=?", array($content_id));
             
             Content::clean_cache( $content_id );
         }

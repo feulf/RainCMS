@@ -141,9 +141,22 @@
          * Type of content you can create in this page
          */
         function content_type_childs( $content_id ){
+            
             $content = Content::get_content($content_id);
-            $content_type_childs = Content::get_content_type_childs($content['type_id']);
-            echo json_encode( $content_type_childs );
+
+            // get all the content type I can add to the site
+            $site_type_childs = Content::get_content_type_childs( 1 );
+
+            $selected_content_type_childs = array();
+
+            // if the content is not root I load also the specific content type I can add to this node
+            if( $content['type_id'] == 1 || $content['parent_id'] != ROOT_ID ){
+                // get the type childs for this node
+                $selected_content_type_childs = Content::get_content_type_childs($content['type_id']);
+            }
+
+            
+            echo json_encode( array("parent_name"=>$content['title'],"type_childs"=>$site_type_childs, "selected_type_childs"=> $selected_content_type_childs ) );
         }
         
         
@@ -157,12 +170,16 @@
 
             if (!$parent_id)
                 $parent_id = 0;
-            elseif (!($parent = Content::get_content($parent_id)))
-                return false; // content not found
+            elseif (!($parent = Content::get_content($parent_id))){
+                echo json_encode( array("error"=>true, "message"=> "Content not found") ); // content not found
+                return false;
+            }
 
             // Get the type
-            if ( !$type = Content::get_content_type($type_id) )
-                return false; // type not found
+            if ( !$type = Content::get_content_type($type_id) ){
+                echo json_encode( array("error"=>true, "message"=> "Content not found") ); // type not found
+                return false;
+            }
 
             // Select the Template
             $template_index = THEMES_DIR . get_setting('theme') . "/" . ( $type['template_index'] ? $type['template_index'] : null );
@@ -222,10 +239,40 @@
                 "rel_id" => $parent_id, "rel_type" => "parent", 
                 "position" => $position ) );
 
-            $this->_content_set_path($content_id, $lang_id, $parent_path = null);
+            $path = $this->_content_set_path($content_id, $lang_id, $parent_path = null);
             
+            echo json_encode( array("success"=>true, "path"=>$path) );
             return true;
-        }       
+        }      
+        
+        
+        function content_delete($content_id){
+            
+            if( $content = Content::get_content($content_id) ){
+                
+                if( $content['parent_id'] > 0 )
+                    $content_parent = Content::get_content( $content['parent_id'] );
+
+                // sub contents
+                $childs = Content::get_childs($content_id, LANG_ID, null, null, $only_published = false);
+                for ($i = 0; $i < count($childs); $i++)
+                    $this->content_delete($childs[$i]['content_id'], LANG_ID);
+
+                // If there aren't any other content with same content_id I delete all the linked files
+                if (Content::file_count($content_id))
+                    $this->_file_delete_by_content_id($content_id);
+
+                // delete the content
+                Content::content_delete($content_id);
+                
+                if( $content['parent_id'] > 0 )
+                    // Path of the parent
+                    echo json_encode( array("success"=>true,"path"=>$content_parent['path']) );
+                else
+                    echo json_encode( array("success"=>true,"path"=>""));
+            }
+            
+        }
         
         
         /**
@@ -314,7 +361,10 @@
                 $content_list = Content::get_childs($content_id);
                 for ($i = 0; $i < count($content_list); $i++)
                     $this->_content_set_path($content_list[$i]['content_id'], $lang_id, $path);
+            
+                return $path;
             }
+            
         }
 
         /**
@@ -326,6 +376,26 @@
                     $this->_content_set_path($content_id, $lang_id);
         }
 
+        
+        //-------------------------------------------------------------
+        //
+        //                          Files
+        //
+        //-------------------------------------------------------------
+
+        // delete file by content id    
+        function _file_delete_by_content_id($content_id) {
+
+            // lista dei file
+            $file_list = db::get_all("SELECT * 
+                                      FROM " . DB_PREFIX . "file 
+                                      WHERE rel_id=? AND module='content'", array($content_id)
+            );
+
+            for ($i = 0; $i < count($file_list); $i++)
+            // cancello i file
+                Content::file_delete($file_list[$i]['file_id']);
+        }
         
         //-------------------------------------------------------------
         //
