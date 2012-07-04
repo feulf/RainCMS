@@ -1,3 +1,14 @@
+    function _init(){
+        block_sortable( content_id )
+        init_aloha();
+        menu_sortable();
+    }
+    
+    $(function(){
+        _init();
+    });
+
+
     // init aloha editor
     function init_aloha(){
         var $ = Aloha.jQuery;
@@ -112,6 +123,10 @@
     // reload one selected block
     function block_refresh(){
         window.location.reload();
+    }
+    
+    function menu_sortable(){
+        $('.nav').sortable({ opacity: 0.3 });
     }
 
     function enable_save_changes_button(){

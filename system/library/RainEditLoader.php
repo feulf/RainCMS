@@ -55,16 +55,13 @@
 
                 // aloha
                 add_script("rain/aloha-config.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
-                add_script("aloha/lib/aloha.js", JAVASCRIPT_DIR, JAVASCRIPT_URL, array("data-aloha-plugins" => "common/format,common/highlighteditables,common/list,common/link,common/undo,common/paste,common/block"));
+                add_script("aloha/lib/aloha.js", JAVASCRIPT_DIR, JAVASCRIPT_URL, array("data-aloha-plugins" => "common/format,common/highlighteditables,common/list,common/link,common/undo,common/paste,common/image"));
                 add_style("aloha/css/aloha.css", JAVASCRIPT_DIR, JAVASCRIPT_URL);
 
                 add_script('jquery.form.min.js', JQUERY_DIR, JQUERY_URL);   // form
 
-                add_javascript("init_aloha();", $on_load = true);
-
                 // block sort
                 add_script('ui/jquery-ui-1.8.16.custom.js', JQUERY_DIR, JQUERY_URL); // all jquery ui
-                add_javascript("block_sortable( '{$this->content_id}' );", $onload = true);
             }
         }
         
