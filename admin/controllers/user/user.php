@@ -6,7 +6,7 @@
 
     // add javascript
     add_script("jquery.validate.min.js", JQUERY_DIR, JQUERY_URL);
-    add_script("jquery.form.js", JQUERY_DIR, JQUERY_URL);
+    add_script("jquery.form.min.js", JQUERY_DIR, JQUERY_URL);
     add_script('user.js', ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
 
     // add style

@@ -167,7 +167,7 @@
         function account_edit($user_id, $group_id = null) {
 
             add_script("jquery.validate.min.js", JQUERY_DIR, JQUERY_URL);
-            add_script("jquery.form.js", JQUERY_DIR, JQUERY_URL);
+            add_script("jquery.form.min.js", JQUERY_DIR, JQUERY_URL);
 
             $user_localization = $user = array();
             if (!($user_id > 0))

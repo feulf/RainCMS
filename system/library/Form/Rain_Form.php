@@ -157,7 +157,7 @@
 
             if ($ajax) {
                 // add ajax jquery script
-                add_script("jquery.form.js", JQUERY_DIR, JQUERY_URL);
+                add_script("jquery.form.min.js", JQUERY_DIR, JQUERY_URL);
                 $ajax = file_get_contents(self::$form_dir . "Form/tpl/{$this->layout_name}/ajax.js");
                 $ajax = str_replace('{$name}', $this->name, $ajax);
             }
