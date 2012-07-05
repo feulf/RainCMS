@@ -248,9 +248,9 @@
             // assign all variable
             $tpl->assign($this->layout_vars);
 
-            // - HEAD ------
-            $tpl->assign("head", get_style() . get_javascript());
-            $tpl->assign("foot", get_javascript_onload());
+            // - HEAD & FOOT ------
+            $tpl->assign("head", get_style() ); // style on the header
+            $tpl->assign("foot", get_javascript() . get_javascript_onload() ); // all javascript in the footer
 
             // - LOAD AREA ----
             // wrap all the blocks in a load area
