@@ -172,11 +172,12 @@
                 $priority = $content_row['priority'];
             }
 
+            /*
             // delete event date table
             DB::query( "DELETE FROM ".DB_PREFIX."content_event_date
                         WHERE content_id=?", 
                         array($content_id) );
-            
+            */
             // check if there're new events
             if( $start_date ){
 
@@ -189,11 +190,14 @@
                         $end_time = mktime( 0, 0, 0, substr($date,0,2), substr($date,3,2), substr($date,6,4) );
                     }
                     
+                    /*
                     DB::query("INSERT INTO ".DB_PREFIX."content_event_date
                                         (content_id, start_time, end_time)
                                VALUES   (:content_id, :start_time, :end_time )",
                                array( ":content_id"=>$content_id, ":start_time"=>$start_time, ":end_time"=>$end_time )
                             );
+                     * 
+                     */
                 }
                 
             }
