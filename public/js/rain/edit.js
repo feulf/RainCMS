@@ -1,5 +1,14 @@
+var RainEdit = {
+    
+    // init all the tools to edit page
+    init: function(){
+        this._init_aloha();
+        this._init_block_sortable();
+        this._init_toolbox();
+    },
+
     // init aloha editor
-    function init_aloha(){
+    _init_aloha: function(){
         var $ = Aloha.jQuery;
         $('.content>.text, .content>.summary, .content>.title').aloha();
         $('.content>.text, .content>.summary, .content>.title').keyup(function(e){
@@ -11,7 +20,7 @@
                 case 40: // Down
                     break;
                 default:
-                    enable_save_changes_button();
+                    RainEdit.enable_save_changes_button();
             }
         });
 
@@ -19,10 +28,10 @@
             $('.aloha-sidebar-bar').fadeOut();
         }, 600 );
 
-    }
-
+    },
+    
     // Enable order content list
-    function block_sortable( content_id ){
+    _init_block_sortable: function ( content_id ){
         $(".rain_load_area_edit_content").each(function(){
             $(this).sortable({
                 opacity: 0.5,
@@ -32,18 +41,73 @@
                 scroll: true,
                 cancel: "#rain_block_main",
                 update: function( i ){
-                    enable_save_changes_button();
+                    RainEdit.enable_save_changes_button();
                     init_aloha();
                 }
             });
         });
 
-    }
+    },
+    
+    
+    _init_buttons: function(){
+        $('#edit_mode_html').live( "click", function(){
+            RainEdit.edit_mode_load_html();
+        });
 
-    function block_delete( block_id ){
+        $('#edit_mode_blocks').live( "click", function(){
+            if( $('#toolbox .block_list').css('display') == 'block' ){
+                $('#toolbox .block_list').fadeOut(function(){
+                    $(this).remove();
+                });
+            }
+            else{
+                $('#toolbox').append('<div class="toolbox_popup block_list rain_load_area_edit_content" id="rain_load_area-disabled"><div class="close"></div></div>');
+                $('#toolbox .block_list').css('display','none').fadeIn();
+                RainEdit.edit_mode_load_blocks();
+                $('#toolbox .block_list .close').click(function(){
+                    $('#toolbox .tooltip_popup').remove();
+                })
+            }
+        });
+
+        $('#edit_mode_themes').live( "click", function(){
+            if( $('#toolbox .theme_list').css('display') == 'block' ){
+                $('#toolbox .theme_list').fadeOut(function(){
+                    $(this).remove();
+                });
+            }
+            else{
+                $('#toolbox').append('<div class="toolbox_popout theme_list"><div class="close"></div></div>');
+                $('#toolbox .theme_list').css('display','none').fadeIn();
+                RainEdit.edit_mode_load_themes();
+                $('#toolbox .theme_list .close').click(function(){
+                    $('#toolbox .theme_list').remove();
+                })
+            }
+        });
+
+        $('#edit_mode_pages').live( "click", function(){
+            if( $('#toolbox .page_list').css('display') == 'block' ){
+                $('#toolbox .page_list').fadeOut(function(){
+                    $(this).remove();
+                });
+            }
+            else{
+                $('#edit_mode_pages').append('<div class="toolbox_popout page_list"><div class="close"></div></div>');
+                $('#toolbox .page_list').css('display','none').fadeIn();
+                RainEdit.edit_mode_load_pages();
+                $('#toolbox .page_list .close').click(function(){
+                    $('#toolbox .page_list').remove();
+                })
+            }
+        });
+    },
+    
+    block_delete: function ( block_id ){
 
         if( confirm( "Are you sure you want to delete this block?" ) ){
-            block_setting_close();
+            RainEdit.block_setting_close();
             $.post( ajax_file + "rain_edit/block_delete/" + block_id, function( result ){
                 $('#rain_block_' + block_id).slideUp(function(){
                     $(this).remove();
@@ -51,18 +115,18 @@
             });
 
         }
-    }
+    },
 
-    function block_setting( block_id ){
+    block_setting: function ( block_id ){
 
         $('#rain_block_'+block_id).addClass("selected");
 
         $('body').append('<div class="rain_popup"><div class="rain_popup_bg"></div><div class="rain_popup_window"><div class="rain_popup_close"></div><div class="rain_popup_window_inner"><h1 class="rain_popup_window_title"></h1><div class="rain_popup_window_content"></div></div></div>');
         $('.rain_popup_bg').click( function(){
-            block_setting_close();
+            RainEdit.block_setting_close();
         })
         $('.rain_popup_close').click( function(){
-            block_setting_close();
+            RainEdit.block_setting_close();
         })
 
         $('.rain_popup').fadeIn("fast");
@@ -93,40 +157,41 @@
             $('.rain_popup_window_content').html( html );
 
             $('#block_settings').ajaxForm( function(){
-                block_refresh();
+                RainEdit.block_refresh();
             })
 
         });
 
-    }
-
-    function block_setting_close(block_id){
+    },
+    
+    // close the block settings
+    block_setting_close: function (block_id){
         $('.rain_block_edit').removeClass("selected");
         $('.rain_popup').fadeOut("fast", function(){
             $("html,body").css("overflow","scroll");
             $(this).remove();
         })
-    }
-
-
+    },
+    
     // reload one selected block
-    function block_refresh(){
+    block_refresh: function (){
         window.location.reload();
-    }
-
-    function enable_save_changes_button(){
+    },
+    
+    enable_save_changes_button: function (){
         $('#save_changes_button').removeClass('disabled').addClass('on').unbind('click').click( function(){
-            save_changes();
+            RainEdit.save_changes();
         })
-    }
+    },
 
-    function disable_save_changes_button(){
+    disable_save_changes_button: function (){
         $('#save_changes_button').removeClass('on').addClass('disabled').unbind('click');
-    }
-
+    },
+    
+    
     // save the change of the page
-    function save_changes(){
-        disable_save_changes_button();
+    save_changes: function (){
+        RainEdit.disable_save_changes_button();
 
         // save the position of the blocks
         $(".rain_load_area_edit_content").each( function(i){
@@ -138,7 +203,7 @@
                 sortable:sortedList
             }, function(){
 
-                });
+            });
         })
 
         // save the content of the blocks
@@ -166,12 +231,11 @@
 
         })
 
-    }
-    var edit_mode
-    function admin_toolbox( id, edit_mode, _control_panel_msg_, _edit_page_msg_ ){
-
+    },
+    
+    _init_toolbox: function (){
         $("body").append( '<div id="toolbox"></div><div id="toolbox_user"></div>' );
-        $('#toolbox').append( '<a href="'+admin_file+'" class="tooltip_popup logo" title="'+_control_panel_msg_+'"></a>' );
+        $('#toolbox').append( '<a href="'+admin_file+'" class="tooltip_popup logo"></a>' );
         //$('#toolbox').append( '<a href="'+admin_file+'" class="tooltip_popup" title="'+_control_panel_msg_+'">'+_control_panel_msg_+'</a>' );
         //$('#toolbox').append( '<a id="edit_mode_blocks" class="tooltip_popup" title="Show list of blocks">Blocks</a>' );
         //$('#toolbox').append( '<a id="edit_mode_themes" class="tooltip_popup" title="Show list of Themes">Themes</a>' );
@@ -182,67 +246,14 @@
 
         $('#toolbox_user').append( 'Welcome <b>'+user_name+'</b> <a href="javascript:user_logout()">Sign out</a>' );
 
-    }
-
-
-    $('#edit_mode_html').live( "click", function(){
-        edit_mode_load_html();
-    });
-
-    $('#edit_mode_blocks').live( "click", function(){
-        if( $('#toolbox .block_list').css('display') == 'block' ){
-            $('#toolbox .block_list').fadeOut(function(){
-                $(this).remove();
-            });
-        }
-        else{
-            $('#toolbox').append('<div class="toolbox_popup block_list rain_load_area_edit_content" id="rain_load_area-disabled"><div class="close"></div></div>');
-            $('#toolbox .block_list').css('display','none').fadeIn();
-            edit_mode_load_blocks();
-            $('#toolbox .block_list .close').click(function(){
-                $('#toolbox .tooltip_popup').remove();
-            })
-        }
-    });
-
-    $('#edit_mode_themes').live( "click", function(){
-        if( $('#toolbox .theme_list').css('display') == 'block' ){
-            $('#toolbox .theme_list').fadeOut(function(){
-                $(this).remove();
-            });
-        }
-        else{
-            $('#toolbox').append('<div class="toolbox_popout theme_list"><div class="close"></div></div>');
-            $('#toolbox .theme_list').css('display','none').fadeIn();
-            edit_mode_load_themes();
-            $('#toolbox .theme_list .close').click(function(){
-                $('#toolbox .theme_list').remove();
-            })
-        }
-    });
-
-    $('#edit_mode_pages').live( "click", function(){
-        if( $('#toolbox .page_list').css('display') == 'block' ){
-            $('#toolbox .page_list').fadeOut(function(){
-                $(this).remove();
-            });
-        }
-        else{
-            $('#edit_mode_pages').append('<div class="toolbox_popout page_list"><div class="close"></div></div>');
-            $('#toolbox .page_list').css('display','none').fadeIn();
-            edit_mode_load_pages();
-            $('#toolbox .page_list .close').click(function(){
-                $('#toolbox .page_list').remove();
-            })
-        }
-    });
-
-    function new_content_setting( type_id, parent_id ){
+    },
+    
+    new_content_setting: function( type_id, parent_id ){
         if( !$('.new_content_setting').html() ){
             var html = '<div class="new_content_setting"><a href="javascript:new_content_list_select();">Back</a><div class="content_form"></div></div>';
             $('.rain_popup_window_content').append( html );
         }
-        new_content_setting_select();
+        RainEdit.new_content_setting_select();
 
         html = '<form action="'+ajax_file+'rain_edit/content_new/'+parent_id+'/" method="post">';
         html += '<input type="hidden" name="type_id" value="'+type_id+'">';
@@ -253,9 +264,9 @@
         
         $('.content_form').html( html)
         
-    }
+    },
 
-    function toolbox_position(){
+    toolbox_position: function(){
         if( $("#toolbox").css('top') == "0px" ){
             $("#toolbox").css("bottom", "0px" )
             $("#toolbox").css("top", null );
@@ -264,9 +275,9 @@
             $("#toolbox").css("top", "0px" )
             $("#toolbox").css("bottom", null );
         }
-    }
+    },
 
-    function edit_mode_load_blocks(){
+    edit_mode_load_blocks: function(){
 
         $.getJSON( ajax_file + "rain_edit/block_list", {
             id:id
@@ -286,16 +297,16 @@
             }
 
             $('#toolbox .block_list').html( html );
-            block_sortable( id );
+            RainEdit._init_block_sortable();
         })
 
 
-    //$('#toolbox .block_list').append('<div class="rain_block_edit rain_block_editable rain_content_0" id="rain_block_0"><div class="rain_block_edit_title">Drag Me!</div><div class="rain_block_content"><div class="content"><div class="text">Woohoo, you can edit this content!</div></div></div></div>');
+        //$('#toolbox .block_list').append('<div class="rain_block_edit rain_block_editable rain_content_0" id="rain_block_0"><div class="rain_block_edit_title">Drag Me!</div><div class="rain_block_content"><div class="content"><div class="text">Woohoo, you can edit this content!</div></div></div></div>');
 
-    }
+    },
 
 
-    function edit_mode_load_themes(){
+    edit_mode_load_themes: function(){
         $('#toolbox .theme_list').html('');
         $.getJSON( ajax_file + "rain_edit/themes_list", function(themes){
             var html = '';
@@ -314,10 +325,10 @@
             $('#toolbox .theme_list').html( html );
 
         })
-    }
+    },
 
 
-    function edit_mode_load_pages(){
+    edit_mode_load_pages: function(){
         $('#toolbox .page_list').html('');
         $.getJSON( ajax_file + "rain_edit/pages_list", function(pages){
             var html = '';
@@ -336,29 +347,27 @@
 
 
         })
-    }
+    },
 
 
-    function edit_mode_load_html(){
+    edit_mode_load_html: function(){
         $('#toolbox .page_list').html('');
         $.get( ajax_file + "rain_edit/get_layout_html/"+selected_theme+"/"+selected_layout, function(html){
-
             alert( html );
-
         })
-    }
+    },
 
 
-    function theme_preview( theme_id, url ){
+    theme_preview: function( theme_id, url ){
         $.get( admin_ajax_file + "configure/languages/", {
             cp:"themes/preview", 
             theme_id: theme_id
         }, function( html ){
             window.location = url;
         });
-    }
+    },
 
-    function theme_set( theme_id ){
+    theme_set: function( theme_id ){
 
         $.get( admin_ajax_file + "configure/set_theme/" + theme_id, function(h){
             $('.thumbnail>a>img').attr('class','thumb_image');
@@ -366,9 +375,9 @@
             $('#t_'+theme_id+'').addClass('selected');
             window.location.reload();
         });
-    }
+    },
 
-    function page_set( layout_id ){
+    page_set: function( layout_id ){
 
         $.get( ajax_file + "rain_edit/set_layout/" + id + "/" + layout_id, function(h){
             $('.page_block').removeClass('selected');
@@ -376,3 +385,4 @@
             window.location.reload();
         });
     }
+};

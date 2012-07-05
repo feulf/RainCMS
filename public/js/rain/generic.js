@@ -3,21 +3,21 @@
  * generic.js contains all the generic function that are called in all templates
  */
 
-var RainEdit = {
+var Rain = {
 
     // initialize all the button for Rain
     init: function(){
         $('.rain_new_content').live( "click", function(){
-            RainEdit.new_content();
+            Rain.new_content();
         });        
         $('.rain_edit_content').live( "click", function(){
-            RainEdit.edit_mode();
+            Rain.edit_mode();
         });
         $('.rain_edit_settings').live( "click", function(){
-            RainEdit.advanced_editing();
+            Rain.advanced_editing();
         });
         $('.rain_user_sign_out').live( "click", function(){
-            RainEdit.sign_out();
+            Rain.sign_out();
         });
     },
 
@@ -47,8 +47,8 @@ var RainEdit = {
     new_content: function(){
         
         // load scripts
-        RainEdit.add_script( javascript_url + "jquery/jquery.form.min.js" );
-        RainEdit.add_script( javascript_url + "jquery/jquery.validate.min.js" );
+        Rain.add_script( javascript_url + "jquery/jquery.form.min.js" );
+        Rain.add_script( javascript_url + "jquery/jquery.validate.min.js" );
         
         // load the popup
         RainPopup.init( "new content" );
@@ -64,12 +64,12 @@ var RainEdit = {
             html += '<div class="new_content_list"><ul>';
             if( selected_type_childs ){
                 for( var i = 0, n=selected_type_childs.length; i<n; i++ ){
-                    html += '<li onclick="RainEdit._new_content_setting('+type_childs[i].type_id+','+content_id+' )">'+parent_name+' &gt; '+selected_type_childs[i].type+'</li>';
+                    html += '<li onclick="Rain._new_content_setting('+type_childs[i].type_id+','+content_id+' )">'+parent_name+' &gt; '+selected_type_childs[i].type+'</li>';
                 }
             }
 
             for( var i = 0, n=type_childs.length; i<n; i++ ){
-                html += '<li onclick="RainEdit._new_content_setting('+type_childs[i].type_id+',0 )">'+type_childs[i].type+'</li>';
+                html += '<li onclick="Rain._new_content_setting('+type_childs[i].type_id+',0 )">'+type_childs[i].type+'</li>';
             }
             html += '</ul></div>';
 
@@ -81,14 +81,14 @@ var RainEdit = {
     },
     
     advanced_editing: function(){
-        RainEdit.add_script( javascript_url + "jquery/jquery.form.min.js" );
-        RainEdit.add_script( javascript_url + "jquery/jquery.validate.min.js" );
+        Rain.add_script( javascript_url + "jquery/jquery.form.min.js" );
+        Rain.add_script( javascript_url + "jquery/jquery.validate.min.js" );
 
         // get the type childs list
         $.get( ajax_file + "rain_edit/content_edit/" + content_id, function( form ){
             var html = '';
             html += form;
-            html += '<hr><a href="javascript:RainEdit.delete_content()" class="btn btn-danger">Delete</a>';
+            html += '<hr><a href="javascript:Rain.delete_content()" class="btn btn-danger">Delete</a>';
             RainPopup.html(html);
         });
         
@@ -111,7 +111,7 @@ var RainEdit = {
 
     _new_content_setting: function ( type_id, parent_id ){
         if( !$('.new_content_setting').html() ){
-            var html = '<div class="new_content_setting"><a href="javascript:RainEdit.new_content_list_select();">Back</a><div class="content_form"></div></div>';
+            var html = '<div class="new_content_setting"><a href="javascript:Rain.new_content_list_select();">Back</a><div class="content_form"></div></div>';
             RainPopup.append( html );
         }
         $('.new_content_list').hide();
@@ -145,14 +145,14 @@ var RainEdit = {
     
 };
 
-
 // init Rain
-RainEdit.init();
+Rain.init();
 
+//
 var RainPopup = {
     id:0,
     init: function( title, html ){
-        RainEdit.add_css( css_url + "rain.edit.css" );
+        Rain.add_css( css_url + "rain.edit.css" );
         this._loadPopup(title, html);
         this.id = "rain_popup_" + (new Date().getTime());
     },
