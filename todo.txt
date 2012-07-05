@@ -1,11 +1,11 @@
 Todo:
 
-- "Add Content" and "Edit content settings" button
 - "Add Block" and "Edit block settings" button
 - Edit mode accessible to all users to create different revisions (like wiki)
 - Content editable: images and content on the theme should be editable as well
-- Menu editable, menu should be editable from the front end
+- Menu editable, menu should be editable from the front end (check branch menu_sort)
 - File module to see the list of files uploaded
+- Drag and drop to add image in the text
 - Add sitemap on toolbar, site map should drag and drop nodes
 - Installer module
 - Change Aloha with Etch
