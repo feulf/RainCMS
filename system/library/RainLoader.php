@@ -278,11 +278,17 @@
             // add javascript
             add_script("jquery.min.js", JQUERY_DIR, JQUERY_URL);
             add_script("rain/generic.js", JAVASCRIPT_DIR, JAVASCRIPT_URL );
-            add_javascript("var url='" . URL . "';");
-            add_javascript("var css_url='" . CSS_URL . "';");
-            add_javascript("var javascript_url='" . JAVASCRIPT_URL . "';");
-            add_javascript("var ajax_file='" . AJAX_URL . "';");
+            
+            // urls
+            add_javascript("var url             ='" . URL . "';");
+            add_javascript("var css_url         ='" . CSS_URL . "';");
+            add_javascript("var javascript_url  ='" . JAVASCRIPT_URL . "';");
+            add_javascript("var ajax_file       ='" . AJAX_URL . "';");
+            add_javascript("var admin_file      ='" . ADMIN_FILE_URL . "';");
+            
+            // variables
             add_javascript("var content_id='" . $this->content_id . "';");
+
             
         }
 

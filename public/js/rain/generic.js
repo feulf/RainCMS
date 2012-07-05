@@ -81,20 +81,7 @@ var Rain = {
     },
     
     advanced_editing: function(){
-        Rain.add_script( javascript_url + "jquery/jquery.form.min.js" );
-        Rain.add_script( javascript_url + "jquery/jquery.validate.min.js" );
-
-        // get the type childs list
-        $.get( ajax_file + "rain_edit/content_edit/" + content_id, function( form ){
-            var html = '';
-            html += form;
-            html += '<hr><a href="javascript:Rain.delete_content()" class="btn btn-danger">Delete</a>';
-            RainPopup.html(html);
-        });
-        
-        RainPopup.init( "Settings" );
-        
-        
+        window.location.href = admin_file + 'content/edit/'+content_id;
     },
     
     delete_content: function(){
