@@ -1,0 +1,36 @@
+
+	.edit_mode_load_area				{ min-width: 100px; min-height: 100px; }
+	.edit_mode_load_area:hover			{ background: #fff9ee; }
+
+	.edit_mode_load_area_header			{ height: 14px; padding: 5px; }
+	.edit_mode_load_area_title			{ font-size: 11px; font-family: arial; color: #666; float: left; }
+	.edit_mode_load_area_buttons		{ float: right; }
+	.edit_mode_load_area_content		{ min-height: 100px; min-width: 100px; margin: 0px; padding: 0px; }
+
+	.edit_mode_block					{ list-style: none; margin: 0px; padding: 0px; }
+	.edit_mode_block_header				{ border:1px solid #99cc66; background:#eeffee;margin-bottom:20px;padding:5px; -moz-border-radius: 3px; -webkit-border-radius:3px; overflow: auto; cursor: move; }
+	.edit_mode_block_title				{ font-size: 11px; font-family: arial; color: #333; float: left; }
+	.edit_mode_block_buttons			{ float: left; margin-right:5px; }
+	.edit_mode_block_del_button			{ float: right; }
+	.edit_mode_block_content			{ }
+
+	.edit_mode_helper					{ border: 2px solid #ff9900; background: red; }
+
+	
+	.edit_mode_block_global	.edit_mode_block_header		{ border-color: #bbccbb; background: #eeffee; }
+	.edit_mode_block_in_content	.edit_mode_block_header	{ border-color: #ccbbdd; background: #f3eeff; }
+	.edit_mode_block_in_page .edit_mode_block_header	{ border-color: #ccbbdd; background: #f3eeff; }
+	.edit_mode_block_content .edit_mode_block_header	{ border-color: #eecccc; background: #ffeeee; }
+
+
+/* TOOLTIP */
+
+	#tooltip 								{ position: absolute; z-index: 3000; border: 1px solid #cccccc; background: #f6f6f6; padding: 10px 15px 10px 15px; -moz-border-radius: 5px; -webkit-border-radius:5px; line-height: 16px; font-size:11px; }
+	#tooltip h3								{ font-size: 11px; margin: 0px; }
+	
+	
+	
+/* TOOLBOX */
+	#toolbox								{ position: fixed; bottom: 0px; right: 20px; border: 1px solid #ccc; border-right: 0px; background: #eee url('../img/menu.gif') repeat-x; height: 25px; color: #333; font-size: 12px; }
+	#toolbox a								{ display: block; padding: 5px 10px 4px 10px; float: left; color: #333; text-decoration: none; border-left: 1px solid #fff; border-right: 1px solid #bbb; outline-style: none;}
+	#toolbox a:hover						{ background: #f6f6f6; padding: 5px 9px 3px 11px;  border-left: 1px solid #ccc; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; }

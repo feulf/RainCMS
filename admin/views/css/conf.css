@@ -1,0 +1,13 @@
+/* Content */
+#content_type{padding:20px;}
+
+/* Content */
+#content_left{float:left;width:200px;border-right:solid 1px #dddddd;padding:20px 0px 20px 0px;margin-left:20px;}
+#content_main{margin:0px 0px 0px 220px;padding:20px;}
+#content_main ul, #content_main li{list-style:none;}
+#content_path{font-size:11px;}
+#content_path a{color:#000;}
+#content_title{font-size:18px;display:inline;}
+
+#content_main ul{}
+#content_main ul li{}

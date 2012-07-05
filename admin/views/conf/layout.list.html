@@ -1,0 +1,77 @@
+<div class="padding_20">
+
+<script>
+
+	$(document).ready( function(){
+
+		$.validator.messages.required 	= "{"necessary_field"|get_msg}";
+		$.validator.messages.email 		= "{"email_field"|get_msg}";
+		
+		$("#layout_list").validate({
+			debug:true,
+			submitHandler: function(form){
+				$('#layout_list_loading').fadeIn('fast')
+				$('#layout_list').hide()
+				$('#form_result').html('').fadeOut()
+				$(form).ajaxSubmit({
+					target: '#form_result',
+					complete:function( dataxml ){
+						$('#layout_list_loading').hide()
+						$('#layout_list').fadeIn('slow')
+						$('#form_result').hide().fadeIn('slow')
+					},
+				});
+			}
+		});
+		
+	});
+	
+	function edit_mode(layout_id){
+		$.get("admin.server.php", {module:"conf",cp:"page/edit_mode_on",layout_id:layout_id}, function(data){ window.location='index.php?layout_id='+layout_id; });
+	}
+	
+</script>
+<!--
+
+	<div id="box_info" class="box box_info">
+	New Page Layout<br/>
+		<form name="content_new" action="admin.server.php" method="get" style="display:inline" class="cpForm">
+									<input type="hidden" name="module" value="content"/>
+									<input type="hidden" name="cp" value="content/new"/>
+									<input type="text" name="title" value="Layout Name"/>
+									<select name="type_id">
+									{loop="template_list"}
+										<option value="{$key}">{$value}</option>
+									{/loop}
+									</select>
+			<button>{"send"|get_msg}</button>
+		</form>
+	</div>
+-->
+
+	{if="$layout_list"}
+	<div id="list">
+	
+		<div id="form_result" style="display:none;"></div>
+		<div id="layout_list_loading" style="display:none;"><img src="../aimg/loading.gif" alt="loading"/>Loading</div>
+	
+		<form name="layout_list" id="layout_list" action="admin.server.php" method="POST">
+			<input type="hidden" name="page" value="conf">
+			<input type="hidden" name="cp" value="page/save">
+	
+			<ul class="list" id="sortable">	
+	
+	        {loop="layout_list"}
+				<li class="row{$counter%2+1}" id="i_{$value.layout_id}">
+					<div class="edit"><input type="hidden" name="page[{$value.layout_id}][name]" value="{$value.name}"><a href="#"><img src="../aimg/edit.gif#"/></a></div>
+					<div class="title"><a href="javascript:edit_mode({$value.layout_id})">{$value.name}</a></div> 
+				</li>
+	        {/loop}
+	    	</ul>
+	    	<br>
+	    	<div align="right"><button>{"save"|get_msg}</button></div>
+			</form>
+	</div>
+	{/if}
+
+</div>
