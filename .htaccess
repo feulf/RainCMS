@@ -54,6 +54,15 @@ AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css a
 
     ErrorDocument 404 /github/raincms2/index.php?path=not_found
 
+
+
+# Back-end ---
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{QUERY_STRING} (.*)
+    RewriteRule ^admin(.*)$ admin.php$1?%1 [L]
+
+
 # Front-end ---
 
     # search
