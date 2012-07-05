@@ -44,28 +44,23 @@
 
             add_javascript($js);
 
+            // aloha
+            add_script( "rain/aloha-config.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
+            add_script( "aloha/lib/aloha.js",   JAVASCRIPT_DIR, JAVASCRIPT_URL, array("data-aloha-plugins" => "common/format,common/highlighteditables,common/list,common/link,common/undo,common/paste,common/block"));
+            add_style(  "aloha/css/aloha.css",  JAVASCRIPT_DIR, JAVASCRIPT_URL);
+            
+
+            // block sort
+            add_script('ui/jquery-ui-1.8.16.custom.js', JQUERY_DIR, JQUERY_URL); // all jquery ui
 
             // jquery
             add_style("rain.edit.css", CSS_DIR, CSS_URL);
             add_script("rain/edit.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
-
-            add_javascript("admin_toolbox( {$this->content_id}, '{$this->edit_mode}', '" . get_msg("control_panel") . "', '" . get_msg("edit_page") . "' )", $onload = true);
             
-            if ($this->edit_mode) {
+            add_javascript("RainEdit.init();");
 
-                // aloha
-                add_script("rain/aloha-config.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
-                add_script("aloha/lib/aloha.js", JAVASCRIPT_DIR, JAVASCRIPT_URL, array("data-aloha-plugins" => "common/format,common/highlighteditables,common/list,common/link,common/undo,common/paste,common/block"));
-                add_style("aloha/css/aloha.css", JAVASCRIPT_DIR, JAVASCRIPT_URL);
 
-                add_script('jquery.form.min.js', JQUERY_DIR, JQUERY_URL);   // form
 
-                add_javascript("init_aloha();", $on_load = true);
-
-                // block sort
-                add_script('ui/jquery-ui-1.8.16.custom.js', JQUERY_DIR, JQUERY_URL); // all jquery ui
-                add_javascript("block_sortable( '{$this->content_id}' );", $onload = true);
-            }
         }
         
         function block($block) {
