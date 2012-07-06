@@ -597,7 +597,9 @@
         static function get_module_list() {
             return db::get_all("SELECT *
                                 FROM " . DB_PREFIX . "module m
-                                ORDER BY module"
+                                ORDER BY module",
+                                array(),
+                                "module"
                               );
         }
         

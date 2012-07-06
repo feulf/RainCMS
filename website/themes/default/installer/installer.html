@@ -2,9 +2,25 @@
     <h1>{"Installer"|get_msg}</h1>
     <div>{"list of installed modules"|get_msg}</div>
     <br>
-    <ul class="nav nav-tabs nav-stacked">
-        {loop="installed_modules"}
-        <li class="{if="$value.published"}{/if}"><a>{$value.module}</a></li>
-        {/loop}
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab1" data-toggle="tab">Installed Modules</a></li>
+        <li><a href="#tab2" data-toggle="tab">App store</a></li>
     </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab1">
+            <div>
+                {loop="modules_list"}
+                <div><b>{$value.module}</b> {if="$value.installed"}module installed <a class="rain_module_unistall">Unistall</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_install">Install</a>{/if}</div>
+                {/loop}
+            </div>
+        </div>
+        <div class="tab-pane" id="tab2">
+            <div>
+                {loop="download_list"}
+                <div><b>{$value.module}</b> {if="$value.installed"}module installed <a class="rain_module_unistall">Unistall</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_install">Install</a>{/if}</div>
+                {/loop}
+            </div>
+        </div>
+    </div>
 </div>

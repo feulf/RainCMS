@@ -3,7 +3,6 @@
 class InstallerAjaxModule extends Module {
 
     function index() {
-        echo 1;
     }
 
     function install($module) {
