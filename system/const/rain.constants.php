@@ -1,6 +1,6 @@
 <?php
 
-    define("RAINCMS_VERSION", "Rain Framework Alpha");
+    define("RAINCMS_VERSION", "Rain CMS Alpha");
 
     //-------------------------------------------------------------
     //
