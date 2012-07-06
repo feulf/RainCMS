@@ -57,6 +57,8 @@
             add_style("rain.edit.css", CSS_DIR, CSS_URL);
             add_script("rain/edit.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
             
+            add_script("jquery.filedrop.js", JQUERY_DIR, JQUERY_URL);
+            
             add_javascript("RainEdit.init();");
 
 
