@@ -1,5 +1,5 @@
 {
-    "module"        :"Content",
+    "module"        :"content",
     "version"       :"1.0",
     "description"   :"Manage contents",
     "author"        :"Federico Ulfo",

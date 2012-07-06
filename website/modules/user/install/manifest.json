@@ -1,7 +1,7 @@
 {
-    "module"        :"User",
+    "module"        :"user",
     "version"       :"1.0",
     "description"   :"Manage Users",
     "author"        :"Federico Ulfo",
-    "dependency"    :["comment"]
+    "dependency"    :[]
 }

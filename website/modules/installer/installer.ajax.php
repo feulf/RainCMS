@@ -1,6 +1,9 @@
 <?php
 
 class InstallerAjaxModule extends Module {
+    
+    var $app_download  = "http://localhost/RainInstaller/news.zip",
+        $app_list_url  = "http://localhost/RainInstaller/module_list.php";
 
     function index() {
     }
@@ -98,11 +101,27 @@ class InstallerAjaxModule extends Module {
     }
     
     
-    function unistall( $module ){
-        echo $module;
+    function deactivate( $module ){
+        DB::query( "UPDATE ".DB_PREFIX."module SET published=0 WHERE LOWER(module)=LOWER(?)", array($module) );
+    }
+    
+    function activate( $module ){
+        DB::query( "UPDATE ".DB_PREFIX."module SET published=1 WHERE LOWER(module)=LOWER(?)", array($module) );
     }
     
     function download( $module ){
+
+        $ch = curl_init( $this->app_download );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        curl_close($ch);
+
+        file_put_contents( MODULES_DIR . $module . ".zip", $data);        
+        
+        
+    }
+
+    function remove( $module ){
         echo $module;
     }
 

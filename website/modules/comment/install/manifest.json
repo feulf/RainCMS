@@ -1,8 +1,8 @@
 {
-    "module"        :"Comment",
+    "module"        :"comment",
     "version"       :"1.0",
     "description"   :"Manage comments",
     "author"        :"Federico Ulfo",
-    "dependency"    :[],
+    "dependency"    :["content"],
     "query"         :["create_content_comment"]
 }

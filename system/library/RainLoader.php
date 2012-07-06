@@ -324,6 +324,11 @@
             
             // load the language for this module
             load_lang( $module );
+            
+            // check if the module is activated
+            $module_row = Content::get_module($module);
+            if( !$module_row["published"] )
+                $this->_page_not_found ();
 
             // - LOAD MODULE ------
             if (file_exists( $module_filepath = self::$modules_dir . $module . "/" . $module . $module_extension)) {

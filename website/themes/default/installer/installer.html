@@ -11,14 +11,20 @@
         <div class="tab-pane active" id="tab1">
             <div>
                 {loop="modules_list"}
-                <div class="module_{$value.module}"><b>{$value.module}</b> {if="$value.installed"}module installed <a class="rain_module_unistall">Unistall</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_install">Install</a>{/if}</div>
+                <div class="module_{$value.module}">
+                    <b>{$value.module}</b> {if="$value.installed"}<a class="rain_module_deactivate">Deactivate</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_activate">Activate</a>{/if}
+                    <br><small>{$value.description}</small>
+                </div>
                 {/loop}
             </div>
         </div>
         <div class="tab-pane" id="tab2">
             <div>
                 {loop="download_list"}
-                <div class="module_{$value.module}"><b>{$value.module}</b> {if="$value.installed"}module installed <a class="rain_module_unistall">Unistall</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_install">Install</a>{/if}</div>
+                <div class="module_{$value.module}">
+                    <b>{$value.module}</b> {if="$value.installed"}<a class="rain_module_deactivate">Deactivate</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_download">Download and Activate</a>{/if}
+                    <br><small>{$value.description}</small>
+                </div>
                 {/loop}
             </div>
         </div>

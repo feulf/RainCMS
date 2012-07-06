@@ -1,5 +1,5 @@
 {
-    "module"        :"Installer",
+    "module"        :"installer",
     "description"   :"Manage all the main content in the website",
     "author":"Federico Ulfo"
 }
