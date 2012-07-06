@@ -140,23 +140,28 @@
         /**
          * Type of content you can create in this page
          */
-        function content_type_childs( $content_id ){
-            
-            $content = Content::get_content($content_id);
+        function content_type_childs( $content_id = null ){
 
             // get all the content type I can add to the site
             $site_type_childs = Content::get_content_type_childs( 1 );
 
             $selected_content_type_childs = array();
+            $title = "";
 
-            // if the content is not root I load also the specific content type I can add to this node
-            if( $content['type_id'] == 1 || $content['parent_id'] != ROOT_ID ){
-                // get the type childs for this node
-                $selected_content_type_childs = Content::get_content_type_childs($content['type_id']);
+            if( $content_id ){
+
+                $content = Content::get_content($content_id);
+                $title = $content["title"];
+
+                // if the content is not root I load also the specific content type I can add to this node
+                if( $content['type_id'] == 1 || $content['parent_id'] != ROOT_ID ){
+                    // get the type childs for this node
+                    $selected_content_type_childs = Content::get_content_type_childs($content['type_id']);
+                }
+
             }
-
             
-            echo json_encode( array("parent_name"=>$content['title'],"type_childs"=>$site_type_childs, "selected_type_childs"=> $selected_content_type_childs ) );
+            echo json_encode( array("parent_name"=>$title,"type_childs"=>$site_type_childs, "selected_type_childs"=> $selected_content_type_childs ) );
         }
         
         
