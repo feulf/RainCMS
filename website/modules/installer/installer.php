@@ -1,5 +1,6 @@
 <?php
 
+
 class InstallerModule extends Module {
     
     var $app_download  = "http://localhost/RainInstaller/download.php",
