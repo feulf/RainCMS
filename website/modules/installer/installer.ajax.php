@@ -98,6 +98,13 @@ class InstallerAjaxModule extends Module {
     }
     
     
+    function unistall( $module ){
+        echo $module;
+    }
+    
+    function download( $module ){
+        echo $module;
+    }
 
 }
 

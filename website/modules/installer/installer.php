@@ -3,6 +3,8 @@
 class InstallerModule extends Module {
 
     function index() {
+        
+        add_script( "installer/js/installer.js", $this->loader->theme_dir );
 
         // installed modules
         $installed_modules = Content::get_module_list();
