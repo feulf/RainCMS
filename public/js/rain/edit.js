@@ -49,8 +49,16 @@ var RainEdit = {
 
     },
     
-    
+    //
+    // Fix the block setting functionality
+    //
     _init_buttons: function(){
+        $('.rain_block_setting').live('click', function(){
+            var id = $(this).parent.attr('id');
+            var block_matches = id.match(/rain_block_(.*)/);
+            var block_id = block_matches[1];
+            RainEdit.block_setting(block_id);
+        })
     },
     
     block_delete: function ( block_id ){
