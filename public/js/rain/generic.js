@@ -16,6 +16,9 @@ var Rain = {
         $('.rain_edit_settings').live( "click", function(){
             Rain.advanced_editing();
         });
+        $('.rain_edit_delete').live( "click", function(){
+            Rain.delete_content();
+        });
         $('.rain_user_sign_out').live( "click", function(){
             Rain.sign_out();
         });
