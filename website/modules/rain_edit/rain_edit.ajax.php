@@ -142,8 +142,23 @@
          */
         function content_type_childs( $content_id = null ){
 
+            load_lang( "admin.generic" );
+
             // get all the content type I can add to the site
-            $site_type_childs = Content::get_content_type_childs( 1 );
+            $site_type_childs = array();
+            if ( $content_type_childs = Content::get_content_type_childs( 0 ) ){
+                foreach ($content_type_childs as $type) {
+                    
+                    // Check if there is any unique type already inserted in the list
+                    if ( !$type['unique'] OR !Content::get_content_by_type($type['type_id'], $lang_id = LANG_ID, $only_published = false) ) {
+                        
+                        $type['type'] = get_msg( "type_" . $type['type'] );
+                        
+                        $site_type_childs[] = $type;
+                    }
+                }
+            }
+            
 
             $selected_content_type_childs = array();
             $title = "";
