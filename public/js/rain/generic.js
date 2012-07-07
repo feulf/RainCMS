@@ -87,7 +87,7 @@ var Rain = {
     },
     
     advanced_editing: function(){
-/
+/*
         Rain.add_script( javascript_url + "jquery/jquery.form.min.js" );
         Rain.add_script( javascript_url + "jquery/jquery.validate.min.js" );
 
