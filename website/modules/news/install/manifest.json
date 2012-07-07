@@ -1,0 +1,11 @@
+{
+    "module"        :"news",
+    "version"       :"1.0",
+    "description"   :"Manage the news",
+    "author"        :"Federico Ulfo",
+    "dependency"    :{
+                        "modules": ["comment","content"],
+                        "languages": ["news","admin.news"],
+                        "templates": ["news"]
+    }
+}

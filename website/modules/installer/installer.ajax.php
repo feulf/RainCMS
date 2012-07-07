@@ -149,8 +149,17 @@ class InstallerAjaxModule extends Module {
         $this->install( $module );
     }
 
+    
+    /**
+     * Remove completely the module and all modules that depends by this module
+     * @param type $module 
+     */
     function remove($module) {
-        echo $module;
+        // check that 
+        if( file_exists(MODULES_DIR . $module ) && $module_row = Content::get_module($module) ){
+            DB::query("DELETE FROM " . DB_PREFIX . "module WHERE LOWER(module)=LOWER(?)", array($module));
+            dir_del( MODULES_DIR . $module );
+        }
     }
 
 }
