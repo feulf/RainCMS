@@ -9,8 +9,11 @@ var Rain = {
     init: function(){
         $('.rain_new_content').live( "click", function(){
             Rain.new_content();
-        });        
+        });
         $('.rain_edit_content').live( "click", function(){
+            Rain.edit_mode();
+        });
+        $('.content>.text').live( "dblclick", function(){
             Rain.edit_mode();
         });
         $('.rain_edit_settings').live( "click", function(){

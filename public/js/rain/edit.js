@@ -55,22 +55,6 @@ var RainEdit = {
             RainEdit.edit_mode_load_html();
         });
 
-        $('#edit_mode_blocks').live( "click", function(){
-            if( $('#toolbox .block_list').css('display') == 'block' ){
-                $('#toolbox .block_list').fadeOut(function(){
-                    $(this).remove();
-                });
-            }
-            else{
-                $('#toolbox').append('<div class="toolbox_popup block_list rain_load_area_edit_content" id="rain_load_area-disabled"><div class="close"></div></div>');
-                $('#toolbox .block_list').css('display','none').fadeIn();
-                RainEdit.edit_mode_load_blocks();
-                $('#toolbox .block_list .close').click(function(){
-                    $('#toolbox .tooltip_popup').remove();
-                })
-            }
-        });
-
         $('#edit_mode_themes').live( "click", function(){
             if( $('#toolbox .theme_list').css('display') == 'block' ){
                 $('#toolbox .theme_list').fadeOut(function(){
@@ -234,18 +218,11 @@ var RainEdit = {
     },
     
     _init_toolbox: function (){
-        $("body").append( '<div id="toolbox"></div><div id="toolbox_user"></div>' );
+        $("body").append( '<div id="toolbox"></div>' );
         $('#toolbox').append( '<a href="'+admin_file+'" class="tooltip_popup logo"></a>' );
-        //$('#toolbox').append( '<a href="'+admin_file+'" class="tooltip_popup" title="'+_control_panel_msg_+'">'+_control_panel_msg_+'</a>' );
-        //$('#toolbox').append( '<a id="edit_mode_blocks" class="tooltip_popup" title="Show list of blocks">Blocks</a>' );
-        //$('#toolbox').append( '<a id="edit_mode_themes" class="tooltip_popup" title="Show list of Themes">Themes</a>' );
-        //$('#toolbox').append( '<a id="edit_mode_pages" class="tooltip_popup" title="Show list of Pages">Layout</a>' );
-        //$('#toolbox').append( '<a id="edit_mode_html" class="tooltip_popup" title="Edit HTML">Edit HTML</a>' );
         $('#toolbox').append( '<a id="save_changes_button" class="tooltip_popup disabled" title="Enable/disable edit mode">Save Changes</a>' );
-
-
-        $('#toolbox_user').append( 'Welcome <b>'+user_name+'</b> <a href="javascript:user_logout()">Sign out</a>' );
-
+        
+        this._init_buttons();
     },
     
     new_content_setting: function( type_id, parent_id ){
@@ -266,123 +243,4 @@ var RainEdit = {
         
     },
 
-    toolbox_position: function(){
-        if( $("#toolbox").css('top') == "0px" ){
-            $("#toolbox").css("bottom", "0px" )
-            $("#toolbox").css("top", null );
-        }
-        else{
-            $("#toolbox").css("top", "0px" )
-            $("#toolbox").css("bottom", null );
-        }
-    },
-
-    edit_mode_load_blocks: function(){
-
-        $.getJSON( ajax_file + "rain_edit/block_list", {
-            id:id
-        }, function(blocks){
-            var html = '';
-            for( var i in blocks ){
-
-                // for some strange reason there is one iteration that is "remove"
-                if( i != 'remove' ){
-                    var block_name		= blocks[i].title;
-                    var block_id		= blocks[i].block_id;
-                    var content_id		= blocks[i].content_id;
-                    var content             = blocks[i].content;
-
-                    html+='<div class="rain_block_edit rain_block_editable rain_content_'+content_id+'" id="rain_block_'+block_id+'"><div class="rain_block_edit_title">'+block_name+'</div><div class="rain_block_content"><div class="content"><div class="text">'+content+'</div></div></div></div>';
-                }
-            }
-
-            $('#toolbox .block_list').html( html );
-            RainEdit._init_block_sortable();
-        })
-
-
-        //$('#toolbox .block_list').append('<div class="rain_block_edit rain_block_editable rain_content_0" id="rain_block_0"><div class="rain_block_edit_title">Drag Me!</div><div class="rain_block_content"><div class="content"><div class="text">Woohoo, you can edit this content!</div></div></div></div>');
-
-    },
-
-
-    edit_mode_load_themes: function(){
-        $('#toolbox .theme_list').html('');
-        $.getJSON( ajax_file + "rain_edit/themes_list", function(themes){
-            var html = '';
-            for( var i in themes ){
-                // for some strange reason there is one iteration that is "remove"
-                if( i != 'remove' ){
-                    var theme	= themes[i].theme;
-                    var theme_id	= themes[i].theme_id
-                    var theme_dir	= themes_dir + theme_id;
-                    var thumbnail	= url + theme_dir + '/' + 'preview.gif';
-
-                    html+='<div id="t_'+theme_id+'" class="theme_block '+(theme_id == selected_theme?'selected':'')+'"><a onclick="theme_set(\''+theme_id+'\')"><img title="select this theme" src="'+thumbnail+'" /></a><div class="theme_block_title">'+theme+' <img src="'+admin_views_images_url+'preview.gif" title="Preview this theme" onclick="theme_preview(\''+theme+'\',\''+url+'\')"></div></div>';
-                }
-            }
-
-            $('#toolbox .theme_list').html( html );
-
-        })
-    },
-
-
-    edit_mode_load_pages: function(){
-        $('#toolbox .page_list').html('');
-        $.getJSON( ajax_file + "rain_edit/pages_list", function(pages){
-            var html = '';
-            for( var i in pages ){
-                // for some strange reason there is one iteration that is "remove"
-                if( i != 'remove' ){
-                    var layout	= pages[i].name;
-                    var layout_id	= pages[i].layout_id;
-
-                    html+='<div id="p_'+layout_id+'" class="block '+(layout_id == selected_layout?'selected':'')+'"><div class="block_title"><a onclick="page_set(\''+layout_id+'\')">'+layout+' </a></div></div>';
-
-                }
-            }
-
-            $('#toolbox .page_list').html( html );
-
-
-        })
-    },
-
-
-    edit_mode_load_html: function(){
-        $('#toolbox .page_list').html('');
-        $.get( ajax_file + "rain_edit/get_layout_html/"+selected_theme+"/"+selected_layout, function(html){
-            alert( html );
-        })
-    },
-
-
-    theme_preview: function( theme_id, url ){
-        $.get( admin_ajax_file + "configure/languages/", {
-            cp:"themes/preview", 
-            theme_id: theme_id
-        }, function( html ){
-            window.location = url;
-        });
-    },
-
-    theme_set: function( theme_id ){
-
-        $.get( admin_ajax_file + "configure/set_theme/" + theme_id, function(h){
-            $('.thumbnail>a>img').attr('class','thumb_image');
-            $('.theme_block').removeClass('selected');
-            $('#t_'+theme_id+'').addClass('selected');
-            window.location.reload();
-        });
-    },
-
-    page_set: function( layout_id ){
-
-        $.get( ajax_file + "rain_edit/set_layout/" + id + "/" + layout_id, function(h){
-            $('.page_block').removeClass('selected');
-            $('#p_'+layout_id+'').addClass('selected');
-            window.location.reload();
-        });
-    }
 };
