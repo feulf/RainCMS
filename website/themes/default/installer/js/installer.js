@@ -37,7 +37,7 @@ var RainInstaller = {
     remove:function(classes){
         var module = RainInstaller.get_selected_module(classes)
         $.get( ajax_file + "installer/remove/"+module, function( html ){
-            console.log( html );
+            location.reload(true);
         });
     },
     get_selected_module: function(classes){
