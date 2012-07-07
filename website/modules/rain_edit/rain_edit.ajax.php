@@ -169,6 +169,20 @@
                 $selected_content_type_childs = Content::get_content_type_childs($content['type_id']);
 
             }
+
+            /*
+
+            //
+            // Ask to add a new type of Content, for example News, Blog Post or others
+            //
+
+            $content_type_list = DB::get_all( "SELECT c.title
+                                               FROM ".DB_PREFIX."content c 
+                                               JOIN ".DB_PREFIX."content_rel r ON c.content_id=r.content_id AND r.rel_type='parent'
+                                               JOIN ".DB_PREFIX."content_type t ON c.type_id=t.type_id
+                                              " );
+            */
+            
             
             echo json_encode( array("parent_name"=>$title,"type_childs"=>$site_type_childs, "selected_type_childs"=> $selected_content_type_childs ) );
         }
