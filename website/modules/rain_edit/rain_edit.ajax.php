@@ -222,7 +222,8 @@
             $published = true;
 
             // In menu
-            $menu_id = 2;
+            if( $parent_id == ROOT_ID )
+                $menu_id = 2;
 
             // LANG_ID
             $lang_id = LANG_ID;
