@@ -1,0 +1,147 @@
+<div>
+	<div class="toolbar">
+		{if="$user"}
+		<a onclick="open_group_list('{$group_id}', '{$user.user_id}', '{"user_add_to_group_msg"|get_msg}', '{"user_remove_from_group_msg"|get_msg}')"><img src="../aimg/user/group.gif"> {"user_button_group_list"|get_msg}</a><div id="button_group_list"></div>
+		<a onclick="editAccount('{$user.user_id}','{$group_id}')" ><img src="../aimg/edit.gif"> {"user_button_edit_user"|get_msg}</a>
+		{ignore}<a onclick="newUserMail();"><img src="../aimg/email/email.gif"> {"email"|get_msg}</a>{/ignore}
+		{/if}
+		{if="$user"}
+		<a onclick="user_delete('{"user_button_delete_msg"|get_msg}');" class="delete_button"><img src="../aimg/del.gif"> {"user_button_delete"|get_msg}</a>
+		{/if}
+	</div>
+
+	<div id="account_info">
+
+        <label>{$user.level}</label> 
+        {if="$user_localization"}
+            <span id="user_localization">
+            <a onclick="$('#user_localization_info').toggle()">
+                <img src="../aimg/user/online.png"/> <span>{"online"|get_msg}</span>
+            </a>
+            </span>
+        {/if}
+        
+        {if="$user"}
+            <h1>{$user.name}</h1>
+        {elseif="$user_localization"}
+            <h1>{$user.name}</h1>
+        {/if}
+        
+        
+
+        {if="$user_localization"}
+            <div id="user_localization_info" {if="!$user"}style="display:block"{/if}>
+                <table cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td>
+                            <label>{"visit"|get_msg}</label><br>
+                            <span>{$user_localization.time_first_click|time_format}</span>
+                        </td>
+                        <td>
+                            <label>{"ip"|get_msg}</label><br>
+                            <span>{$user_localization.last_ip}</span><br><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>{"location"|get_msg}</label><br>
+                            <span>{$user_localization.city_name} {$user_localization.zip} {$user_localization.region_name} {$user_localization.country_name}</span><br><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{"timezone"|get_msg}</label><br>
+                            <span>{$user_localization.timezone_name}</label>
+                        </td>
+                        <td>
+                            <label>{"coordinate"|get_msg}</label><br>
+                            <span>{$user_localization.latitude} {$user_localization.longitude}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>{"last_page"|get_msg}</label><br>
+                            <span><a href="{$user_localization.url}" target="_blank">{$user_localization.url}</a></span><br><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>{"browser"|get_msg}</label><br>
+                            <span>{$user_localization.browser}<span><br><br>
+                        </td>
+                        <td>
+                            <label>{"os"|get_msg}</label><br>
+                            <span>{$user_localization.os}</span>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        {/if}
+        
+		{if="$user.is_registered"}
+            <h2>{"user_detail"|get_msg}</h2>
+            {if="$user.firstname || $user.lastname"}
+            <table cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>
+                        <label>{"firstname"|get_msg}</label><br>
+                        <span>{$user.firstname}</span>
+                    </td>
+                    <td>
+                        <label>{"lastname"|get_msg}</label><br>
+                        <span>{$user.lastname}</span>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            {/if}
+
+            <label>{"email"|get_msg}</label><br>
+            <a href="" onclick="newUserMail();">{$user.email}</a> <img src="../aimg/email/email.gif" />
+            <br>
+
+            <br>
+            <label>{"company"|get_msg}</label><br>
+            <span>{$user.company}</span><br><br>
+
+
+            
+            <table cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>
+                        <label>{"tel"|get_msg}</label><br>
+                        <span>{$user.tel}</span><br>
+                    </td>
+                    <td>
+                        <label>{"mobile"|get_msg}</label><br>
+                        <span>{$user.mobile}</span><br>
+                    </td>
+                </tr>
+            </table>
+
+            <br>
+            <label>{"user_level"|get_msg}</label>
+            <h3>{$user.level}</h3>
+            <br>
+
+        
+        <h2>{"permission"|get_msg}</h2>
+	
+        <img src="../aimg/lock.png" />
+        {if="$user.status == USER_SUPER_ADMIN"}
+            {"user_permission_all"|get_msg}
+        {elseif="$user.status == USER_ADMIN && $permission_list"}
+            {loop="permission_list"}
+                {if="$value.id>0"}
+                    {"user_has_permission_in"|get_msg} <a href="?id={$value.id}">{$value.title}</a> {"user_has_permission_to"|get_msg} {if="$value.content_access"}<b>{"user_has_permission_content"|get_msg}</b>{/if} {if="$value.content_access && $value.subcontent_access"} {"and"|get_msg} {/if} {if="$value.subcontent_access"}<b>{"user_permission_subcontent"|get_msg}</b>{/if}<br>
+                {else}
+                    {"user_permission_all"|get_msg}<br>
+                {/if}
+            {/loop}
+        {/if}
+
+    {/if}
+        
+	</div>
+</div>

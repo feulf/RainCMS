@@ -51,41 +51,6 @@ var RainEdit = {
     
     
     _init_buttons: function(){
-        $('#edit_mode_html').live( "click", function(){
-            RainEdit.edit_mode_load_html();
-        });
-
-        $('#edit_mode_themes').live( "click", function(){
-            if( $('#toolbox .theme_list').css('display') == 'block' ){
-                $('#toolbox .theme_list').fadeOut(function(){
-                    $(this).remove();
-                });
-            }
-            else{
-                $('#toolbox').append('<div class="toolbox_popout theme_list"><div class="close"></div></div>');
-                $('#toolbox .theme_list').css('display','none').fadeIn();
-                RainEdit.edit_mode_load_themes();
-                $('#toolbox .theme_list .close').click(function(){
-                    $('#toolbox .theme_list').remove();
-                })
-            }
-        });
-
-        $('#edit_mode_pages').live( "click", function(){
-            if( $('#toolbox .page_list').css('display') == 'block' ){
-                $('#toolbox .page_list').fadeOut(function(){
-                    $(this).remove();
-                });
-            }
-            else{
-                $('#edit_mode_pages').append('<div class="toolbox_popout page_list"><div class="close"></div></div>');
-                $('#toolbox .page_list').css('display','none').fadeIn();
-                RainEdit.edit_mode_load_pages();
-                $('#toolbox .page_list .close').click(function(){
-                    $('#toolbox .page_list').remove();
-                })
-            }
-        });
     },
     
     block_delete: function ( block_id ){
@@ -242,5 +207,4 @@ var RainEdit = {
         $('.content_form').html( html)
         
     },
-
 };
