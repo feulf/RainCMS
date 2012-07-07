@@ -1,5 +1,6 @@
 {
     "module"        :"rain_edit",
+    "version"       :"1.0",
     "description"   :"Allows to edit all the contents in place (WYSIWYG)",
-    "author":"Federico Ulfo"
+    "author"        :"Federico Ulfo"
 }

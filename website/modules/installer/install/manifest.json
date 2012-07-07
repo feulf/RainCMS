@@ -1,5 +1,6 @@
 {
     "module"        :"installer",
+    "version"       :"1.0",
     "description"   :"Manage all the main content in the website",
-    "author":"Federico Ulfo"
+    "author"        :"Federico Ulfo"
 }

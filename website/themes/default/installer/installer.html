@@ -12,7 +12,7 @@
             <div>
                 {loop="modules_list"}
                 <div class="module_{$value.module}">
-                    <h4>{$value.module}</h4> {if="$value.installed"}<a class="rain_module_deactivate">Deactivate</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_activate">Activate</a>{/if}
+                    <h4>{$value.module}</h4> version {$value.version} {if="$value.installed"}<a class="rain_module_deactivate">Deactivate</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_activate">Activate</a>{/if}
                     <br><small>{$value.description}</small>
                 </div>
                 <hr>
@@ -23,7 +23,7 @@
             <div>
                 {loop="download_list"}
                 <div class="module_{$value.module}">
-                    <h4>{$value.module}</h4> {if="$value.installed"}<a class="rain_module_deactivate">Deactivate</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_download">Download and Install</a>{/if}
+                    <h4>{$value.module}</h4> version {$value.version} {if="$value.installed"}<a class="rain_module_deactivate">Deactivate</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_download">Download and Install</a>{/if}
                     <br><small>{$value.description}</small>
                 </div>
                 <hr>
