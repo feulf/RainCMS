@@ -144,35 +144,29 @@
 
             load_lang( "admin.generic" );
 
-            // get all the content type I can add to the site
+            // get all the content type for the website
             $site_type_childs = array();
-            if ( $content_type_childs = Content::get_content_type_childs( 0 ) ){
+            $content_type_childs = Content::get_content_type_childs( 0 );
+            if ( $content_type_childs ){
                 foreach ($content_type_childs as $type) {
-                    
                     // Check if there is any unique type already inserted in the list
                     if ( !$type['unique'] OR !Content::get_content_by_type($type['type_id'], $lang_id = LANG_ID, $only_published = false) ) {
-                        
                         $type['type'] = get_msg( "type_" . $type['type'] );
-                        
                         $site_type_childs[] = $type;
                     }
                 }
             }
-            
-
             $selected_content_type_childs = array();
             $title = "";
 
+            // If we are into a node I load the content type I can create inside it
             if( $content_id ){
 
                 $content = Content::get_content($content_id);
                 $title = $content["title"];
 
-                // if the content is not root I load also the specific content type I can add to this node
-                if( $content['type_id'] == 1 || $content['parent_id'] != ROOT_ID ){
-                    // get the type childs for this node
-                    $selected_content_type_childs = Content::get_content_type_childs($content['type_id']);
-                }
+                // get the type childs for this node
+                $selected_content_type_childs = Content::get_content_type_childs($content['type_id']);
 
             }
             
