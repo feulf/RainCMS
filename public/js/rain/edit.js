@@ -428,6 +428,10 @@ var RainDragDropUpload = {
 		},
 		// Called before each upload is started
 		beforeEach: function(file){
+
+                    var date = new Date();
+                    this.image_id = date.getTime();
+
 			if(!file.type.match(/^image\//)){
 				alert('Only images are allowed!');
 
@@ -450,15 +454,9 @@ var RainDragDropUpload = {
     },
 
     template :'<div class="preview">'+
-                            '<span class="imageHolder">'+
-                                    '<img />'+
-                                    '<span class="uploaded"></span>'+
-                            '</span>'+
-                            '<div class="progressHolder">'+
-                                    '<div class="progress"></div>'+
-                            '</div>'+
-                    '</div>',
-
+              '<img />'+
+              //'<div class="progress" style="background:red;height:20px;"></div>'+
+              '</div>',
 
     createImage: function (file){
 
