@@ -31,7 +31,8 @@
                     $type_id,
                     $layout,
                     $layout_id = LAYOUT_ID_GENERIC,
-                    $selected_module;
+                    $selected_module,
+                    $blocks = array();
 
         
         
@@ -400,10 +401,11 @@
             require_once LIBRARY_DIR     . "Block.php";
 
             // load blocks
-            if ($block_list = Content::get_block_list($this->layout_id, $this->type_id, $this->content_id)) {
-                foreach ($block_list as $block) {
+            $this->block_list = Content::get_block_list($this->layout_id, $this->type_id, $this->content_id);
+            if ( $this->block_list ) {
+                foreach ( $this->block_list as $block) {
                     // if selected is true the block can read the parameters
-                    $this->block($block);
+                    $this->block( $block );
                 }
             }
             
@@ -600,7 +602,10 @@
 
             $this->assign("not_found_msg", get_msg( $msg ) );
             $this->load_menu();
-            $this->load_blocks($this->layout_id);
+            // if there was an error in loading the blocks it won't try to load again them
+            if( !$this->block_list ){
+                $this->load_blocks($this->layout_id);
+            }
             $this->draw();
             die;
         }
