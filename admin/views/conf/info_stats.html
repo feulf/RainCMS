@@ -1,0 +1,59 @@
+
+	<div class="block">
+		<div class="title">Google Analytics Stats</div>
+		<div class="content">
+
+		{if="$summary"}
+		
+			{if="$summary['ga:visits']==0"}
+				<div class="stat"><span>0 visits.</span><a href="https://www.google.com/analytics/reporting/?id={$analytics_id}" target="_blank"> Google Analytics &raquo;</a></div>
+			{else}
+		
+				<div id="analytics_chart"></div>
+			    <script type="text/javascript">
+		
+				    //http://code.google.com/apis/visualization/documentation/gallery/areachart.html#Methods
+				      //google.load("visualization", "1", {packages:["areachart"]});
+				      google.setOnLoadCallback(drawAnalyticsChart);
+				      function drawAnalyticsChart() {
+				        var data = new google.visualization.DataTable();
+				        data.addColumn('string', 'Data');
+				        data.addColumn('number', 'Visits');
+				        data.addRows( {$stats|count} );
+				
+				        {loop="stats"}
+				        	data.setValue({$counter}, 1, {$value['ga:visits']} );
+				        	{if="$counter%10==0"}
+				        	data.setValue({$counter}, 0, '{$key|time_format}' );
+				        	{/if}
+				        {/loop}
+				  
+				        var chart = new google.visualization.AreaChart(document.getElementById('analytics_chart'));
+				        chart.draw(data, {width: 760, height: 250, legend: 'none', tooltipHeight: 50, tooltipWidth: 100, tooltipFontSize: '14px', pointSize: 3, focusBorderColor: {stroke:'#3776d6', strokeSize: 6}, lineSize: 2 });
+				      }
+				</script>
+				
+				<table width="100%" cellspacing="0" cellpadding="0">
+					<tr>
+						<td width="50%"><div class="stat"><span>{$summary['ga:visits']}</span> tot visits</div></td>
+						<td><div class="stat"><span>{$summary[average_time_on_site_formatted]}</span> Avg. time on site</div></td>
+					</tr>
+					<tr>
+						<td><div class="stat"><span>{$summary['ga:pageviews']}</span> page views</div></td>
+						<td><div class="stat"><span>{$summary['newVisitsPerc']} %</span> New Visits</div></td>
+					</tr>
+					<tr>
+						<td><div class="stat"><span>{$summary[pages_per_visit]}</span> page per visit</div></td>
+						<td><div class="stat"><a href="https://www.google.com/analytics/reporting/?id={$analytics_profile_id}" target="_blank">Google Analytics &raquo;</a></div></td>
+					</tr>
+				</table>
+				<div class="text_light">last refresh: {$last_refresh|time_format}</div>
+				{/if}
+				
+			{else}
+				{#"conf_google_analytics_error"|get_msg}<br>
+				<div class="stat"><a href="https://www.google.com/analytics/reporting/?id={$analytics_profile_id}" target="_blank">Google Analytics &raquo;</a></div>
+			{/if}
+				
+		</div>
+	</div>

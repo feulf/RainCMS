@@ -1,0 +1,78 @@
+{if="$group_id > 0"}
+<script>
+
+	//	PERMISSION EDIT
+	var group_id = {$group_id};
+	var user_id = 0
+	var permission_counter = 0
+	
+	var content_list = new Array()
+	{loop="content_list"}
+		content_list[{$value.id}] = '{$value.name}';
+	{/loop}
+
+	$(document).ready( function(){
+
+		$.validator.messages.required 	= "{#_NECESSARY_FIELD_#}";
+		$.validator.messages.email 		= "{#_EMAIL_FIELD_#}";
+
+		$("#group_edit").validate({
+			debug:true,
+			submitHandler: function(form){
+				$('#group_edit_loading').fadeIn('slow')
+				$('#group_edit').hide()
+				$(form).ajaxSubmit({
+					complete:function( data ){
+						$('#group_edit_loading').slideUp('slow', function(){
+							$('#g_{$group_id}').html( $('input[name=name]').attr('value') )
+							
+							$('#group_edit').fadeIn("slow", function(){
+								updatePermission()
+							})
+							
+						});
+					},
+				});
+			}
+		});
+
+	});
+
+</script>
+<div>
+	<div class="toolbar">
+		<button onclick="openGroup('{$group_id}')" class="tooltip" title="{"user_button_cancel_caption"|get_msg}">{"user_button_cancel"|get_msg}</button>
+		<button onclick="$('#group_edit').submit();" ><img src="../aimg/save.gif"> {"save"|get_msg}</button>
+		<button onclick="group_delete({$group_id}, '{"user_button_group_delete_msg"|get_msg}');" class="delete_button"><img src="../aimg/del.gif"> {"user_button_group_delete"|get_msg}</button>
+	</div>
+	<div class="margin_20">
+		<div id="group_edit_loading" style="display:none;"><img src="../aimg/loading.gif" alt="loading"/>{"loading"|get_msg}</div>
+		<form name="group_edit" id="group_edit" action="admin.ajax.php/user/group_save/{$group_id}" method="post">
+			<table padding="5">
+				<tr>
+					<td><span>{"group"|get_msg}</span><br><input name="name" value="{$name}" class="required account_name" type="text"></td>
+				</tr>
+			</table>
+
+			<div id="permission">
+				<br><br>
+				<h3>{"user_edit_permission"|get_msg}</h3>
+				<div id="permission_list">
+					<script>
+					{loop="permission_list"}
+						addPermission( {$value.permission_id}, {$value.id}, {$value.content_access}, {$value.subcontent_access} );
+					{/loop}
+					</script>
+				</div>
+				<br><br>
+				<a href="javascript:addPermission()">{"user_add_permission"|get_msg}</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+{else}
+<div class="text">
+	<h3>{if="$group_id=='all'"}{"user_all"|get_msg}{elseif="$group_id=='registered'"}{"user_all_registered"|get_msg}{elseif="$group_id=='online'"}{#_USER_ONLINE_#}{/if}</h3>
+</div>
+{/if}

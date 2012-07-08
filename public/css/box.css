@@ -1,0 +1,11 @@
+/* Box */
+.box{border:1px solid #beb;padding:20px;margin-bottom:20px;-moz-border-radius:5px;-webkit-border-radius:5px;line-height:18px;overflow:auto}
+.box_success{border-color:#beb;background:#efe}
+.box_warning{border-color:#feb;background:#fff6ee}
+.box_error{border-color:#ebb;background:#fee}
+.box_info{border-color:#cce;background:#f6f6ff}
+.box_grey{border-color:#ccc;background:#f6f6f6}
+.box_purple{border-color:#ece;background:#fff3ff}
+.box .close{float:right;margin-top:4px;cursor:pointer}
+.box ul{margin:0;padding:0}
+.box li{margin-left:10px}

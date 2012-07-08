@@ -1,0 +1,118 @@
+/* Style */
+html, body{height:100%;width:100%;padding:0px;margin:0px;color:#333;font:11px'Lucida Grande','Lucida Console Sans',sans-serif;}
+img{border:0px;}
+a:link, a:visited, a:active{color:#1360A4;text-decoration:none;outline:none;}
+a:hover{color:#FF3A00;text-decoration:underline;}
+
+
+/*	LAYOUT	*/
+#body{overflow:hidden;}
+#container{height:100%;height:auto !important;min-height:100%;margin-bottom:-100px;}
+#header{color:#fff;background:#006699;}
+#footer_space{height:150px;}
+#footer{border-top:1px solid #ccc;padding:20px;height:50px;}
+
+/*	HEADER	*/
+#logo{float:left;}
+#sign{float:right;color:#fff;padding:4px 10px 0px 0px;}
+#sign a{color:#fff;text-decoration:underline;}
+#sign a:hover{color:#ccccff;}
+#menu{height:28px;clear:both;background:url('../img/menu.gif') repeat-x;text-transform:uppercase;border-bottom:1px solid #ccc;text-shadow:1px 1px 1px #fff}
+#menu a{color:#333;display:block;padding:7px 15px 7px 15px;float:left;border-right:1px solid #ccc;border-left:1px solid #fff;}
+#menu a:hover{color:#999;background:url('../img/menu-over.gif');text-decoration:none;}
+#menu .selected{background:url('../img/menu-over.gif');}
+
+/* Login */
+#login_page{background:#006699;}
+#login_header{color:#fff;background:#006699;height:80px;}
+
+/* List */
+.list{border:1px solid #ddd;border-bottom:0px;margin:0px;padding:0px;}
+.list li{list-style:none;height:36px;}
+.list .edit{float:left;width:36px;}
+.list .edit img, .list .edit input{margin:10px;}
+.list .title{float:left;line-height:36px;}
+.list .del{float:right;width:36px;}
+.list .del img{margin:10px;}
+.list .row1{background:#f9f9f9;border-top:1px solid #fff;border-bottom:1px solid #ddd;}
+.list .row2{background:#f3f3f3;border-top:1px solid #fff;border-bottom:1px solid #ddd;}
+.list .selected{background:#ddffdd;border-bottom:1px solid #aaddaa;}
+.list .row1:hover, .list .row2:hover, .list .selected:hover{background:#ffffdd;border-bottom:1px solid #ddd;}
+.list_placeholder{border:1px solid #003366;background:#336699;}
+.drag{cursor:move;}
+
+/* table */
+.table{width:100%;border:1px solid #ddd;border-bottom:0px;margin:0px;padding:0px;}
+.table th{text-align:left;background:#eee;color:#666;font-size:11px;font-weight:bold;line-height:16px;padding-bottom:1px;border-bottom:1px solid #ddd;}
+.table tr{height:36px;}
+.table .edit{width:36px;}
+.table .edit img, .table .edit input{margin:10px;}
+.table .title{line-height:36px;}
+.table .del{width:36px;}
+.table .del img{margin:10px;}
+.table .row1 td{background:#f9f9f9;border-top:1px solid #fff;border-bottom:1px solid #ddd;}
+.table .row2 td{background:#f3f3f3;border-top:1px solid #fff;border-bottom:1px solid #ddd;}
+.table .selected td{background:#ddffdd;border-bottom:1px solid #aaddaa;}
+.table .row1:hover td, .table .row2:hover td, .table .selected:hover td{background:#ffffdd;border-bottom:1px solid #ddd;}
+
+/* block */
+.block{border:1px solid #ccc;-moz-border-radius:5px;-webkit-border-radius:5px;float:left;margin:10px;overflow:auto;background:#fff;}
+.block .title{font-size:18px;background:#eee;border-bottom:1px solid #ccc;padding:10px;}
+.block .content{font-size:12px;padding:20px;}
+
+/* Lang */
+#languages a{text-decoration:none;}
+#languages .selected{text-decoration:underline;}
+
+/* Content Tree */
+.tree .permission_denied{color:#999;}
+.tree .selected{font-weight:bold;background:#e0e9f9;border:1px solid #bbccff;padding:1px 5px 1px 5px;-moz-border-radius:3px;-webkit-border-radius:3px;text-decoration:none;}
+.tree ul{padding:0;margin:0;list-style:none;}
+.tree li{padding:3px 0px 0px 16px;background:url("../aimg/tree/treeview-default-line.gif") 0 0 no-repeat;}
+.tree li.last{background-position:0 -1764px;}
+.tree .voice{position:relative;right:16px;}
+
+/* File */
+.button_upload{border:1px solid #999;padding:3px 12px 3px 12px;font-size:10px;background-color:#eee;color:#333;-moz-border-radius:5px;-webkit-border-radius:5px;cursor:pointer;}
+#upload_list{display:none;margin-top:10px;border:1px solid #ccc;background:#fff;padding:10px;}
+.thumbnail_list{margin:0px;padding:0px;}
+.thumbnail_list li{float:left;list-style:none;margin:10px 10px 0 0;}
+.thumbnail_list img.selected{padding:5px;border:1px solid #ff9900;background:#ffeeaa;}
+.thumbnail_list .thumb_image{padding:5px;border:1px solid #cccccc;background:#fff;}
+.thumbnail_list .thumb_image:hover{padding:5px;border:1px solid #000066;background:#336699;}
+.thumbnail_list .thumb_icon{padding:5px;border:1px solid #cccccc;background:#fff;}
+.thumbnail_list .thumb_icon:hover{background-color:#336699;padding:5px;border:1px solid #000066;}
+
+/* other */
+.stat{padding:10px;font-size:14px;color:#336699;font-weight:bold;}
+.stat span{color:#000;font-weight:bold;}
+#tooltip{position:absolute;z-index:3000;border:1px solid #cccccc;background:#f6f6f6;padding:10px 15px 10px 15px;-moz-border-radius:5px;-webkit-border-radius:5px;line-height:16px;font-size:11px;-moz-box-shadow: inset 1px 1px 1px #fff;-webkit-box-shadow: inset 1px 1px 1px #fff;box-shadow: inset 1px 1px 1px #fff;text-shadow:1px 1px 1px #fff;}
+#tooltip h3{font-size:11px;margin:0px;}
+#simplemodal-overlay{background-color:#000;opacity:80%;}
+#simplemodal-container{width:50%;background:#fff;padding:20px;-moz-border-radius:10px;-webkit-border-radius:10px;font-size:14px;}
+#simplemodal_button{position:absolute;bottom:20px;right:20px;}
+
+/* Box */
+.box{border:1px solid #bbeebb;padding:20px;margin-bottom:20px;-moz-border-radius:5px;-webkit-border-radius:5px;line-height:18px;overflow:auto;}
+.box_success{border-color:#bbeebb;background:#eeffee;}
+.box_warning{border-color:#ffeebb;background:#fff6ee;}
+.box_error{border-color:#eebbbb;background:#ffeeee;}
+.box_info{border-color:#ccccee;background:#f6f6ff;}
+.box_grey{border-color:#cccccc;background:#f6f6f6;}
+.box_purple{border-color:#eeccee;background:#fff3ff;}
+.box .close{float:right;margin-top:4px;cursor:pointer;}
+.box ul{margin:0px;padding:0px;}
+.box li{margin-left:10px;}
+
+/* Generic */
+.padding_5{padding:5px;}
+.padding_10{padding:10px;}
+.padding_15{padding:15px;}
+.padding_20{padding:20px;}
+.margin_5{margin:5px;}
+.margin_10{margin:10px;}
+.margin_15{margin:15px;}
+.margin_20{margin:20px;}
+.text_light2{color:#ccc;}
+.text_light{color:#999;font-size:10px;}
+.max_width{width:100%;}

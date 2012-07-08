@@ -650,6 +650,37 @@
                 Content::file_delete($file_list[$i]['file_id']);
         }
         
+
+        function upload_image_content($content_id) {
+
+            $w = 100;
+            $h = 100;
+
+            $content = Content::get_content($content_id);
+
+            if (isset($_FILES['file']) && $file_info = upload_image('file', $thumb_prefix = "t_", $w, $h, false)) {
+
+                $name = $file_info['name'];
+                $size = $file_info['size'];
+                $error = $file_info['error'];
+                $ext = file_ext($name);
+                $filepath = $file_info["filepath"];
+                $thumbnail_filepath = $file_info["thumbnail_filepath"];
+                $file_type_id = IMAGE;
+
+                DB::query("INSERT INTO " . DB_PREFIX . "file 
+                        ( rel_id, module, name, filepath, thumb, type_id, status, size, last_edit_time )
+                        VALUES ( :content_id, 'content', :name, :filepath, :thumbnail_filepath, :file_type_id, :status, :size, UNIX_TIMESTAMP() )", 
+                        array(":content_id" => $content_id, ":name" => $name, ":filepath" => $filepath, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":status" => FILE_EMBED, ":size" => $size)
+                );
+
+                $file_id = DB::get_last_id();
+
+                return json_encode(array('result' => true, 'file_id' => $file_id, 'filepath' => $filepath, 'dir' => UPLOADS_URL));
+            }
+        }
+
+        
         //-------------------------------------------------------------
         //
         //                          Theme
