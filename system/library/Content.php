@@ -414,6 +414,12 @@
                                array( $block_type_id )
                               );
         }
+        
+        static function get_block_type_list(){
+            return DB::get_all("SELECT *
+                                FROM ".DB_PREFIX."block_type
+                               ");
+        }
 
         //-------------------------------------------------------------
         //

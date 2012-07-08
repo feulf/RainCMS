@@ -120,7 +120,8 @@ var Rain = {
 
     _new_content_setting: function ( type_id, parent_id ){
         if( !$('.new_content_setting').html() ){
-            var html = '<div class="new_content_setting"><a href="javascript:Rain.new_content_list_select();">Back</a><div class="content_form"></div></div>';
+            var html = '// Check the field for this content type (example if news there it should be a date field)\n\
+<div class="new_content_setting"><a href="javascript:Rain.new_content_list_select();">Back</a><div class="content_form"></div></div>';
             RainPopup.append( html );
         }
         $('.new_content_list').hide();

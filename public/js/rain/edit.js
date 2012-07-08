@@ -135,10 +135,77 @@ var RainEdit = {
 
     block_new: function ( load_area ){
 
+        // open a popup to create a new block
+
+        // load scripts
+        Rain.add_script( javascript_url + "jquery/jquery.form.min.js" );
+        Rain.add_script( javascript_url + "jquery/jquery.validate.min.js" );
+
+        // load the popup
         RainPopup.init( load_area + " &gt; New Block" );
+
+        // get the type childs list
+        $.getJSON( ajax_file + "rain_edit/block_type_list/" + load_area, function( json ){
+
+            var block_type_list = json.block_type_list;
+            var html = "";
+
+            html += '<div class="new_block_list"><ul>';
+            if( block_type_list ){
+                for( var i = 0, n=block_type_list.length; i<n; i++ ){
+                    html += '<li onclick="RainEdit._block_new_setting('+block_type_list[i].block_type_id+', \''+load_area+'\' )">'+block_type_list[i].name+'</li>';
+                }
+            }
+            html += '</ul></div>';
+           
+            RainPopup.html( html );
+ 
+        })
+
 
     },
     
+    block_new_list_select: function(){
+        $('.new_content_list').show();
+        $('.new_content_setting').hide();
+    },
+    
+    _block_new_setting: function ( block_type_id, load_area ){
+        if( !$('.new_content_setting').html() ){
+            var html = '<div class="new_block_setting"><a href="javascript:RainEdit.block_new_list_select();">Back</a><div class="content_form"></div></div>';
+            RainPopup.append( html );
+        }
+        $('.new_block_list').hide();
+        $('.new_block_setting').show();
+
+        html = '<form id="rain_new_block_form" action="'+ajax_file+'rain_edit/block_new/'+load_area+'/" method="post">';
+        html += '<input type="hidden" name="type_id" value="'+block_type_id+'">';
+        html += 'Title <br><input type="text" name="title" value="" class="required"/><br>';
+        html += 'Content <br><textarea name="content" class="required"></textarea>';
+        html += '<input type="submit" value="SAVE" class="btn btn-primary"/>';
+        html += '</form>';
+        
+        $('.content_form').html(html)
+        
+        $("#rain_new_block_form").validate({
+            submitHandler: function(form){
+                $('#rain_new_block_form').hide();
+                $(form).ajaxSubmit({
+                    dataType: "json",
+                    success:function( json ){
+                        if( json.success ){
+                         //   document.location.href = url + json.path;
+                        }
+                        else{
+                            RainWindow.html( json.message );
+                        }
+                    }
+                });
+            }
+        });
+        
+    },
+
     // close the block settings
     block_setting_close: function (block_id){
         $('.rain_block_edit').removeClass("selected");

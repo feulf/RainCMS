@@ -102,6 +102,26 @@
                 Content::clean_cache($block['content_id']);
             
         }
+        
+        // block type list
+        function block_type_list(){
+            $block_type_list = Content::get_block_type_list();
+            echo json_encode( array("block_type_list"=> $block_type_list ) );
+        }
+
+        // block new
+        function block_new($load_area){
+
+            $block_type_id = $this->post("block_type_id");
+            $title = $this->post("title");
+            $content = $this->post("content");
+            
+            $content_id = 1 + Content::get_last_content_id();
+            
+            DB::insert( DB_PREFIX . "content", array("title"=>$title,"content"=>$content,"type_id"=>1, "published"=>1, "lang_id"=>LANG_ID, "content_id"=>$content_id ) );
+            DB::insert( DB_PREFIX . "block", array("global"=>1,"load_area"=>$load_area,"template"=>"content","block_type_id"=>$block_type_id,"module"=>"content", "content_id"=>$content_id ) );
+
+        }
 
 
         //-------------------------------------------------------------
