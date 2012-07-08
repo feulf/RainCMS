@@ -194,7 +194,7 @@ var RainEdit = {
                     dataType: "json",
                     success:function( json ){
                         if( json.success ){
-                         //   document.location.href = url + json.path;
+                            document.location.href = url + json.path;
                         }
                         else{
                             RainWindow.html( json.message );
