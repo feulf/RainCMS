@@ -56,6 +56,11 @@ var RainEdit = {
     //
     _init_buttons: function(){
         
+        $('.rain_load_area_add_block').live("click", function(){
+            var load_area_name_class = $(this).attr('class').split(' ')[1];
+            var load_area = load_area_name_class.match(/rain_load_area_(.*)/)[1];
+            RainEdit.block_new( load_area );
+        });
         $('.rain_block_setting').live("click", function(){
             var block_class_id = $(this).attr('class').split(' ')[1];
             var block_id = (block_class_id.match(/rain_block_(\d*)/))[1];
@@ -125,6 +130,12 @@ var RainEdit = {
             })
 
         });
+
+    },
+
+    block_new: function ( load_area ){
+
+        RainPopup.init( load_area + " &gt; New Block" );
 
     },
     
@@ -230,7 +241,7 @@ var RainDragDropUpload = {
     message:'',
     init_drag_drop_upload: function(){
 
-        $('footer').append('<div class="message">HELLO</div>');
+        $('footer').append('<div class="message"></div>');
 
         this.dropbox = $('.content>.text');
         this.message = $('.message', this.dropbox);

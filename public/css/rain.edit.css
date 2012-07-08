@@ -3,6 +3,8 @@
     .rain_load_area_edit_title{padding:3px 5px;background:#9c9;color:#363;border:1px solid #696;text-shadow:1px 1px 1px #cfc;border-radius: 5px 5px 0 0;-moz-border-radius: 5px 5px 0 0;text-transform:capitalize;}
     .rain_load_area_edit:hover{background:#efe;border-radius: 5px 5px 0 0;-moz-border-radius: 5px 5px 0 0;}
     .rain_load_area_edit:hover .rain_load_area_edit_title{padding:1px 3px; border:3px solid #696;}
+    .rain_load_area_edit .icon{float:right;font-size:10px;text-shadow:none;}
+    .rain_load_area_edit .icon a{float:left;margin-left:10px;text-decoration: none;color: #363;cursor:pointer;}
     .rain_load_area_edit_content{min-height:100px;width:100%;}
 
     .rain_block_edit{}
@@ -10,7 +12,7 @@
     .rain_block_edit:hover{background:#eef;}
     .rain_block_edit_title{padding:2px 3px;background:#69c;color:#036;border:1px solid #369;text-shadow:1px 1px 1px #acf;}
     .rain_block_edit_title .icon{float:right;font-size:10px;text-shadow:none;}
-    .rain_block_edit_title .icon a{float:left;margin-left:10px;text-decoration: none;color: #036}
+    .rain_block_edit_title .icon a{float:left;margin-left:10px;text-decoration: none;color: #036;cursor:pointer;}
     .rain_block_edit:hover .rain_block_edit_title{padding:0px 1px; border:3px solid #369;}
 
     .rain_popup{width:100%;height:100%;position:fixed;z-index:10000;top:0;left:0;display:none;}
