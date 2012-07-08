@@ -1,11 +1,11 @@
 Todo:
 
-- "Add Block" and "Edit block settings" button
+- "Add Block" button
 - Edit mode accessible to all users to create different revisions (like wiki)
 - Content editable: images and content on the theme should be editable as well
 - Menu editable, menu should be editable from the front end (check branch menu_sort)
 - File module to see the list of files uploaded
-- Drag and drop to add image in the text
+- Drag and drop to uploads image in the text
 - Add sitemap on toolbar, site map should drag and drop nodes
 - Installer module
 - Change Aloha with Etch
@@ -15,8 +15,7 @@ Todo:
 - User list should be improved
 - Search, should save the user search to create the autocomplete
 - Automatic Google translate, Plugin
-- Block filter, add a new block type where you can create your query, example:
-last 10 content, of content_type news, template content_list.
+- Block filter: block type where you can create your query, example, last 10 content, of content_type news, template content_list.
 
 
 - prepare documentation of Rain:
