@@ -167,6 +167,9 @@ var RainPopup = {
             $(this).html( html ).fadeIn();
         });
     },
+    title: function(title){
+        $('.rain_popup_window_title').html(title);
+    },
     append: function(html){
         $('.rain_popup_window_content').append(html);
     },

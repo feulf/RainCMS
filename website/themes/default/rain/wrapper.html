@@ -12,7 +12,7 @@
                     <div class="rain_block_edit" id="rain_block_{$value.content.block_id}">
                 {/if}
 
-                        <div class="rain_block_edit_title">{$value.content.title}<span class="icon"><a href="javascript:block_setting('{$value.content.block_id}');">Setting</a></span></div>
+                        <div class="rain_block_edit_title"><span class="rain_block_title">{$value.content.title}</span><span class="icon"><a class="rain_block_setting rain_block_{$value.content.block_id}">Setting</a></span></div>
                         <div class="rain_block_content">{$value.html}</div>
                     </div>
                 

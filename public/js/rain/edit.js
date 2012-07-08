@@ -5,6 +5,7 @@ var RainEdit = {
         this._init_aloha();
         this._init_block_sortable();
         this._init_toolbox();
+        this._init_buttons();
     },
 
     // init aloha editor
@@ -51,41 +52,16 @@ var RainEdit = {
     
     
     _init_buttons: function(){
-        $('#edit_mode_html').live( "click", function(){
-            RainEdit.edit_mode_load_html();
+        
+        $('.rain_block_setting').live("click", function(){
+            var block_class_id = $(this).attr('class').split(' ')[1];
+            var block_id = (block_class_id.match(/rain_block_(\d*)/))[1];
+            var title_div = $(this).parent().parent().find(".rain_block_title")[0];
+            var title = $(title_div).html();
+            
+            RainEdit.block_setting( block_id, title );
         });
 
-        $('#edit_mode_themes').live( "click", function(){
-            if( $('#toolbox .theme_list').css('display') == 'block' ){
-                $('#toolbox .theme_list').fadeOut(function(){
-                    $(this).remove();
-                });
-            }
-            else{
-                $('#toolbox').append('<div class="toolbox_popout theme_list"><div class="close"></div></div>');
-                $('#toolbox .theme_list').css('display','none').fadeIn();
-                RainEdit.edit_mode_load_themes();
-                $('#toolbox .theme_list .close').click(function(){
-                    $('#toolbox .theme_list').remove();
-                })
-            }
-        });
-
-        $('#edit_mode_pages').live( "click", function(){
-            if( $('#toolbox .page_list').css('display') == 'block' ){
-                $('#toolbox .page_list').fadeOut(function(){
-                    $(this).remove();
-                });
-            }
-            else{
-                $('#edit_mode_pages').append('<div class="toolbox_popout page_list"><div class="close"></div></div>');
-                $('#toolbox .page_list').css('display','none').fadeIn();
-                RainEdit.edit_mode_load_pages();
-                $('#toolbox .page_list .close').click(function(){
-                    $('#toolbox .page_list').remove();
-                })
-            }
-        });
     },
     
     block_delete: function ( block_id ){
@@ -101,22 +77,18 @@ var RainEdit = {
         }
     },
 
-    block_setting: function ( block_id ){
+    block_setting: function ( block_id, title ){
+
+        Rain.add_script( javascript_url + "jquery/jquery.form.min.js" );
 
         $('#rain_block_'+block_id).addClass("selected");
-
-        $('body').append('<div class="rain_popup"><div class="rain_popup_bg"></div><div class="rain_popup_window"><div class="rain_popup_close"></div><div class="rain_popup_window_inner"><h1 class="rain_popup_window_title"></h1><div class="rain_popup_window_content"></div></div></div>');
-        $('.rain_popup_bg').click( function(){
-            RainEdit.block_setting_close();
-        })
-        $('.rain_popup_close').click( function(){
-            RainEdit.block_setting_close();
-        })
-
-        $('.rain_popup').fadeIn("fast");
+        if( !title )
+            title = "Loading";
+        
+        RainPopup.init( title );
 
         $.getJSON(ajax_file+"rain_edit/block_settings_get/"+block_id, function(json){
-
+            
             var title = json["block"]["name"];
             var html = "";
             if( json["options"].length ){
@@ -132,10 +104,15 @@ var RainEdit = {
                 }
                 html += '<input type="submit" value="SAVE" class="btn btn-primary"/>';
                 html += '</form>';
-
+                
+                RainPopup.html(html);
+                RainPopup.title(title);
             }
 
-            html += '<a href="javascript:block_delete('+block_id+');" class="delete">Delete the block?</a>';
+            html += '<a class="rain_block_delete">Delete this block?</a>';
+            $('.rain_block_delete').live("click",function(){
+                RainEdit.block_delete( block_id );
+            })
 
             $('.rain_popup_window_title').html( title );
             $('.rain_popup_window_content').html( html );
@@ -221,8 +198,6 @@ var RainEdit = {
         $("body").append( '<div id="toolbox"></div>' );
         $('#toolbox').append( '<a href="'+admin_file+'" class="tooltip_popup logo"></a>' );
         $('#toolbox').append( '<a id="save_changes_button" class="tooltip_popup disabled" title="Enable/disable edit mode">Save Changes</a>' );
-        
-        this._init_buttons();
     },
     
     new_content_setting: function( type_id, parent_id ){
