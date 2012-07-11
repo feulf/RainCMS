@@ -22,8 +22,8 @@ var Rain = {
         $('.rain_edit_delete').live( "click", function(){
             Rain.delete_content();
         });
-        $('.rain_user_sign_out').live( "click", function(){
-            Rain.sign_out();
+        $('.rain_user_signout').live( "click", function(){
+            Rain.signout();
         });
     },
 
@@ -115,6 +115,12 @@ var Rain = {
     new_content_list_select: function(){
         $('.new_content_list').show();
         $('.new_content_setting').hide();
+    },
+    
+    signout: function(){
+        $.get( ajax_file + 'user/signout/', function(){
+            window.location.reload(); 
+        });
     },
 
     _new_content_setting: function ( type_id, parent_id ){
