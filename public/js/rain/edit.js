@@ -7,7 +7,9 @@ var RainEdit = {
         this._init_toolbox();
         this._init_buttons();
         
-        Rain.add_script( javascript_url + "rain/edit.dragdropupload.js" );
+        
+        /* Upload image directly in content */
+        /* Rain.add_script( javascript_url + "rain/edit.dragdropupload.js" ); */
     },
 
     /* init aloha editor */

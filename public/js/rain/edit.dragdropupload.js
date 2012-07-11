@@ -36,11 +36,11 @@ var RainDragDropUpload = {
 		},
                 
                 docOver: function(file){
-                    console.log( "over" );
                 },
+
 		/* Called before each upload is started */
 		beforeEach: function(file){
-
+                    
                     var date = new Date();
                     this.image_id = date.getTime();
 
@@ -65,14 +65,14 @@ var RainDragDropUpload = {
 
     },
 
-    template :'<div class="preview">'+
+    template :'<div class="preview" style="border:3px solid #ccc;background:#eee;width:100%;height:100px;">'+
               '<img />'+
-              '<div class="progress" style="background:red;height:20px;"></div>'+
+              '<div class="progress"></div>'+
               '</div>',
 
     createImage: function (file){
 
-            var preview = $(this.template), 
+            var preview = $(this.template),
             image = $('img', preview);
 
             var reader = new FileReader();
@@ -100,7 +100,6 @@ var RainDragDropUpload = {
             */
 
             $.data(file,preview);
-            
             RainEdit.enable_save_changes_button();
     },
 
@@ -108,6 +107,5 @@ var RainDragDropUpload = {
             this.message.html(msg);
     }
 }
-
 
 RainDragDropUpload.init_drag_drop_upload();
