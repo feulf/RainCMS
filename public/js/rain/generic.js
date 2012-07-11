@@ -5,7 +5,7 @@
 
 var Rain = {
 
-    // initialize all the button for Rain
+    /* initialize all the button for Rain */
     init: function(){
         $('.rain_new_content').live( "click", function(){
             Rain.new_content();
@@ -27,20 +27,20 @@ var Rain = {
         });
     },
 
-    // load dynamically a script
+    /* load dynamically a script */
     add_script: function( url ){
         $('<script type="text/javascript" src="' + url + '" />').appendTo('body');
     },
 
-    // load dynamically a stylesheet
+    /* load dynamically a stylesheet */
     add_css: function( url ){
         $('<link rel="stylesheet" type="text/css" href="' + url + '" />').appendTo('head');
     },
 
-    // enable edit mode
+    /* enable edit mode */
     edit_mode: function(){
         var location = document.location.href;
-        var match = /edit_mode=1/
+        var match = /edit_mode=1/;
         if( !location.match(match) ){
             document.location.href += "?edit_mode=1";
         }
@@ -49,17 +49,17 @@ var Rain = {
         }
     },
 
-    // open a popup to create a new content
+    /* open a popup to create a new content */
     new_content: function(){
         
-        // load scripts
+        /* load scripts */
         Rain.add_script( javascript_url + "jquery/jquery.form.min.js" );
         Rain.add_script( javascript_url + "jquery/jquery.validate.min.js" );
         
-        // load the popup
+        /* load the popup */
         RainPopup.init( "new content" );
 
-        // get the type childs list
+        /* get the type childs list */
         $.getJSON( ajax_file + "rain_edit/content_type_childs/" + content_id, function( json ){
 
             var type_childs = json.type_childs;
@@ -87,11 +87,11 @@ var Rain = {
     },
     
     advanced_editing: function(){
-/*
+
         Rain.add_script( javascript_url + "jquery/jquery.form.min.js" );
         Rain.add_script( javascript_url + "jquery/jquery.validate.min.js" );
 
-        // get the type childs list
+        /* get the type childs list */
         $.get( ajax_file + "rain_edit/content_edit/" + content_id, function( form ){
             var html = '';
             html += form;
@@ -100,16 +100,15 @@ var Rain = {
         });
         
         RainPopup.init( "Settings" );
-        
-        
-*/
+
         window.location.href = admin_file + 'content/edit/'+content_id;
     },
     
     delete_content: function(){
         $.getJSON(ajax_file+'rain_edit/content_delete/'+content_id, function(json){
-            if( json.success )
+            if( json.success ){
                 document.location.href= url + json.path;
+            }
         });
     },
     
@@ -120,8 +119,8 @@ var Rain = {
 
     _new_content_setting: function ( type_id, parent_id ){
         if( !$('.new_content_setting').html() ){
-            var html = '// Check the field for this content type (example if news there it should be a date field)\n\
-<div class="new_content_setting"><a href="javascript:Rain.new_content_list_select();">Back</a><div class="content_form"></div></div>';
+            /* Check the field for this content type (example if news there it should be a date field) */
+            var html = '<div class="new_content_setting"><a href="javascript:Rain.new_content_list_select();">Back</a><div class="content_form"></div></div>';
             RainPopup.append( html );
         }
         $('.new_content_list').hide();
@@ -134,7 +133,7 @@ var Rain = {
         html += '<input type="submit" value="SAVE" class="btn btn-primary"/>';
         html += '</form>';
         
-        $('.content_form').html(html)
+        $('.content_form').html(html);
         
         $("#rain_new_content_form").validate({
             submitHandler: function(form){
@@ -142,10 +141,11 @@ var Rain = {
                 $(form).ajaxSubmit({
                     dataType: "json",
                     success:function( json ){
-                        if( json.success )
+                        if( json.success ){
                             document.location.href = url + json.path;
-                        else
+                        }else{
                             RainWindow.html( json.message );
+                        }
                     }
                 });
             }
@@ -155,10 +155,10 @@ var Rain = {
     
 };
 
-// init Rain
+/* init Rain */
 Rain.init();
 
-//
+/* draw a modal */
 var RainPopup = {
     id:0,
     init: function( title, html ){
@@ -196,9 +196,9 @@ var RainPopup = {
         });
     },
     _loadPopup: function(title, html, width, height){
-        if( !html ) html = "";
-        if( !width ) width = 500;
-        if( !height ) height = 300;
+        if( !html ){ html = ""; }
+        if( !width ){ width = 500; }
+        if( !height ){ height = 300; }
         $("body").css("overflow","hidden");
         $('body').append('<div class="rain_popup new_content" id="'+this.id+'"><div class="rain_popup_bg"></div><div class="rain_popup_window"><div class="rain_popup_close"></div><h1 class="rain_popup_window_title">'+title+'</h1><div class="rain_popup_window_content">'+html+'</div></div>');
         $('.rain_popup_bg').click( function(){

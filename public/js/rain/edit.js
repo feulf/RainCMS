@@ -1,6 +1,6 @@
 var RainEdit = {
     
-    // init all the tools to edit page
+    /* init all the tools to edit page */
     init: function(){
         this._init_aloha();
         this._init_block_sortable();
@@ -9,17 +9,17 @@ var RainEdit = {
         RainDragDropUpload.init_drag_drop_upload();
     },
 
-    // init aloha editor
+    /* init aloha editor */
     _init_aloha: function(){
         var $ = Aloha.jQuery;
         $('.content>.text, .content>.summary, .content>.title').aloha();
         $('.content>.text, .content>.summary, .content>.title').keyup(function(e){
             switch( e.keyCode ){
-                case 27: // Left
-                case 37: // Left
-                case 38: // Up
-                case 39: // Right
-                case 40: // Down
+                case 27: /* Esc */
+                case 37: /* Left */
+                case 38: /* Up */
+                case 39: /* Right */
+                case 40: /* Down */
                     break;
                 default:
                     RainEdit.enable_save_changes_button();
@@ -32,7 +32,7 @@ var RainEdit = {
 
     },
     
-    // Enable order content list
+    /* Enable order content list */
     _init_block_sortable: function ( content_id ){
         $(".rain_load_area_edit_content").each(function(){
             $(this).sortable({
@@ -51,9 +51,9 @@ var RainEdit = {
 
     },
     
-    //
+    /*
     // Fix the block setting functionality
-    //
+    */
     _init_buttons: function(){
         
         $('.rain_load_area_add_block').live("click", function(){
@@ -135,16 +135,16 @@ var RainEdit = {
 
     block_new: function ( load_area ){
 
-        // open a popup to create a new block
+        /* open a popup to create a new block */
 
-        // load scripts
+        /* load scripts */
         Rain.add_script( javascript_url + "jquery/jquery.form.min.js" );
         Rain.add_script( javascript_url + "jquery/jquery.validate.min.js" );
 
-        // load the popup
+        /* load the popup */
         RainPopup.init( load_area + " &gt; New Block" );
 
-        // get the type childs list
+        /* get the type childs list */
         $.getJSON( ajax_file + "rain_edit/block_type_list/" + load_area, function( json ){
 
             var block_type_list = json.block_type_list;
@@ -206,7 +206,7 @@ var RainEdit = {
         
     },
 
-    // close the block settings
+    /* close the block settings */
     block_setting_close: function (block_id){
         $('.rain_block_edit').removeClass("selected");
         $('.rain_popup').fadeOut("fast", function(){
@@ -215,7 +215,7 @@ var RainEdit = {
         })
     },
     
-    // reload one selected block
+    /* reload one selected block */
     block_refresh: function (){
         window.location.reload();
     },
@@ -231,11 +231,11 @@ var RainEdit = {
     },
     
     
-    // save the change of the page
+    /* save the change of the page */
     save_changes: function (){
         RainEdit.disable_save_changes_button();
 
-        // save the position of the blocks
+        /* save the position of the blocks */
         $(".rain_load_area_edit_content").each( function(i){
             var load_area = this.id.substr(15);
             var sortedList = $(this).sortable("serialize");
@@ -248,14 +248,14 @@ var RainEdit = {
             });
         })
 
-        // save the content of the blocks
+        /* save the content of the blocks */
         var block_to_edit = [];
         $('.rain_block_editable').each(function(){
             var class_list = $(this).attr('class');
             if( m = class_list.match( /.*rain_content_(\d*).*/ ) ){
                 var content_id = m[1];
 
-                // get title and text of the content
+                /* get title and text of the content */
                 var content_text = $('.rain_content_' + content_id + ' .content>.text' ).html();
                 var content_title = $('.rain_content_' + content_id + ' .content>.title' ).html();
                 var content_summary = $('.rain_content_' + content_id + ' .content>.summary' ).html();
@@ -264,11 +264,11 @@ var RainEdit = {
                     content:content_text,
                     summary:content_summary
                 }, function(){
-                    //edit_mode_off();
+                    /* edit_mode_off(); */
                     });
             }
             else{
-            //edit_mode_off();
+            /* edit_mode_off(); */
             }
 
         })
@@ -313,14 +313,14 @@ var RainDragDropUpload = {
         this.dropbox = $('.content>.text');
         this.message = $('.message', this.dropbox);
 	this.dropbox.filedrop({
-		// The name of the $_FILES entry:
+		/* The name of the $_FILES entry: */
 		paramname:'file',
 		maxfiles: 5,
                 maxfilesize: 2,
 		url: ajax_file + 'rain_edit/upload_image_content/'+content_id,
 		uploadFinished:function(i,file,response){
 			$.data(file).addClass('done');
-			// response is the JSON object that post_file.php returns
+			/* response is the JSON object that post_file.php returns */
 		},
                 error: function(err, file) {
 			switch(err) {
@@ -338,7 +338,7 @@ var RainDragDropUpload = {
 					break;
 			}
 		},
-		// Called before each upload is started
+		/* Called before each upload is started */
 		beforeEach: function(file){
 
                     var date = new Date();
@@ -347,8 +347,8 @@ var RainDragDropUpload = {
 			if(!file.type.match(/^image\//)){
 				alert('Only images are allowed!');
 
-				// Returning false will cause the
-				// file to be rejected
+				/* Returning false will cause the
+				   file to be rejected */
 				return false;
 			}
 		},
@@ -358,7 +358,7 @@ var RainDragDropUpload = {
 		},
 		
 		progressUpdated: function(i, file, progress) {
-			//$.data(file).find('.progress').width(progress);
+			/*$.data(file).find('.progress').width(progress);*/
 		}
     	 
 	});
@@ -367,7 +367,7 @@ var RainDragDropUpload = {
 
     template :'<div class="preview">'+
               '<img />'+
-              //'<div class="progress" style="background:red;height:20px;"></div>'+
+              /*'<div class="progress" style="background:red;height:20px;"></div>'+*/
               '</div>',
 
     createImage: function (file){
@@ -381,21 +381,23 @@ var RainDragDropUpload = {
             image.height = 100;
 
             reader.onload = function(e){
-                    // e.target.result holds the DataURL which
-                    // can be used as a source of the image:
+                    /* e.target.result holds the DataURL which
+                    can be used as a source of the image: */
 
                     image.attr('src',e.target.result);
             };
 
-            // Reading the file as a DataURL. When finished,
-            // this will trigger the onload function above:
+            /* Reading the file as a DataURL. When finished,
+               this will trigger the onload function above:
+            */
             reader.readAsDataURL(file);
 
             this.message.hide();
             preview.appendTo(this.dropbox);
 
-            // Associating a preview container
-            // with the file, using jQuery's $.data():
+            /* Associating a preview container
+               with the file, using jQuery's $.data():
+            */
 
             $.data(file,preview);
             
