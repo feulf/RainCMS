@@ -56,15 +56,15 @@
             $plugins_json = file_get_contents( $plugins_filepath );
             $plugins = json_decode($plugins_json, $assoc=true);
 
-            foreach( $plugins["plugins_load"] as $plugin => $plugin_status ){
-                if( $plugin_status == "enabled" )
-                    require PLUGINS_DIR . $plugin . "/" . $plugin . ".php";
+            foreach( $plugins["plugins_load"] as $plugin ){
+                if( $plugin["status"] == "enabled" )
+                    require PLUGINS_DIR . $plugin["name"] . "/" . $plugin["name"] . ".php";
             }
             load_actions( "plugin_loaded", array("loader"=>$this) );
-            
-            foreach( $plugins["plugins"] as $plugin => $plugin_status ){
-                if( $plugin_status == "enabled" )
-                    require PLUGINS_DIR . $plugin . "/" . $plugin . ".php";
+
+            foreach( $plugins["plugins"] as $plugin ){
+                if( $plugin["status"] == "enabled" )
+                    require PLUGINS_DIR . $plugin["name"] . "/" . $plugin["name"] . ".php";
             }
 
             load_actions( "after_init", array("loader"=>$this) );
@@ -172,7 +172,6 @@
             // if null path = ""
             if (null === $this->path)
                 $this->path = "";
-
 
             // The content exists
             if ($content = Content::get_content_by_path($this->path)) {
@@ -373,7 +372,7 @@
                 call_user_func_array(array($controller_obj, $action), $params);            // call the selected action
                 $html = ob_get_clean();    // close the output buffer
 
-                list( $time, $memory ) = $this->_get_benchmark("module");
+                list( $time, $memory ) = $this->get_benchmark("module");
                 $this->loaded_modules[] = array("module" => $module, "execution_time" => $time, "execution_memory" => $memory);
 
             } else {
@@ -501,7 +500,7 @@
 
 
             // - BENCHMARK ------
-            list( $timer, $memory ) = $this->_get_benchmark();
+            list( $timer, $memory ) = $this->get_benchmark();
             $tpl->assign("execution_time", $timer);
             $tpl->assign("memory_used", $memory);
             $tpl->assign("loaded_modules", $this->loaded_modules);
@@ -657,7 +656,7 @@
          * @param type $benchmark
          * @return type 
          */
-        protected function _get_benchmark($benchmark = null) {
+        function get_benchmark($benchmark = null) {
             return array(timer($benchmark), memory_usage($benchmark));
         }
 
