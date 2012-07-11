@@ -696,7 +696,7 @@
 
                 $file_id = DB::get_last_id();
 
-                return json_encode(array('result' => true, 'file_id' => $file_id, 'filepath' => $filepath, 'dir' => UPLOADS_URL));
+                echo json_encode(array('result' => true, 'file_id' => $file_id, 'filepath' => $filepath, 'dir' => UPLOADS_URL));
             }
         }
 
