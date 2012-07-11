@@ -1,10 +1,19 @@
 {
     "plugins_load" : [
-                      {"gzip" : "enabled"},
-                      {"cache" : "disabled"}
+                      { 
+                        "name":"gzip",
+                        "status": "enabled"
+                      },
+                      { 
+                        "name":"cache",
+                        "status":"disabled"
+                      }
                      ],
     "plugins" : [
-                    {"compress":"disabled"}
+                    {
+                      "name":"compress",
+                      "status":"disabled" 
+                    }
                 ]
 
 }
