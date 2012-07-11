@@ -24,5 +24,6 @@ Todo (Alpha version):
 
 
 Todo (next version)
+
 - Convert to psr-0
 - Prepare the package for composer
