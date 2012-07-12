@@ -1,4 +1,51 @@
-Welcome and thanks to try Rain
+----------------------------------------------------
 
-Rain is the coolest way to create awesome website and to manage them in a surprising easy way.
-Have fun and enjoy your creativity.
+                  / _ \___ _(_)__
+                 / , _/ _ `/ / _ \
+                /_/|_|\_,_/_/_//_/
+
+          Woo Hoo you are part of the Rain team
+            We're cool and so you are!
+
+----------------------------------------------------
+
+                
+Rain is a tool to create awesome website and to manage them simply with a blink of an eye!
+
+
+
+Install
+-------
+
+1. clone Rain in your WWW folder
+git clone https://github.com/rainphp/Rain.git
+
+2. create a database rain and import in it the file raincms2.sql
+
+3. edit the file config/db.php with the right database account information
+
+
+
+Use
+---
+
+access http://localhost/Rain to navigate the website.
+
+Administration:
+http://localhost/Rain/admin
+login demo@demo.com
+pw demo
+
+
+Debugging
+---
+
+Rain cache the HTML, CSS and JS so in order to see any changes on templates or CSS or JS, you have to be logged as administrator, or even better delete all the cache files with this command:
+rm -r cache/html/* public/cache/* cache/website/* cache/views/*
+
+
+
+Suggestion
+----------
+
+Take a good Beer or a Coke, some chips and have fun playing with it!
