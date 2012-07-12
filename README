@@ -20,7 +20,7 @@ Install
 1. clone Rain in your WWW folder
 git clone https://github.com/rainphp/Rain.git
 
-2. create a database rain and import in it the file raincms2.sql
+2. create a database rain and import in it the file raincms.sql
 
 3. edit the file config/db.php with the right database account information
 
