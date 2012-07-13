@@ -4,13 +4,17 @@
                  / , _/ _ `/ / _ \
                 /_/|_|\_,_/_/_//_/
 
-          Woo Hoo you are part of the Rain team
-            We're cool and so you are!
+               RainCMS alpha 1.0
+       If you can read this you have 20/20
 
 ----------------------------------------------------
-
                 
+
 Rain is a tool to create awesome website and to manage them simply with a blink of an eye!
+
+Rain Alpha 1.0 has been just released, so please report any issue and be patient, in the next few days we'll publish the App Store, so you'll be able to download and install more modules and themes.
+
+
 
 
 
@@ -42,7 +46,6 @@ Debugging
 
 Rain cache the HTML, CSS and JS so in order to see any changes on templates or CSS or JS, you have to be logged as administrator, or even better delete all the cache files with this command:
 rm -r cache/html/* public/cache/* cache/website/* cache/views/*
-
 
 
 Suggestion
