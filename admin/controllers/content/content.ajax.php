@@ -235,16 +235,24 @@
                     $published = post($lang_id . '_published');
 
                     // SET LANGUAGE FIELD QUERY
-                    $query_field = "";
-                    if ($multilanguage_field_list)
-                        foreach ($multilanguage_field_list as $field)
-                            $query_field .= "," . $field['name'] . "='" . post($lang_id . "_" . $field['name']) . "'" . "\n";
+                    $query_field = "title=:title, published=:published";
+                    $prepared_values[":title"] = $title;
+                    $prepared_values[":published"] = $published;
+                    
+                    if ($multilanguage_field_list){
+                        $query_field .= ",";
+                        foreach ($multilanguage_field_list as $field){
+                            $query_field .= $field['name'] . "=:" . $field['name'] . ",";
+                            $prepared_values[ ":" . $field['name'] ] = post($lang_id . "_" . $field['name']);
+                        }
+                    }
 
                     // TAGS
-                    if ($type['tags_enabled'])
-                        $query_field .= ",tags='" . post($lang_id . "_tags") . "'\n";
-
-
+                    if ($type['tags_enabled']){
+                        $query_field .= "tags=:tags";
+                        $prepared_values[":tags"] = post( $lang_id . "_tags");
+                    }
+                    
                     // CREATE NEW CONTENT IF THE LANGUAGE DOESN'T EXSISTS
                     if (!Content::get_content($content_id, $lang_id))
                         DB::insert( DB_PREFIX."content", array("content_id"=>$content_id,"lang_id"=>$lang_id) );
@@ -252,11 +260,9 @@
                     // UPDATE CONTENT MULTILANGUAGES
 
                     db::query("UPDATE " . DB_PREFIX . "content
-                               SET  title = :title,
-                                    published = :published
-                                    $query_field
+                               SET  $query_field
                                WHERE content_id=:content_id AND lang_id=:lang_id",
-                               array(":title"=>$title, ":published"=>$published, ":content_id"=>$content_id, ":lang_id"=>$lang_id )
+                               $prepared_values + array(":content_id"=>$content_id, ":lang_id"=>$lang_id )
                              );
 
                     // UPDATE CONTENT MULTILANGUAGES
