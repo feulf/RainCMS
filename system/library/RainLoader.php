@@ -32,7 +32,7 @@
                     $layout,
                     $layout_id = LAYOUT_ID_GENERIC,
                     $selected_module,
-                    $blocks = array();
+                    $block_list = array();
 
         
         
@@ -105,6 +105,9 @@
             }
             $this->theme = $settings['theme'];
             require CONFIG_DIR . "url.php";
+            
+            load_actions( "after_init_settings", array("loader"=>$this) );
+
         }
 
 
@@ -432,7 +435,7 @@
             $this->assign("menu", db::get_all("SELECT c.content_id, c.title AS name, c.path AS link, IF( ? LIKE CONCAT(c.path,'%') AND ( c.path != '' OR ? = '' ), 1, 0 ) AS selected 
                                                FROM " . DB_PREFIX . "content c
                                                JOIN " . DB_PREFIX ."content_rel r ON c.content_id=r.content_id AND r.rel_type='parent'
-                                               WHERE c.menu_id = 2
+                                               WHERE c.menu_id = 2 AND c.published=1
                                                ORDER BY r.position", 
                                                array($this->path, $this->path)
                     )
@@ -441,7 +444,7 @@
             $this->assign("menu2", db::get_all("SELECT c.content_id, c.title AS name, c.path AS link, IF( ? LIKE CONCAT(c.path,'%') AND ( c.path != '' OR ? = '' ), 1, 0 ) AS selected
                                                 FROM " . DB_PREFIX . "content c
                                                 JOIN " . DB_PREFIX ."content_rel r ON c.content_id=r.content_id AND r.rel_type='parent'
-                                                WHERE c.menu_id = 3
+                                                WHERE c.menu_id = 3 AND c.published=1
                                                 ORDER BY r.position", 
                                                 array($this->path, $this->path)
                     )
