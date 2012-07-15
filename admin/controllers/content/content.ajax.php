@@ -240,16 +240,15 @@
                     $prepared_values[":published"] = $published;
                     
                     if ($multilanguage_field_list){
-                        $query_field .= ",";
                         foreach ($multilanguage_field_list as $field){
-                            $query_field .= $field['name'] . "=:" . $field['name'] . ",";
+                            $query_field .= "," . $field['name'] . "=:" . $field['name'];
                             $prepared_values[ ":" . $field['name'] ] = post($lang_id . "_" . $field['name']);
                         }
                     }
 
                     // TAGS
                     if ($type['tags_enabled']){
-                        $query_field .= "tags=:tags";
+                        $query_field .= ",tags=:tags";
                         $prepared_values[":tags"] = post( $lang_id . "_tags");
                     }
                     
@@ -260,7 +259,7 @@
                     // UPDATE CONTENT MULTILANGUAGES
 
                     db::query("UPDATE " . DB_PREFIX . "content
-                               SET  $query_field
+                               SET $query_field
                                WHERE content_id=:content_id AND lang_id=:lang_id",
                                $prepared_values + array(":content_id"=>$content_id, ":lang_id"=>$lang_id )
                              );
