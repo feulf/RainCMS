@@ -29,29 +29,30 @@
         "changefreq":"2",
         "priority":"0.7",
         "fields":[{
-                        "name" : "content",
-                        "field_type" : "word",
-                        "validation" : "required",
-                        "command" : "",
-                        "param" : "",
-                        "layout" : "row",
-                        "multilanguage" : "1",
-                        "position" : "3",
-                        "multilanguage" : "1"
-                  }]
+            "name" : "content",
+            "field_type" : "word",
+            "validation" : "required",
+            "command" : "",
+            "param" : "",
+            "layout" : "row",
+            "multilanguage" : "1",
+            "position" : "3",
+            "multilanguage" : "1"
         }],
-        "parents":["1"],
-        "block":[{
-                        "type":"content",
-                        "lang_index":"content",
-                        "template":"block",
-                        "options":[{
-                                    "name" : "n_contents",
-                                    "field_type" : "text",
-                                    "validation" : "required",
-                                    "position"   : "1"
-                            }]
-                }]
-
+        "parents":["1"]
+    }],
+    "block_type":[{
+        "block_type_id":"1",
+        "type":"content",
+        "lang_index":"content",
+        "template":"block",
+        "options":[{
+            "name" : "n_contents",
+            "field_type" : "text",
+            "validation" : "required",
+            "position"   : "1"
+        }]
+    }]
+    
 
 }
