@@ -53,10 +53,10 @@
                 return drawMsg('content type uknown', WARNING, $close = true);
 
             // CONTENT TEMPLATE
-            $template_index = "cms/views/" . get_setting('theme') . "/" . ( $type['template_index'] ? $type['template_index'] : null );
+            $template_index = THEMES_DIR . get_setting('theme') . "/" . ( $type['template_index'] ? $type['template_index'] : null );
             $template_list_temp = glob($template_index . "*");
             $strlen_index = strlen($template_index);
-
+            
             for ($i = 0, $template_list = array(); $i < count($template_list_temp); $i++) {
                 $l = file_name(substr($template_list_temp[$i], $strlen_index));
                 // i get all layout that has not "block." in the name
@@ -289,11 +289,11 @@
                                 SET layout_id       = :layout_id,
                                     type_id        = :type_id,
                                     menu_id        = :menu_id, 
-                                    date              = :date,
-                                    template          = :template,
+                                    date            = :date,
+                                    template        = :template,
                                     read_access     = :read_access,
-                                    last_edit_time    = UNIX_TIMESTAMP(),
-                                    changefreq        = :changefreq,
+                                    last_edit_time  = UNIX_TIMESTAMP(),
+                                    changefreq      = :changefreq,
                                     priority        = :priority
                                     $query_field
                                 WHERE content_id='$content_id'", array(":layout_id" => $layout_id, ":type_id" => $type_id, ":menu_id" => $menu_id, ":date" => $date, ":template" => $template, ":read_access" => $read_access, ":changefreq" => $changefreq, ":priority" => $priority)
