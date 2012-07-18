@@ -29,13 +29,13 @@ var RainInstaller = {
         });
     },
     deactivate:function(classes){
-        var module = RainInstaller.get_selected_module(classes)        
+        var module = RainInstaller.get_selected_module(classes);   
         $.get( ajax_file + "installer/deactivate/"+module, function( html ){
             location.reload(true);
         });
     },
     remove:function(classes){
-        var module = RainInstaller.get_selected_module(classes)
+        var module = RainInstaller.get_selected_module(classes);
         $.get( ajax_file + "installer/remove/"+module, function( html ){
             location.reload(true);
         });
