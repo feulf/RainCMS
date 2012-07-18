@@ -595,14 +595,14 @@
 
         static function get_module($module) {
             return db::get_row("SELECT *
-                                FROM " . DB_PREFIX . "module m
+                                FROM " . DB_PREFIX . "module
                                 WHERE module=?"
                             , array($module));
         }
 
         static function get_module_list() {
             return db::get_all("SELECT *
-                                FROM " . DB_PREFIX . "module m
+                                FROM " . DB_PREFIX . "module
                                 ORDER BY module",
                                 array(),
                                 "module"
