@@ -7,7 +7,7 @@ class InstallerModule extends Module {
         $app_list_url  = "http://localhost/RainInstaller/module_list.php";
 
     function index() {
-        
+
         add_script( "installer/js/installer.js", $this->loader->theme_dir );
 
         // installed modules

@@ -3,13 +3,13 @@
 class InstallerAjaxModule extends Module {
 
     var $app_download = "http://localhost/RainInstaller/news.zip",
-            $app_list_url = "http://localhost/RainInstaller/module_list.php";
+        $app_list_url = "http://localhost/RainInstaller/module_list.php";
 
     function index() {
-        
+
     }
 
-    function install($module) {
+    function install( $module ) {
 
         // check if the module is already installed
         if (Content::get_module($module))
@@ -44,7 +44,10 @@ class InstallerAjaxModule extends Module {
         // get the type list
         $type_list = $type_info["type"];
 
-        // install the types
+        // get the block type list
+        $block_type_list = $type_info["block_type"];
+
+        // install the content types and fields
         foreach ($type_list as $type) {
 
             // get the fields
@@ -79,7 +82,16 @@ class InstallerAjaxModule extends Module {
                     DB::insert(DB_PREFIX . "content_type_tree", array("type_id" => $type["type_id"], "parent_id" => $parent));
                 }
             }
+
         }
+        
+        
+        // install the type for the blocks
+        foreach ($block_type_list as $type) {
+            DB::insert(DB_PREFIX . "block_type", array("block_type_id" => $type["block_type_id"], "type" => $type["type"], "template" => $type["template"] ));
+        }
+        
+        
     }
 
     protected function _install_templates($module) {
