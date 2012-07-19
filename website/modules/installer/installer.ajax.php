@@ -2,7 +2,7 @@
 
 class InstallerAjaxModule extends Module {
 
-    var $app_download = "http://localhost/RainInstaller/news.zip",
+    var $app_download = "http://localhost/RainInstaller/",
         $app_list_url = "http://localhost/RainInstaller/module_list.php";
 
     function index() {
@@ -127,13 +127,15 @@ class InstallerAjaxModule extends Module {
         $module = strtolower($module);
 
         // Download the zip
-        $ch = curl_init($this->app_download);
+        $module_url = $this->app_download . $module . ".zip";
+        $ch = curl_init( $module_url );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $data = curl_exec($ch);
         curl_close($ch);
-
+        
         $zip_filepath = MODULES_DIR . $module . ".zip";
         $destination_folder = MODULES_DIR;
+        
 
 
         // Save on the disk
