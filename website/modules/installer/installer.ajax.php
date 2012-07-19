@@ -12,8 +12,8 @@ class InstallerAjaxModule extends Module {
     function install( $module ) {
 
         // check if the module is already installed
-        if (Content::get_module($module))
-            return true;
+//        if (Content::get_module($module))
+//            return true;
 
         // read the manifest
         $manifest_filepath = MODULES_DIR . $module . "/install/manifest.json";
@@ -95,18 +95,16 @@ class InstallerAjaxModule extends Module {
     }
 
     protected function _install_templates($module) {
+        
         $themes = dir_list(THEMES_DIR);
         foreach ($themes as $theme) {
-            $template_folder = THEMES_DIR . $theme . "/" . $module;
+            $template_folder = THEMES_DIR . $theme . "/" . $module . "/";
             if (!is_dir($template_folder)) {
                 mkdir($template_folder);
 
                 // copy all templates to the templates folder
-                $templates = glob(MODULES_DIR . $module . "/templates/*.html");
-                foreach ($templates as $template) {
-                    $destination_file = BASE_DIR . THEMES_DIR . $theme . "/" . $module . "/" . basename($template);
-                    copy($template, $destination_file);
-                }
+                $destination_folder = THEMES_DIR . $theme;
+                dir_copy( MODULES_DIR . $module . "/install/templates/", $destination_folder );
             }
         }
     }
