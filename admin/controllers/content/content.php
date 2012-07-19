@@ -352,7 +352,7 @@
 
             // get children list of type
             $child_type = array();
-            $type_id = $type['type_id'] > 0 ? $type['type_id'] : 1;
+            $type_id = $type['type_id'] > 0 ? $type['type_id'] : 0;
             if ($ct = Content::get_content_type_childs($type_id))
                 foreach ($ct as $t) {
 
