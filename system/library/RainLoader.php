@@ -343,8 +343,6 @@
             if (file_exists( $module_filepath = self::$modules_dir . $module . "/" . $module . $module_extension)) {
                 require_once $module_filepath;
 
-                
-
                 // - RENDER THE MODULE ------
 
                 $this->_start_benchmark("module");
@@ -371,9 +369,14 @@
                 if (!is_callable(array($controller_obj, $action)))
                     $this->_page_not_found("content not found");
 
-                ob_start(); // start the output buffer
-                call_user_func_array(array($controller_obj, $action), $params);            // call the selected action
-                $html = ob_get_clean();    // close the output buffer
+                try{
+                
+                    ob_start(); // start the output buffer
+                    call_user_func_array(array($controller_obj, $action), $params);            // call the selected action
+                    $html = ob_get_clean();    // close the output buffer
+                }catch( Exception $e ){
+                    $this->_page_not_found( $e->getMessage() );
+                }
 
                 list( $time, $memory ) = $this->get_benchmark("module");
                 $this->loaded_modules[] = array("module" => $module, "execution_time" => $time, "execution_memory" => $memory);
