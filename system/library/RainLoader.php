@@ -234,7 +234,6 @@
                 $this->module = $router->get_controller();
                 $this->action = $router->get_action();
                 $this->params = $router->get_params();
-                
                 $layout = Content::get_layout( $this->layout_id );
                 $this->layout = "layout." . $layout["template"];
 
@@ -309,7 +308,7 @@
          * @param string $module_extension Filename of the module
          * @param string $module_class_name Classname of the module
          */
-        function load_module($module = null, $action = null, $params = array(), $load_area = "center", $selected = true, $content = null, $module_extension = null, $module_class_name = null) {
+        function load_module($module = null, $action = null, $params = array(), $load_area = "center", $selected = true, $content = null, $module_extension = null, $module_class_name = null, $page_not_found_on_error = true ) {
 
             // load the Module class
             require_once LIBRARY_DIR     . "Module.php";
@@ -335,10 +334,16 @@
             load_lang( $module );
             
             // check if the module is activated
-            $module_row = Content::get_module($module);
-            if( !$module_row["published"] )
-                $this->_page_not_found ();
+//            $module_row = Content::get_module($module);
+//            if( !$module_row["published"] )
+//                $this->_page_not_found ();
 
+
+            // everything is OK
+            $status         = SUCCESS;
+            $html           = "";
+
+            
             // - LOAD MODULE ------
             if (file_exists( $module_filepath = self::$modules_dir . $module . "/" . $module . $module_extension)) {
                 require_once $module_filepath;
@@ -361,37 +366,65 @@
                 // init module object
                 $init_params = array("loader" => $this, "selected" => $selected, "content" => $content );
 
-                if( class_exists($controller_class) )
+                if( class_exists($controller_class) ){
+                    
                     $controller_obj = new $controller_class($init_params);
-                else
-                    $this->_page_not_found("content not found");
 
-                if (!is_callable(array($controller_obj, $action)))
-                    $this->_page_not_found("content not found");
+                    if (is_callable(array($controller_obj, $action))){
+                        
+                        try{
 
-                try{
-                
-                    ob_start(); // start the output buffer
-                    call_user_func_array(array($controller_obj, $action), $params);            // call the selected action
-                    $html = ob_get_clean();    // close the output buffer
-                }catch( Exception $e ){
-                    $this->_page_not_found( $e->getMessage() );
+                            ob_start();                                                         // start the output buffer
+                            call_user_func_array( array($controller_obj, $action), $params );   // call the selected action
+                            $html = ob_get_clean();                                             // close the output buffer
+
+                        }catch( Exception $e ){
+                            
+                            $status = ERROR;
+                            $html = $e->getMessage();
+
+                        }
+                        
+                    }
+                    else{
+                        $status = ERROR;
+                        $html = "module not found";
+                    }
+
+                    
+                }
+                else{
+                    
+                    $status = ERROR;
+                    $html = "module not found";
+                    
                 }
 
-                list( $time, $memory ) = $this->get_benchmark("module");
-                $this->loaded_modules[] = array("module" => $module, "execution_time" => $time, "execution_memory" => $memory);
-
             } else {
-                $this->_page_not_found("content not found");
+                
+                $status         = ERROR;
+                $html           = "module not found";
+
             }
 
 
+            if( $status == ERROR && $page_not_found_on_error ){
+                $this->_page_not_found( $html );
+            }
+            
+            // benchmark
+            list( $time, $memory ) = $this->get_benchmark("module");
+            $this->loaded_modules[] = array( "module" => $module, "execution_time" => $time, "execution_memory" => $memory, "status" => $status );
+
+            
             // if it is in ajax mode print and stop the execution of the script
-            if ($this->ajax_mode)
+            if ( $this->ajax_mode )
                 $this->_draw_ajax($html);
             else {
                 $this->load_area_array[$load_area][] = array("html" => $html, "module" => $module, "content" => $content);
             }
+            
+
 
         }
 
@@ -423,9 +456,10 @@
          * @param string $block 
          */
         function block($block) {
+
             // get the settings and the parameters
             $params = Content::get_block_settings( $block["block_id"] );
-            $this->load_module($block['module'], $action = "draw", $params, $block['load_area'], $selected = false, $block, BLOCK_EXTENSION, BLOCK_CLASS_NAME);
+            $this->load_module($block['module'], $action = "draw", $params, $block['load_area'], $selected = false, $block, BLOCK_EXTENSION, BLOCK_CLASS_NAME, $page_not_found_on_error = false );
 
         }
 
