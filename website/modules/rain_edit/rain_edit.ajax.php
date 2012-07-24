@@ -121,6 +121,8 @@
             DB::insert( DB_PREFIX . "content", array("title"=>$title,"content"=>$content,"type_id"=>1, "published"=>1, "lang_id"=>LANG_ID, "content_id"=>$content_id ) );
             DB::insert( DB_PREFIX . "block", array("global"=>1,"load_area"=>$load_area,"template"=>"content","block_type_id"=>$block_type_id,"module"=>"content", "content_id"=>$content_id ) );
 
+            echo json_encode( array("success"=>true, "path"=>$path) );
+
         }
 
 

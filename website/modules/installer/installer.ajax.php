@@ -2,7 +2,7 @@
 
 class InstallerAjaxModule extends Module {
 
-    var $app_download = "http://localhost/RainInstaller/",
+    var $app_download = "http://localhost/RainInstaller/modules/",
         $app_list_url = "http://localhost/RainInstaller/module_list.php";
 
     function index() {
@@ -10,6 +10,7 @@ class InstallerAjaxModule extends Module {
     }
 
     function install( $module ) {
+
 
         // check if the module is already installed
 //        if (Content::get_module($module))
@@ -40,7 +41,7 @@ class InstallerAjaxModule extends Module {
         $type_filepath = MODULES_DIR . $module . "/install/type.json";
         $type_json = file_get_contents($type_filepath);
         $type_info = json_decode($type_json, $assoc = true);
-
+        
         // get the type list
         $type_list = $type_info["type"];
 
@@ -85,12 +86,10 @@ class InstallerAjaxModule extends Module {
 
         }
         
-        
         // install the type for the blocks
         foreach ($block_type_list as $type) {
             DB::insert(DB_PREFIX . "block_type", array("block_type_id" => $type["block_type_id"], "type" => $type["type"], "template" => $type["template"] ));
         }
-        
         
     }
 

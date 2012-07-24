@@ -156,7 +156,7 @@ var RainEdit = {
             html += '<div class="new_block_list"><ul>';
             if( block_type_list ){
                 for( var i = 0, n=block_type_list.length; i<n; i++ ){
-                    html += '<li onclick="RainEdit._block_new_setting('+block_type_list[i].block_type_id+', \''+load_area+'\' )">'+block_type_list[i].name+'</li>';
+                    html += '<li onclick="RainEdit._block_new_setting('+block_type_list[i].block_type_id+', \''+load_area+'\' )">'+block_type_list[i].type+'</li>';
                 }
             }
             html += '</ul></div>';
@@ -187,9 +187,9 @@ var RainEdit = {
         html += 'Content <br><textarea name="content" class="required"></textarea>';
         html += '<input type="submit" value="SAVE" class="btn btn-primary"/>';
         html += '</form>';
-        
+
         $('.content_form').html(html)
-        
+
         $("#rain_new_block_form").validate({
             submitHandler: function(form){
                 $('#rain_new_block_form').hide();
@@ -197,20 +197,21 @@ var RainEdit = {
                     dataType: "json",
                     success:function( json ){
                         if( json.success ){
-                            document.location.href = url + json.path;
+                            this.block_refresh();
                         }
                         else{
                             RainWindow.html( json.message );
                         }
                     }
+
                 });
             }
         });
-        
+
     },
 
     /* close the block settings */
-    block_setting_close: function (block_id){
+    block_setting_close: function ( block_id ){
         $('.rain_block_edit').removeClass("selected");
         $('.rain_popup').fadeOut("fast", function(){
             $("html,body").css("overflow","scroll");
