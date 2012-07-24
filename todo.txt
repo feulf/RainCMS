@@ -1,17 +1,17 @@
 Todo (Alpha version):
 
-- "Add Block" button
+- When you click on Add Block, the popup show the block type you can add, when you select one you should have different options, for example if you add a News module it should just load the News, instead if you add a Content module you should be able to add your content.
 - Edit mode accessible to all users to create different revisions (like wiki)
-- Content editable: images and content on the theme should be editable as well
+- Static Content editable: images and content on the theme should be editable as well
 - Menu editable, menu should be editable from the front end (check branch menu_sort)
-- File module to see the list of files uploaded
-- Drag and drop to uploads image in the text
+- File module to see the list of files uploaded (masonry)
+- Drag and drop to uploads image in the text (uncomment RainEdit upload script)
 - Add sitemap on toolbar, site map should drag and drop nodes
-- Installer module
+- Installer module (improve the module)
 - Change Aloha with Etch
 - Content_type module to add new content type
-- Automatic Upgrade
-- Production mode, fatal error should bring to 404
+- Auto upgrade. Manage the versions of components and core libraries
+- Production mode, any fatal error it should bring to 404
 - User list should be improved
 - Search, should save the user search to create the autocomplete
 - Automatic Google translate, Plugin
