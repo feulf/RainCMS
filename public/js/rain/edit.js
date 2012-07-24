@@ -181,14 +181,14 @@ var RainEdit = {
         $('.new_block_list').hide();
         $('.new_block_setting').show();
 
-        html = '<form id="rain_new_block_form" action="'+ajax_file+'rain_edit/block_new/'+load_area+'/" method="post">';
-        html += '<input type="hidden" name="type_id" value="'+block_type_id+'">';
+        html =  '<form id="rain_new_block_form" action="'+ajax_file+'rain_edit/block_new/'+load_area+'/" method="post">';
+        html += '<input type="hidden" name="block_type_id" value="'+block_type_id+'">';
         html += 'Title <br><input type="text" name="title" value="" class="required"/><br>';
         html += 'Content <br><textarea name="content" class="required"></textarea>';
         html += '<input type="submit" value="SAVE" class="btn btn-primary"/>';
         html += '</form>';
 
-        $('.content_form').html(html)
+        $('.content_form').html(html);
 
         $("#rain_new_block_form").validate({
             submitHandler: function(form){
@@ -197,7 +197,7 @@ var RainEdit = {
                     dataType: "json",
                     success:function( json ){
                         if( json.success ){
-                            this.block_refresh();
+                            RainEdit.block_refresh();
                         }
                         else{
                             RainWindow.html( json.message );

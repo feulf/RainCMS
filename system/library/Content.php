@@ -376,15 +376,17 @@
 
         // return Block List
         static function get_block_list($layout_id = 0, $type_id = 0, $content_id = 0) {
-            return DB::get_all("SELECT c.*, c.path AS link, t.*, b.*
+            return DB::get_all("SELECT c.*, c.path AS link, t.*, b.*, bt.module
                                 FROM " . DB_PREFIX . "block AS b
+                                JOIN " . DB_PREFIX . "block_type bt ON b.block_type_id = bt.block_type_id
                                 JOIN " . DB_PREFIX . "content AS c ON b.content_id = c.content_id
                                 JOIN " . DB_PREFIX . "content_type AS t ON c.type_id = t.type_id
                                 WHERE b.global = 1
                                 OR ( :layout_id>0 AND b.layout_id=:layout_id )
                                 OR ( :content_id>0 AND b.in_content_id=:content_id )
                                 OR ( :type_id>0 AND b.type_id=:type_id )
-                                ORDER BY b.load_area, b.position", array(":layout_id" => $layout_id, ":type_id" => $type_id, ":content_id" => $content_id)
+                                ORDER BY b.load_area, b.position", 
+                                array(":layout_id" => $layout_id, ":type_id" => $type_id, ":content_id" => $content_id)
             );
         }
 

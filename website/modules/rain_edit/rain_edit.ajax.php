@@ -15,8 +15,8 @@
          */
         function block_sort() {
 
-            $load_area = post("load_area");
-            $sortable = post("sortable");
+            $load_area = get_post("load_area");
+            $sortable = get_post("sortable");
             $sortable = explode("&", $sortable);
 
             if ( User::is_admin() ) {
@@ -112,9 +112,9 @@
         // block new
         function block_new($load_area){
 
-            $block_type_id = $this->post("block_type_id");
-            $title = $this->post("title");
-            $content = $this->post("content");
+            $block_type_id = get_post("block_type_id");
+            $title = get_post("title");
+            $content = get_post("content");
             
             $content_id = 1 + Content::get_last_content_id();
             
@@ -139,9 +139,9 @@
          */
         function content_wysiwyg_update( $content_id ) {
 
-            $title = stripslashes( post("title") );
-            $content = stripslashes( post("content") );
-            $summary = stripslashes( post("summary") );
+            $title = stripslashes( get_post("title") );
+            $content = stripslashes( get_post("content") );
+            $summary = stripslashes( get_post("summary") );
 
             if( $title != 'null' ) $field['title'] = $title;
             if( $content  != 'null' ) $field['content'] = $content;
