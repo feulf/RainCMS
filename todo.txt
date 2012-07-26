@@ -1,5 +1,10 @@
 Todo (Alpha version):
 
+- Remove the choice of template and layout, the layout it should be fixed (for copyrighters, and changeable for admin), so for example when I create a new content it have already the specify layout assigned, with the blocks default block assigned.
+- The only editable fields it should be the one you see on screen and the options, such number of item per page
+- each content it should be editable with <class="rain_editable content_id_{$content.content_id}">
+
+
 - When you click on Add Block, the popup show the block type you can add, when you select one you should have different options, for example if you add a News module it should just load the News, instead if you add a Content module you should be able to add your content.
 - Edit mode accessible to all users to create different revisions (like wiki)
 - Static Content editable: images and content on the theme should be editable as well
