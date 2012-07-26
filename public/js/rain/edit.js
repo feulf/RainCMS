@@ -8,8 +8,8 @@ var RainEdit = {
         this._init_buttons();
         
         
-        /* Upload image directly in content */
-        /* Rain.add_script( javascript_url + "rain/edit.dragdropupload.js" ); */
+    /* Upload image directly in content */
+    /* Rain.add_script( javascript_url + "rain/edit.dragdropupload.js" ); */
     },
 
     /* init aloha editor */
@@ -249,7 +249,7 @@ var RainEdit = {
                 sortable:sortedList
             }, function(){
 
-            });
+                });
         })
 
         /* save the content of the blocks */
@@ -283,24 +283,6 @@ var RainEdit = {
         $("body").append( '<div id="toolbox"></div>' );
         $('#toolbox').append( '<a href="'+admin_file+'" class="tooltip_popup logo"></a>' );
         $('#toolbox').append( '<a id="save_changes_button" class="tooltip_popup disabled" title="Enable/disable edit mode">Save Changes</a>' );
-    },
-    
-    new_content_setting: function( type_id, parent_id ){
-        if( !$('.new_content_setting').html() ){
-            var html = '<div class="new_content_setting"><a href="javascript:new_content_list_select();">Back</a><div class="content_form"></div></div>';
-            $('.rain_popup_window_content').append( html );
-        }
-        RainEdit.new_content_setting_select();
-
-        html = '<form action="'+ajax_file+'rain_edit/content_new/'+parent_id+'/" method="post">';
-        html += '<input type="hidden" name="type_id" value="'+type_id+'">';
-        html += 'Title <br><input type="text" name="title" value=""/><br>';
-        html += 'Content <br><textarea width=100%></textarea>';
-        html += '<input type="submit" value="SAVE" class="btn btn-primary"/>';
-        html += '</form>';
-        
-        $('.content_form').html( html)
-        
     }
 
 };
