@@ -280,6 +280,7 @@
             // add javascript
             add_script("jquery.min.js", JQUERY_DIR, JQUERY_URL);
             add_script("rain/generic.js", JAVASCRIPT_DIR, JAVASCRIPT_URL );
+            add_script("rain/popup.js", JAVASCRIPT_DIR, JAVASCRIPT_URL );
             
             // urls
             add_javascript("var url             ='" . URL . "';");
