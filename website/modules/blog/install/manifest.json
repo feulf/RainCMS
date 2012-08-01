@@ -1,0 +1,7 @@
+{
+    "module"        :"blog",
+    "version"       :"1.0",
+    "description"   :"Manage the blog post",
+    "author"        :"Federico Ulfo",
+    "dependency"    :["comment","content"]
+}

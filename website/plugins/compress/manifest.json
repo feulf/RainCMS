@@ -1,0 +1,11 @@
+{
+  // Required
+  "name": "Compress",
+  "version": "1",
+  "manifest_version": 1,
+  "author": "Federico Ulfo",
+  "email": "rainelemental@gmail.com",
+  // Recommended
+  "description": "Compress all the Javascript and CSS found in a page into a single file",
+  "dependencies": {},
+}

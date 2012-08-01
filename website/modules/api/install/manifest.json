@@ -1,0 +1,7 @@
+{
+    "module"        :"news",
+    "version"       :"1.0",
+    "description"   :"Manage the news",
+    "author"        :"Federico Ulfo",
+    "dependency"    :["comment","content"]
+}

@@ -70,13 +70,14 @@ var Rain = {
             html += '<div class="new_content_list"><ul>';
             if( selected_type_childs ){
                 for( var i = 0, n=selected_type_childs.length; i<n; i++ ){
-                    html += '<li onclick="Rain._new_content_setting('+type_childs[i].type_id+','+content_id+' )">'+parent_name+' &gt; '+selected_type_childs[i].type+'</li>';
+                    html += '<li onclick="Rain._new_content_setting('+selected_type_childs[i].type_id+', 0 )">'+selected_type_childs[i].type+'</li>';
                 }
             }
 
-            for( var i = 0, n=type_childs.length; i<n; i++ ){
-                html += '<li onclick="Rain._new_content_setting('+type_childs[i].type_id+',0 )">'+type_childs[i].type+'</li>';
-            }
+            if( type_childs )
+                for( var i = 0, n=type_childs.length; i<n; i++ ){
+                    html += '<li onclick="Rain._new_content_setting('+type_childs[i].type_id+','+type_childs[i].content_id+' )">'+type_childs[i].parent_name+' &gt; '+type_childs[i].type+'</li>';
+                }
             html += '</ul></div>';
 
             RainPopup.html( html );

@@ -1,0 +1,11 @@
+{
+  // Required
+  "name": "Cache",
+  "version": "1",
+  "manifest_version": 1,
+  "author": "Federico Ulfo",
+  "email": "rainelemental@gmail.com",
+  // Recommended
+  "description": "Save the output inside an HTML file so the next time the loading is tremendously reduced.",
+  "dependencies": {},
+}

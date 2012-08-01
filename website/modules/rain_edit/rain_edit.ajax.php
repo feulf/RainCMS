@@ -167,19 +167,20 @@
             load_lang( "admin.generic" );
 
             // get all the content type for the website
-            $site_type_childs = array();
-            $content_type_childs = Content::get_content_type_childs( 0 );
-            if ( $content_type_childs ){
+            $selected_type_childs = array();
+
+            if ( $content_type_childs = Content::get_content_type_childs(0) ){
                 foreach ($content_type_childs as $type) {
                     // Check if there is any unique type already inserted in the list
                     if ( !$type['unique'] OR !Content::get_content_by_type($type['type_id'], $lang_id = LANG_ID, $only_published = false) ) {
                         $type['type'] = get_msg( "type_" . $type['type'] );
-                        $site_type_childs[] = $type;
+                        $selected_type_childs[] = $type;
                     }
                 }
             }
-            $selected_content_type_childs = array();
-            $title = "";
+/*
+            $selected_type_childs = array();
+            
 
             // If we are into a node I load the content type I can create inside it
             if( $content_id ){
@@ -188,25 +189,31 @@
                 $title = $content["title"];
 
                 // get the type childs for this node
-                $selected_content_type_childs = Content::get_content_type_childs($content['type_id']);
+                if( $selected_content_type_childs = Content::get_content_type_childs($content['type_id']) ){
+                    
+                    foreach ($selected_content_type_childs as $type) {
+                        // Check if there is any unique type already inserted in the list
+                        if ( !$type['unique'] OR !Content::get_content_by_type($type['type_id'], $lang_id = LANG_ID, $only_published = false) ) {
+                            $type['type'] = get_msg( "type_" . $type['type'] );
+                            $selected_type_childs[] = $type;
+                        }
+                    }
+
+                    
+                }
 
             }
-
-            /*
-
-            //
-            // Ask to add a new type of Content, for example News, Blog Post or others
-            //
-
-            $content_type_list = DB::get_all( "SELECT c.title
-                                               FROM ".DB_PREFIX."content c 
-                                               JOIN ".DB_PREFIX."content_rel r ON c.content_id=r.content_id AND r.rel_type='parent'
-                                               JOIN ".DB_PREFIX."content_type t ON c.type_id=t.type_id
-                                              " );
             */
-            
-            
-            echo json_encode( array("parent_name"=>$title,"type_childs"=>$site_type_childs, "selected_type_childs"=> $selected_content_type_childs ) );
+            // Load all childs type
+            $type_childs = DB::get_all( "SELECT c.title AS parent_name, t2.type_id, t2.type AS type, c.content_id
+                                         FROM ".DB_PREFIX."content c
+                                         JOIN ".DB_PREFIX."content_type t ON t.type_id = c.type_id
+                                         LEFT JOIN ".DB_PREFIX."content_type_tree ctt ON ctt.parent_id = t.type_id
+                                         JOIN ".DB_PREFIX."content_type t2 ON ctt.type_id = t2.type_id
+                                         WHERE ( t2.type_id!=1 && !t2.unique OR !(SELECT content_id FROM ".DB_PREFIX."content c2 WHERE c2.type_id = t2.type_id GROUP BY c2.type_id)>0 )
+                                         GROUP BY t.type_id" );
+
+            echo json_encode( array("parent_name"=>$title,"type_childs"=>$type_childs, "selected_type_childs"=> $selected_type_childs ) );
         }
         
         
