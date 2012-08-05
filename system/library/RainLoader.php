@@ -1,7 +1,8 @@
 <?php
 
-    require CONSTANTS_DIR   . "rain.constants.php";
     require CONSTANTS_DIR   . "constants.php";
+    require CONSTANTS_DIR   . "rain.constants.php";
+    require LIBRARY_DIR     . "error.functions.php";
     require LIBRARY_DIR     . "functions.php";
     require LIBRARY_DIR     . "Plugin.php";
 

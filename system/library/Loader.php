@@ -7,8 +7,9 @@
     *  Distributed under MIT license http://www.opensource.org/licenses/mit-license.php
     */
     require CONSTANTS_DIR . "constants.php";
-    require LIBRARY_DIR . "functions.php";
-    require LIBRARY_DIR . "Plugin.php";
+    require LIBRARY_DIR   . "error.functions.php";
+    require LIBRARY_DIR   . "functions.php";
+    require LIBRARY_DIR   . "Plugin.php";
 
 
     /**
