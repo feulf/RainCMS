@@ -116,8 +116,6 @@ var RainEdit = {
                 html += '<input type="submit" value="SAVE" class="btn btn-primary"/>';
                 html += '</form>';
                 
-                RainPopup.html(html);
-                RainPopup.title(title);
             }
 
             html += '<a class="rain_block_delete">Delete this block?</a>';
@@ -125,8 +123,8 @@ var RainEdit = {
                 RainEdit.block_delete( block_id );
             })
 
-            $('.rain_popup_window_title').html( title );
-            $('.rain_popup_window_content').html( html );
+            RainPopup.html(html);
+            RainPopup.title(title);
 
             $('#block_settings').ajaxForm( function(){
                 RainEdit.block_refresh();
