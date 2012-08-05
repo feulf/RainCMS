@@ -2,7 +2,7 @@
     "plugins_load" : [
                       { 
                         "name":"gzip",
-                        "status" : "enabled"
+                        "status" : "disabled"
                       },
                       {
                         "name":"cache",
