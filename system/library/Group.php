@@ -17,7 +17,7 @@
         }
 
         static function get_group($group_id) {
-            return DB::get_all("SELECT * FROM " . DB_PREFIX . "usergroup WHERE group_id=?", array($group_id));
+            return DB::get_row("SELECT * FROM " . DB_PREFIX . "usergroup WHERE group_id=?", array($group_id));
         }
 
         static function get_user_in_group($group_id, $order_by = "name", $order = "asc", $limit = 0) {
