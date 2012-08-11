@@ -2,9 +2,9 @@
 
 	//	PERMISSION EDIT
 	var user_id = '{$user_id}';
-	var permission_counter = 0
+	var permission_counter = 0;
 
-	var content_list = new Array()
+	var content_list = new Array();
 	{loop="content_list"}
 		content_list[{$value.id}] = '{$value.title|addslashes}';
 	{/loop}
@@ -29,17 +29,17 @@
 		$("#account_edit").validate({
 			debug:true,
 			submitHandler: function(form){
-				$('#account_edit_loading').fadeIn('fast')
-				$('#account_edit').hide()
-				$('#form_result').html('').fadeOut()
+				$('#account_edit_loading').fadeIn('fast');
+				$('#account_edit').hide();
+				$('#form_result').html('').fadeOut();
 				$(form).ajaxSubmit({
 					target: '#form_result',
 					complete:function( dataxml ){
-						$('#a_{$user_id}>span').html( $('input[name=name]').attr('value') )
-						$('#account_edit_loading').hide()
-						$('#account_edit').fadeIn('slow')
+						$('#a_{$user_id}>span').html( $('input[name=name]').attr('value') );
+						$('#account_edit_loading').hide();
+						$('#account_edit').fadeIn('slow');
 						$('#form_result').hide().fadeIn('slow');
-						updatePermission()
+						update_permission();
 					}
 				});
 			}
@@ -129,11 +129,11 @@
 				<div id="permission_list">
 					<script>
 					{loop="permission_list"}
-						addPermission( {$value.permission_id}, {$value.id}, {$value.content_access}, {$value.subcontent_access} );
+						add_permission( {$value.permission_id}, {$value.id}, {$value.content_access}, {$value.subcontent_access} );
 					{/loop}
 					</script>
 				</div>
-				<img src="../aimg/lock.png" /> <a href="javascript:addPermission()">{"user_add_permission"|get_msg}</a>
+				<img src="../aimg/lock.png" /> <a href="javascript:add_permission()">{"user_add_permission"|get_msg}</a>
 			 </div>
 
         </form>

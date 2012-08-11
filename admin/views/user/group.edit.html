@@ -8,13 +8,13 @@
 	
 	var content_list = new Array()
 	{loop="content_list"}
-		content_list[{$value.id}] = '{$value.name}';
+		content_list[{$value.content_id}] = '{$value.title}';
 	{/loop}
 
 	$(document).ready( function(){
 
-		$.validator.messages.required 	= "{#_NECESSARY_FIELD_#}";
-		$.validator.messages.email 		= "{#_EMAIL_FIELD_#}";
+		$.validator.messages.required 	= "{'necessary_field'|get_msg}";
+		$.validator.messages.email 		= "{'email_field'|get_msg}";
 
 		$("#group_edit").validate({
 			debug:true,
@@ -27,7 +27,7 @@
 							$('#g_{$group_id}').html( $('input[name=name]').attr('value') )
 							
 							$('#group_edit').fadeIn("slow", function(){
-								updatePermission()
+								update_permission()
 							})
 							
 						});
@@ -40,10 +40,13 @@
 
 </script>
 <div>
+    
 	<div class="toolbar">
-		<button onclick="openGroup('{$group_id}')" class="tooltip" title="{"user_button_cancel_caption"|get_msg}">{"user_button_cancel"|get_msg}</button>
-		<button onclick="$('#group_edit').submit();" ><img src="../aimg/save.gif"> {"save"|get_msg}</button>
-		<button onclick="group_delete({$group_id}, '{"user_button_group_delete_msg"|get_msg}');" class="delete_button"><img src="../aimg/del.gif"> {"user_button_group_delete"|get_msg}</button>
+		<a onclick="openGroup('{$group_id}')" class="tooltip" title="{"user_button_cancel_caption"|get_msg}"><img src="../aimg/action_back.gif"> {"user_button_cancel"|get_msg}</a>
+		<a onclick="$('#group_edit').submit();"><img src="../aimg/save.gif"> {"save"|get_msg}</a>
+		{ignore}<a onclick="newUserMail();"><img src="../aimg/email/email.gif"> {"email"|get_msg}</a>{/ignore}
+		<a onclick="user_delete('{"user_button_delete_msg"|get_msg}');" class="delete_button"><img src="../aimg/del.gif"> {"user_button_delete"|get_msg}</a>
+		<a onclick="group_delete({$group_id}, '{"user_button_group_delete_msg"|get_msg}');" class="tooltip"><img src="../aimg/del.gif"> {"user_button_group_delete"|get_msg}</a>
 	</div>
 	<div class="margin_20">
 		<div id="group_edit_loading" style="display:none;"><img src="../aimg/loading.gif" alt="loading"/>{"loading"|get_msg}</div>
@@ -60,12 +63,12 @@
 				<div id="permission_list">
 					<script>
 					{loop="permission_list"}
-						addPermission( {$value.permission_id}, {$value.id}, {$value.content_access}, {$value.subcontent_access} );
+						add_permission( {$value.permission_id}, {$value.id}, {$value.content_access}, {$value.subcontent_access} );
 					{/loop}
 					</script>
 				</div>
 				<br><br>
-				<a href="javascript:addPermission()">{"user_add_permission"|get_msg}</a>
+				<a href="javascript:add_permission()">{"user_add_permission"|get_msg}</a>
 			</div>
 		</form>
 	</div>

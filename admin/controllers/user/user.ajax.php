@@ -213,6 +213,59 @@
                         db::query("DELETE FROM " . DB_PREFIX . "usergroup_user WHERE group_id=? AND user_id=?", array($group_id, $user_id));
         }
 
+        function group_view( $group_id = null ){
+
+            if( $group_id != 'all' && $group_id != 'registered' && $group_id != 'online' ){
+                $permission_list = db::get_all( "SELECT ".DB_PREFIX."content_permission.*, ".DB_PREFIX."content.title  
+                                                        FROM ".DB_PREFIX."content_permission
+                                                        INNER JOIN ".DB_PREFIX."content ON ".DB_PREFIX."content_permission.content_id = ".DB_PREFIX."content.content_id
+                                                        WHERE ".DB_PREFIX."content_permission.group_id = $group_id
+                                                        GROUP BY ".DB_PREFIX."content.content_id
+                                                        ");
+            }
+            else
+                $permission_list = "";
+
+
+            // load the Group library
+            $this->load_library("Group");
+
+            $group = Group::get_group( $group_id );
+            $content_list = Content::get_childs( 0 );
+            
+            $tpl = new View();
+            $tpl->assign( $group );
+            $tpl->assign( "content_list", $content_list );
+            $tpl->assign( "permission_list", $permission_list );
+            $tpl->draw( 'user/group.view' );
+            
+        }
+        
+        function group_edit( $group_id = null ){
+            if( $group_id != 'all' && $group_id != 'registered' && $group_id != 'online' ){
+                $content_list = Content::get_childs( 0 );
+                $permission_list = db::get_all( "SELECT ".DB_PREFIX."content_permission.*, ".DB_PREFIX."content.title 
+                                                        FROM ".DB_PREFIX."content_permission
+                                                        INNER JOIN ".DB_PREFIX."content ON ".DB_PREFIX."content_permission.content_id = ".DB_PREFIX."content.content_id
+                                                        WHERE ".DB_PREFIX."content_permission.group_id = $group_id
+                                                        GROUP BY ".DB_PREFIX."content.content_id
+                                                        ");
+            }
+            else
+                $permission_list = $content_list = "";
+
+            // load the Group library
+            $this->load_library("Group");
+
+            $tpl = new View();
+            $tpl->assign( Group::get_group( $group_id ) );
+            $tpl->assign( "group_id", $group_id);
+            $tpl->assign( "content_list", $content_list );
+            $tpl->assign( "permission_list", $permission_list );
+            $tpl->draw( 'user/group.edit' );
+        }
+
+
         function account_delete() {
 
             $user_id = post("user_id");

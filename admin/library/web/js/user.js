@@ -178,11 +178,12 @@ function openGroup( group_id, user_id ){
 
 		if( user_id )
 			openAccount( user_id )
-		else
+		else{
 			$.get( ajax_file + "/user/group_view/" + group_id + "/", null, function( html ){  
 				$('#account_detail').html( html );
 				init_tooltip()
-			})
+			});
+                }
 		resizeAddressBook()
 	})
 }
@@ -289,3 +290,56 @@ function user_delete( msg ){
 
 	}
 }
+
+
+//	PERMISSION
+	var permission_counter = 0
+	function add_permission( permission_id, id, content_access, subcontent_access ){
+
+		if( !permission_id )
+			permission_id = 0
+
+		html = '<div id="p_'+permission_counter+'">' +
+					'<input type="hidden" name="permission['+permission_counter+'][permission_id]" value="'+permission_id+'">' +
+					' has permission in ' +
+					'<select name="permission['+permission_counter+'][id]">' +
+					'<option value="0">Tutti i contenuti</option>'
+					for( content_list_id in content_list )
+
+		html +=			'<option value="'+content_list_id+'" '+(id==content_list_id?' selected="selected" class="selected"':null)+'>&nbsp;&nbsp;'+content_list[content_list_id]+'</option>'
+		
+		html +=		'</select>' +
+				'	to &nbsp;&nbsp; <input type="checkbox" name="permission['+permission_counter+'][content_access]" id="content_access_'+permission_counter+'" '+( content_access==1 ? 'checked="checked"' : null)+'> ' +
+				'	<label for="content_access_'+permission_counter+'">manage this content</label> &nbsp;&nbsp; and &nbsp;&nbsp; ' +
+				'	to &nbsp;&nbsp; <input type="checkbox" name="permission['+permission_counter+'][subcontent_access]" id="subcontent_access_'+permission_counter+'" '+( subcontent_access==1 ? 'checked="checked"' : null)+'> ' +
+				'	<label for="subcontent_access_'+permission_counter+'">manage the sub content</label>' +
+				'	&nbsp; &nbsp; <a href="javascript:delPermission('+permission_counter+')"><img src="'+admin_views_images_url+'del.gif" alt="del"></a>' +
+				'</div>'
+
+		permission_counter++
+		$('#permission_list').append( html )
+	}
+	
+	function del_permission( permission_counter ){
+		$('#p_'+permission_counter).append('<input type="hidden" name="permission['+permission_counter+'][delete]" value="1">')
+		$('#p_'+permission_counter).hide()
+	}
+	
+	function load_permission(){
+		$.get( ajax_file, {module:"user", cp:"permission/edit", user_id: user_id}, function(html){
+			$('#permission').html( html )
+		});
+	}
+	
+	function update_permission( group_id, user_id ){
+		$.getJSON( ajax_file, {module:"user", cp:"permission/list", user_id: user_id, group_id: group_id}, function(permission_list){
+			if( permission_list ){
+				var permission_counter = 0
+				$('#permission_list').html('')
+				for( i in permission_list ){
+					var permission = permission_list[i]
+					addPermission( permission['permission_id'], permission['id'], permission['content_access'], permission['subcontent_access'] )
+				}
+			}
+		});
+	}
