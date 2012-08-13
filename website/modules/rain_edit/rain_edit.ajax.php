@@ -179,6 +179,9 @@
         function content_type_childs( $content_id = null ){
 
             load_lang( "admin.generic" );
+            
+            $content = Content::get_content($content_id);
+            $title = $content["title"];
 
             // get all the content type for the website
             $selected_type_childs = array();
