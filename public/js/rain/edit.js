@@ -23,6 +23,17 @@ var RainEdit = {
                 case 38: /* Up */
                 case 39: /* Right */
                 case 40: /* Down */
+                case 9:  /* Tab */
+                case 16:  /* Shift */
+                case 17:  /* Control */
+                case 18:  /* Alt */
+                case 20:  /* Caps lock*/
+                case 35:  /* End */
+                case 36:  /* Home */
+                case 45:  /* Insert */
+                case 19:  /* Pause Break */
+                case 91:  /* Command */
+                case 93:  /* Right Command */
                     break;
                 default:
                     RainEdit.enable_save_changes_button();
