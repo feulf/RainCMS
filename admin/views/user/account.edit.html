@@ -6,7 +6,7 @@
 
 	var content_list = new Array();
 	{loop="content_list"}
-		content_list[{$value.id}] = '{$value.title|addslashes}';
+		content_list[{$value.content_id}] = '{$value.title|addslashes}';
 	{/loop}
 
 	function changeUserStatus( status ){

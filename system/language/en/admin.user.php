@@ -38,5 +38,8 @@
     $lang["user_selected"] = "Selected users";
     $lang["user_are_in_group"] = "Users are in group";
     $lang["user_level"] = "User Level";
+    $lang["user_all_registered"] = "Registered Users";
+    $lang["user_online"] = "User Online";
+    $lang["user_all"] = "All";
 
     // -- end
