@@ -196,7 +196,7 @@
             $tpl = new View;
             $tpl->assign($user);
             $tpl->assign($user_localization);
-            $tpl->assign("user_level", Array(USER_SUPER_ADMIN => get_msg("USER_SUPER_ADMIN"), USER_ADMIN => get_msg("USER_ADMIN"), USER_REGISTERED => get_msg("USER_REGISTERED"), USER_UNREGISTERED => get_msg("USER_UNREGISTERED"), USER_BANNED => get_msg("USER_BANNED"), USER_REFUSED => get_msg("USER_REFUSED")));
+            $tpl->assign("user_level", Array(USER_SUPER_ADMIN => get_msg("user_super_admin"), USER_ADMIN => get_msg("user_admin"), USER_REGISTERED => get_msg("user_registered"), USER_UNREGISTERED => get_msg("user_unregistered"), USER_BANNED => get_msg("user_banned"), USER_REFUSED => get_msg("user_refused")));
             $tpl->assign("content_list", Content::get_childs(0));
             $tpl->assign("permission_list", $permission_list);
             $tpl->assign("group_id", $group_id);

@@ -1,10 +1,10 @@
 <?php
 
     global $lang;
-    $lang["USER_CONTACT"] = "Contact";
-    $lang["USER_REFUSED"] = "Refused User";
-    $lang["USER_BANNED"] = "Banned";
-    $lang["USER_UNREGISTERED"] = "Utente non registrato";
-    $lang["USER_REGISTERED"] = "Registered User";
-    $lang["USER_ADMIN"] = "Admin";
-    $lang["USER_SUPER_ADMIN"] = "Super Admin";
+    $lang["user_contact"] = "Contact";
+    $lang["user_refused"] = "Refused User";
+    $lang["user_banned"] = "Banned";
+    $lang["user_unregistered"] = "Utente non registrato";
+    $lang["user_registered"] = "Registered User";
+    $lang["user_admin"] = "Admin";
+    $lang["user_super_admin"] = "Super Admin";
