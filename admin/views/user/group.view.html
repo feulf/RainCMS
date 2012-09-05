@@ -8,10 +8,9 @@
 		<h3>{$name}</h3>
 
 		{if="$permission_list"}
-			This group 
 			{loop="permission_list"}
-				{if="$value.id>0"}
-					{"user_has_permission_in"|get_msg} <a href="?id={$value.id}">{$value.name}</a> {"user_has_permission_to"|get_msg}{if="$value.content_access"}<b>{"user_permission_manage_this_content"|get_msg}</b>{/if} {if="$value.content_access && $value.subcontent_access"} {"and"|get_msg} {/if} {if="$value.subcontent_access"}<b>{"user_permission_subcontent"|get_msg}</b>{/if}<br> 
+				{if="$value.content_id>0"}
+					{"user_has_permission_in"|get_msg} <a href="content/{$value.content_id}">{$value.title}</a> {"user_has_permission_to"|get_msg} {if="$value.content_access"}<b>{"user_permission_content"|get_msg}</b>{/if} {if="$value.content_access && $value.subcontent_access"} {"and"|get_msg} {/if} {if="$value.subcontent_access"}<b>{"user_permission_subcontent"|get_msg}</b>{/if}<br> 
 				{else}
 					{"user_permission_all"|get_msg}<br>
 				{/if}

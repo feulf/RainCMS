@@ -50,7 +50,7 @@
             $group = post('group');
             $msg = post('msg');
             $status = post('status');
-            $permission_list = post('permission_list');
+            $permission_list = post('permission');
 
             $is_registered = ( $status == USER_BANNED || $status == USER_REGISTERED || $status == USER_ADMIN || $status == USER_SUPER_ADMIN ) ? 1 : 0;
             if (( $user_id > 0 ) && ( $user = user::get_user($user_id) )) {
@@ -106,59 +106,61 @@
                 $user = user::get_user($user_id);
             }
 
-            if ( $status == USER_ADMIN ) {
+            if ($permission_list) {
+                foreach ($permission_list as $i => $permission) {
+                    $content_id = isset($permission['content_id']) ? $permission['content_id'] : 0;
+                    $content_access = isset($permission['content_access']) ? 1 : 0;
+                    $subcontent_access = isset($permission['subcontent_access']) ? 1 : 0;
+                    $permission_id = isset($permission['permission_id']) ? $permission['permission_id'] : 0;
 
-                if ($permission_list) {
-                    foreach ($permission_list as $i => $permission) {
-                        $content_id = isset($permission['content_id']) ? $permission['content_id'] : 0;
-                        $content_access = isset($permission['content_access']) ? 1 : 0;
-                        $subcontent_access = isset($permission['subcontent_access']) ? 1 : 0;
-                        $permission_id = isset($permission['permission_id']) ? $permission['permission_id'] : 0;
+                    if (isset($permission['delete']))
+                        db::query("DELETE FROM " . DB_PREFIX . "content_permission WHERE permission_id=?", array($permission_id));
+                    elseif ($permission_id > 0){
 
-                        if (isset($permission['delete']))
-                            db::query("DELETE FROM " . DB_PREFIX . "content_permission WHERE permission_id=?", array($permission_id));
-                        elseif ($permission_id > 0){
-                            
-                            db::query("UPDATE " . DB_PREFIX . "content_permission 
-                                       SET content_id = :content_id,
-                                           content_access = :content_access,
-                                           subcontent_access = :subcontent_access
-                                           WHERE permission_id = :permission_id", 
-                                       array( ":content_id"=> $content_id, ":content_access"=>$content_access, ":subcontent_access"=>$subcontent_access, ":permission_id"=> $permission['permission_id'] )
-                                    );
-                        }
-                        else{
-                            
-                            db::query("INSERT INTO " . DB_PREFIX . "content_permission 
-                                       ( content_id, content_access, subcontent_access, user_id ) 
-                                       VALUES ( :content_id, :content_access, :subcontent_access, :user_id )",
-                                       array(":content_id"=>$content_id, ":content_access"=>$content_access, ":subcontent_access"=>$subcontent_access, ":user_id"=>$user_id) );
-                        }
+                        db::query("UPDATE " . DB_PREFIX . "content_permission 
+                                    SET content_id = :content_id,
+                                        content_access = :content_access,
+                                        subcontent_access = :subcontent_access
+                                        WHERE permission_id = :permission_id", 
+                                    array( ":content_id"=> $content_id, ":content_access"=>$content_access, ":subcontent_access"=>$subcontent_access, ":permission_id"=> $permission['permission_id'] )
+                                );
+                    }
+                    else{
+
+                        db::query("INSERT INTO " . DB_PREFIX . "content_permission 
+                                    ( content_id, content_access, subcontent_access, user_id ) 
+                                    VALUES ( :content_id, :content_access, :subcontent_access, :user_id )",
+                                    array(":content_id"=>$content_id, ":content_access"=>$content_access, ":subcontent_access"=>$subcontent_access, ":user_id"=>$user_id) );
                     }
                 }
             }
+
         }
 
-        function group_save($group_id, $name, $permission_list) {
+        function group_save( $group_id ) {
+
+            $name = post('name');
+            $permission_list = post('permission');
 
             $this->load_library("group");
-            if (( $group_id > 0 ) && ( $group = getGroup($group_id) )) {
+            if (( $group_id > 0 ) && ( $group = Group::get_group($group_id) )) {
 
                 db::query("UPDATE " . DB_PREFIX . "usergroup SET name = :name WHERE group_id = :group_id", array(":name"=>$name, ":group_id"=>$group_id ) );
 
-                if ($permission_list) {
+                if ( $permission_list ) {
                     foreach ($permission_list as $i => $permission) {
                         $content_id = isset($permission['content_id']) ? $permission['content_id'] : 0;
                         $content_access = isset($permission['content_access']) ? 1 : 0;
                         $subcontent_access = isset($permission['subcontent_access']) ? 1 : 0;
                         $permission_id = isset($permission['permission_id']) ? $permission['permission_id'] : 0;
 
-                        if (isset($permission['delete']))
+                        if (isset($permission['delete'])){
+
                             db::query("DELETE FROM " . DB_PREFIX . "content_permission WHERE permission_id=?", array($permission_id) );
+
+                        }
                         elseif ($permission_id > 0){
-                        
-                            
-                            
+
                             db::query("UPDATE " . DB_PREFIX . "content_permission 
                                        SET content_id = :content_id,
                                            content_access = :content_access,
@@ -169,6 +171,7 @@
 
                         }
                         else{
+
                             db::query("INSERT INTO " . DB_PREFIX . "content_permission 
                                        ( content_id, content_access, subcontent_access, group_id ) 
                                        VALUES ( :content_id, :content_access, :subcontent_access, :group_id )",
@@ -217,11 +220,11 @@
 
             if( $group_id != 'all' && $group_id != 'registered' && $group_id != 'online' ){
                 $permission_list = db::get_all( "SELECT ".DB_PREFIX."content_permission.*, ".DB_PREFIX."content.title  
-                                                        FROM ".DB_PREFIX."content_permission
-                                                        INNER JOIN ".DB_PREFIX."content ON ".DB_PREFIX."content_permission.content_id = ".DB_PREFIX."content.content_id
-                                                        WHERE ".DB_PREFIX."content_permission.group_id = $group_id
-                                                        GROUP BY ".DB_PREFIX."content.content_id
-                                                        ");
+                                                 FROM ".DB_PREFIX."content_permission
+                                                 INNER JOIN ".DB_PREFIX."content ON ".DB_PREFIX."content_permission.content_id = ".DB_PREFIX."content.content_id
+                                                 WHERE ".DB_PREFIX."content_permission.group_id = $group_id
+                                                 GROUP BY ".DB_PREFIX."content.content_id
+                                                ");
             }
             else
                 $permission_list = "";

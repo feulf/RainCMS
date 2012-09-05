@@ -124,17 +124,16 @@
             <label>{"user_level"|get_msg}</label>
             <h3>{$user.level}</h3>
             <br>
-
         
         <h2>{"permission"|get_msg}</h2>
 	
         <img src="../aimg/lock.png" />
         {if="$user.status == USER_SUPER_ADMIN"}
             {"user_permission_all"|get_msg}
-        {elseif="$user.status == USER_ADMIN && $permission_list"}
+        {else}
             {loop="permission_list"}
-                {if="$value.id>0"}
-                    {"user_has_permission_in"|get_msg} <a href="?id={$value.id}">{$value.title}</a> {"user_has_permission_to"|get_msg} {if="$value.content_access"}<b>{"user_has_permission_content"|get_msg}</b>{/if} {if="$value.content_access && $value.subcontent_access"} {"and"|get_msg} {/if} {if="$value.subcontent_access"}<b>{"user_permission_subcontent"|get_msg}</b>{/if}<br>
+                {if="$value.content_id>0"}
+                    {"user_has_permission_in"|get_msg} <a href="{#ADMIN_FILE_URL#}content/edit/{$value.content_id}">{$value.title}</a> {"user_has_permission_to"|get_msg} {if="$value.content_access"}<b>{"user_permission_content"|get_msg}</b>{/if} {if="$value.content_access && $value.subcontent_access"} {"and"|get_msg} {/if} {if="$value.subcontent_access"}<b>{"user_permission_subcontent"|get_msg}</b>{/if}<br>
                 {else}
                     {"user_permission_all"|get_msg}<br>
                 {/if}

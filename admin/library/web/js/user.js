@@ -80,7 +80,7 @@ function openAccount( user_id, user_localization_id, group_id){
 }
 
 function editAccount( user_id, group_id ){
-    $.get( ajax_file + "/user/account_edit/" + user_id + "/" + group_id, null, function( html ){  
+    $.get( ajax_file + "/user/account_edit/" + user_id + "/" + group_id, null, function( html ){
         $('#account_detail').html( html );
         init_tooltip();
     })
@@ -91,7 +91,7 @@ function editAccountPw( user_id, msg ){
         $.get( ajax_file + "user/account_save_pw/" + user_id + "/", {
             user_pw: user_pw
         }, function( html, result ){
-            alert( html );
+            
         })
 }
 
@@ -303,8 +303,8 @@ function add_permission( permission_id, id, content_access, subcontent_access ){
     var html = '<div id="p_'+permission_counter+'">' +
     '<input type="hidden" name="permission['+permission_counter+'][permission_id]" value="'+permission_id+'">' +
     ' has permission in ' +
-    '<select name="permission['+permission_counter+'][id]">' +
-    '<option value="0">Tutti i contenuti</option>';
+    '<select name="permission['+permission_counter+'][content_id]">' +
+    '<option value="0">All contents</option>';
 
     for( content_list_id in content_list )
         html +=			'<option value="'+content_list_id+'" '+(id==content_list_id?' selected="selected" class="selected"':null)+'>&nbsp;&nbsp;'+content_list[content_list_id]+'</option>';
@@ -348,7 +348,7 @@ function update_permission( group_id, user_id ){
             $('#permission_list').html('');
             for( i in permission_list ){
                 var permission = permission_list[i];
-                addPermission( permission['permission_id'], permission['id'], permission['content_access'], permission['subcontent_access'] );
+                addPermission( permission['permission_id'], permission['content_id'], permission['content_access'], permission['subcontent_access'] );
             }
         }
     });

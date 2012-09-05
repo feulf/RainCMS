@@ -6,8 +6,7 @@
 
 	var content_list = new Array();
 	{loop="content_list"}
-		content_list[{$value.content_id}] = '{$value.title|addslashes}';
-	{/loop}
+        content_list[{$value.content_id}] = '{$value.title|addslashes}';{/loop}
 
 	function changeUserStatus( status ){
 		if( status >= {#USER_ADMIN#} )
@@ -129,7 +128,7 @@
 				<div id="permission_list">
 					<script>
 					{loop="permission_list"}
-						add_permission( {$value.permission_id}, {$value.id}, {$value.content_access}, {$value.subcontent_access} );
+						add_permission( {$value.permission_id}, {$value.content_id}, {$value.content_access}, {$value.subcontent_access} );
 					{/loop}
 					</script>
 				</div>
