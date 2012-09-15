@@ -618,7 +618,7 @@
                 foreach ($setting as $key => $value)
                     $this->configure($key, $value);
             else if (property_exists(__CLASS__, $setting))
-                static::$$setting = $value;
+                static::$setting = $value;
         }
 
 
