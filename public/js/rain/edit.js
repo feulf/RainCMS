@@ -2,18 +2,16 @@ var RainEdit = {
     
     /* init all the tools to edit page */
     init: function(){
-        this._init_aloha();
+        this._init_wysiwyg();
         this._init_block_sortable();
-        this._init_toolbox();
         this._init_buttons();
-        
         
     /* Upload image directly in content */
     /* Rain.add_script( javascript_url + "rain/edit.dragdropupload.js" ); */
     },
 
     /* init aloha editor */
-    _init_aloha: function(){
+    _init_wysiwyg: function(){
         var $ = Aloha.jQuery;
         $('.content>.text, .content>.summary, .content>.title').aloha();
         $('.content>.text, .content>.summary, .content>.title').keyup(function(e){
@@ -83,6 +81,11 @@ var RainEdit = {
             
             RainEdit.block_setting( block_id, title );
         });
+        
+
+        // add save button in Toolbar
+        $('#toolbox').append( '<a id="save_changes_button" class="tooltip_popup disabled" title="Enable/disable edit mode">Save Changes</a>' );
+
 
     },
     
@@ -288,10 +291,4 @@ var RainEdit = {
 
     },
     
-    _init_toolbox: function (){
-        $("body").append( '<div id="toolbox"></div>' );
-        $('#toolbox').append( '<a href="'+admin_file+'" class="tooltip_popup logo"></a>' );
-        $('#toolbox').append( '<a id="save_changes_button" class="tooltip_popup disabled" title="Enable/disable edit mode">Save Changes</a>' );
-    }
-
 };

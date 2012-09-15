@@ -78,7 +78,7 @@ AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css a
 
     # WYSIWYG Edit ---
         RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteCond %{QUERY_STRING} ^.*edit_mode=1.*$ [NC]
+        RewriteCond %{HTTP_COOKIE} ^.*admin_check.*$ [NC]
         RewriteCond %{QUERY_STRING} (.*)
         RewriteRule ^(.*)$ edit.php/$1?%1 [L]
 

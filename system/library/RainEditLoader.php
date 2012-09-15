@@ -14,6 +14,8 @@
         }
 
         function load_head() {
+            
+            $this->edit_mode = get('edit_mode');
 
             parent::load_head();
 
@@ -44,23 +46,34 @@
 
             add_javascript($js);
 
-            // aloha
-            add_script( "rain/aloha-config.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
-            add_script( "aloha/lib/aloha.js",   JAVASCRIPT_DIR, JAVASCRIPT_URL, array("data-aloha-plugins" => "common/format,common/highlighteditables,common/list,common/link,common/undo,common/paste,common/block"));
-            add_style(  "aloha/css/aloha.css",  JAVASCRIPT_DIR, JAVASCRIPT_URL);
+
+            // rain toolbox
+            add_style("rain.toolbox.css", CSS_DIR, CSS_URL);
+            add_script("rain/toolbox.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
+            
+            add_javascript("RainToolbox.init();");
+            
+            if( $this->edit_mode ){
+
+                // rain edit mode
+                add_script("rain/edit.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
+                add_style("rain.edit.css", CSS_DIR, CSS_URL);
+
+                // aloha
+                add_script( "rain/aloha-config.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
+                add_script( "aloha/lib/aloha.js",   JAVASCRIPT_DIR, JAVASCRIPT_URL, array("data-aloha-plugins" => "common/format,common/highlighteditables,common/list,common/link,common/undo,common/paste,common/block"));
+                add_style(  "aloha/css/aloha.css",  JAVASCRIPT_DIR, JAVASCRIPT_URL);
             
 
-            // block sort
-            add_script('ui/jquery-ui-1.8.16.custom.js', JQUERY_DIR, JQUERY_URL); // all jquery ui
+                // block sort
+                add_script('ui/jquery-ui-1.8.16.custom.js', JQUERY_DIR, JQUERY_URL); // all jquery ui
 
-            // jquery
-            add_style("rain.edit.css", CSS_DIR, CSS_URL);
-            add_script("rain/edit.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
-            
-            add_script("jquery.filedrop.js", JQUERY_DIR, JQUERY_URL);
-            
-            add_javascript("RainEdit.init();");
+                // drag and drop image
+                add_script("jquery.filedrop.js", JQUERY_DIR, JQUERY_URL);
+                
+                add_javascript("RainEdit.init();");
 
+            }
 
 
         }
