@@ -72,6 +72,7 @@ class InstallerAjaxModule extends Module {
             // install the type fields
             foreach ($type_field_list as $field) {
                 $field["type_id"] = $type["type_id"];
+                $field["published"] = 1;
                 if (!Content::get_content_type_field($type["type_id"], $field["name"])) {
                     DB::insert(DB_PREFIX . "content_type_field", $field);
                 }
