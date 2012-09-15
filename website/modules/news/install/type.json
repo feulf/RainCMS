@@ -2,7 +2,7 @@
     "type":[{
         "type_id":"10",
         "type":"news_section",
-        "icon":"news_section.gif",
+        "icon":"news section.gif",
         "lang_index":"news",
         "module":"news",
         "action":"",
