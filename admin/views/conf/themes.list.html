@@ -7,7 +7,9 @@
 	<li style="display:none"></li>
 	{loop="$theme_list"}
 	<li class="thumbnail" id="t_{$value.theme_id}">
-		<a href="javascript:theme_set( '{$value.theme_id}' )"><img src="{#THEMES_DIR#}{$value.directory}/preview.png#" alt="{$value}" class="thumb_image tooltip {if="$value.theme_id == get_setting('theme')"}selected{/if}" title="{$value.description}<br><br>AUTHOR<br>{$value.author}, {$value.author_email}<br>{$value.author_website}"/></a>
+		<a href="javascript:theme_set( '{$value.theme_id}' )">
+                    <img src="{#THEMES_DIR#}{$value.directory}/preview.png#" alt="{$value.theme}" class="thumb_image tooltip {if="$value.theme_id == get_setting('theme')"}selected{/if}" title="{$value.description}<br><br>AUTHOR<br>{$value.author}, {$value.author_email}<br>{$value.author_website}"/>
+                </a>
 		<div class="thumb_title">
 			{$value.theme} <a href="#" onclick="theme_preview('{$value.theme_id}','{#URL#}');"><img src="../aimg/preview.gif" class="tooltip" title="{"preview"|get_msg}"></a>
 		</div>
