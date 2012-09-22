@@ -9,12 +9,14 @@
 
     /**
     *     Functions divided in categories
-    */
+    **/
+
     //-------------------------------------------------------------
     //
     //                     INPUT FUNCTIONS
     //
     //-------------------------------------------------------------
+
     // disable register globals
     if (ini_get("register_globals") && isset($_REQUEST))
         foreach ($_REQUEST as $k => $v)
@@ -682,7 +684,7 @@
     }
 
 
-//-------------------------------------------------------------
+    //-------------------------------------------------------------
     //
     //                    Settings
     //
@@ -907,5 +909,25 @@
         }
         return $GLOBALS['rain_browser_info'];
     }
+    
+    
+
+    //-------------------------------------------------------------
+    //
+    //                    URL FUNCTIONS
+    //
+    //-------------------------------------------------------------
+
+    // alias for redirect
+    function reindex( $url ){
+        redirect( $url );
+    }
+    
+    function redirect( $url ){
+        header( "location: $url" );
+    }
 
     // -- end
+    
+    
+    
