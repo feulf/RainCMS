@@ -563,9 +563,9 @@
                         WHERE content_id=?", array($content_id));
 
                 db::query("INSERT INTO " . DB_PREFIX . "file 
-                           ( rel_id, module, name, filepath, ext, thumb, type_id, status, size, width, height, last_edit_time ) 
-                           VALUES ( :content_id, 'content', :name, :filepath, :ext, :thumbnail_filepath, :file_type_id, :status, :size, :width, :height, UNIX_TIMESTAMP() )", 
-                           array(":content_id" => $content_id, ":name" => $name, ":filepath" => $filepath, ":ext" => $ext, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":status" => FILE_LIST, ":size" => $size, ":width" => $width, ":height" => $height));
+                           ( rel_id, module, name, filepath, ext, thumb, type_id, rel_type, size, width, height, last_edit_time ) 
+                           VALUES ( :content_id, 'content', :name, :filepath, :ext, :thumbnail_filepath, :file_type_id, :rel_type, :size, :width, :height, UNIX_TIMESTAMP() )", 
+                           array(":content_id" => $content_id, ":name" => $name, ":filepath" => $filepath, ":ext" => $ext, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":rel_type" => FILE_LIST, ":size" => $size, ":width" => $width, ":height" => $height));
 
                 $file_id = db::get_last_id();
 
@@ -623,9 +623,9 @@
                 $file_type_id = IMAGE;
 
                 DB::query("INSERT INTO " . DB_PREFIX . "file 
-                        ( rel_id, module, name, filepath, thumb, type_id, status, size, last_edit_time )
-                        VALUES ( :content_id, 'content', :name, :filepath, :thumbnail_filepath, :file_type_id, :status, :size, UNIX_TIMESTAMP() )", 
-                        array(":content_id" => $content_id, ":name" => $name, ":filepath" => $filepath, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":status" => FILE_EMBED, ":size" => $size)
+                        ( rel_id, module, name, filepath, thumb, type_id, rel_type, size, last_edit_time )
+                        VALUES ( :content_id, 'content', :name, :filepath, :thumbnail_filepath, :file_type_id, :rel_type, :size, UNIX_TIMESTAMP() )", 
+                        array(":content_id" => $content_id, ":name" => $name, ":filepath" => $filepath, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":rel_type" => FILE_EMBED, ":size" => $size)
                 );
 
                 $file_id = DB::get_last_id();
@@ -677,9 +677,9 @@
                         list($width, $height) = getimagesize(UPLOADS_DIR . $filepath);
 
                         DB::query("INSERT INTO " . DB_PREFIX . "file 
-                                ( rel_id, module, name, filepath, thumb, type_id, status, size, width, height, last_edit_time )
-                                VALUES ( :content_id, 'content', :name, :filepath, :thumbnail_filepath, :file_type_id, :status, :size, :width, :height, UNIX_TIMESTAMP() )", 
-                                array(":content_id" => $content_id, ":name" => $name, ":filepath" => $filepath, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":status" => FILE_COVER, ":size" => $size, ":width"=>$width, ":height"=>$height )
+                                ( rel_id, module, name, filepath, thumb, type_id, rel_type, size, width, height, last_edit_time )
+                                VALUES ( :content_id, 'content', :name, :filepath, :thumbnail_filepath, :file_type_id, :rel_type, :size, :width, :height, UNIX_TIMESTAMP() )", 
+                                array(":content_id" => $content_id, ":name" => $name, ":filepath" => $filepath, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":rel_type" => FILE_COVER, ":size" => $size, ":width"=>$width, ":height"=>$height )
                         );
 
                         
@@ -711,7 +711,7 @@
                 $content_id = $content['content_id'];
                 if ($cover = DB::get_row("SELECT file_id
                                                 FROM " . DB_PREFIX . "file
-                                                WHERE rel_id=? AND module='content' AND status=?
+                                                WHERE rel_id=? AND module='content' AND rel_type=?
                                                 LIMIT 1;", array($content_id, FILE_COVER)
                 ))
                     Content::file_delete($cover['file_id']);
