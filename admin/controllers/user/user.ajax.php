@@ -238,6 +238,7 @@
             
             $tpl = new View();
             $tpl->assign( $group );
+            $tpl->assign( "group_id", $group_id );
             $tpl->assign( "content_list", $content_list );
             $tpl->assign( "permission_list", $permission_list );
             $tpl->draw( 'user/group.view' );

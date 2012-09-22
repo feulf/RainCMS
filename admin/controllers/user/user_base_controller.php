@@ -119,27 +119,6 @@
             }
         }
 
-        function group_view($group_id = null) {
-
-            if ($group_id != 'all' && $group_id != 'registered' && $group_id != 'online') {
-                $permission_list = db::get_all("SELECT p.*, c.title
-                                                FROM " . DB_PREFIX . "content_permission p
-                                                INNER JOIN " . DB_PREFIX . "content c ON p.permission_id = c.content_id
-                                                WHERE p.group_id=?
-                                                GROUP BY c.content_id", array($group_id)
-                );
-            }
-            else
-                $permission_list = "";
-
-            $tpl = new View;
-            $this->load_library("Group");
-            $tpl->assign(Group::get_group($group_id));
-            $tpl->assign("group_id", $group_id);
-            $tpl->assign("permission_list", $permission_list);
-            return $tpl->draw('user/group.view', true);
-        }
-
         function group_edit($group_id = null) {
 
             if ($group_id != 'all' && $group_id != 'registered' && $group_id != 'online') {
