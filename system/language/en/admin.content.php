@@ -18,7 +18,7 @@
     $lang["content_button_category_caption"] = "Category - Click here to manage the category";
     $lang["content_button_comment"] = "Comment List";
     $lang["content_button_comment_caption"] = "Comment - Click here to comment list";
-    $lang["content_button_file"] = "File linked to content";
+    $lang["content_button_file"] = "File List";
     $lang["content_button_file_caption"] = "Files - Click here for file list";
     $lang["content_button_content_list"] = "Content List";
     $lang["content_button_content_list_caption"] = "Content List - Click here to see the content list";

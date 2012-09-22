@@ -51,12 +51,13 @@
 
                 // SET CONTROL PANEL
 
-                $edit_html = '<div id="content_edit">' . $this->_content_edit($content_id) . '</div>';
+                $this->tab->add_tab("content_edit", $this->_content_edit($content_id), "content_button_content", "content_button_content_caption");
+
+                // files
                 if ($type['file_enabled'])
-                    $edit_html .= '<div id="content_file">' . $this->_content_file_list($content_id, $file_id) . '</div>' . "\n";
+                    $this->tab->add_tab("file_edit", $this->_content_file_list($content_id, $file_id), "content_button_file", "content_button_file_caption");
 
-
-                $this->tab->add_tab("content_edit", $edit_html, "content_button_content", "content_button_content_caption");
+                // childs
                 if ($child)
                     $this->tab->add_tab("content_list", '<div id="content_list">' . $this->_content_list($content_id) . '</div>', "content_button_content_list", "content_button_content_list_caption");
 
@@ -145,6 +146,39 @@
                 $param_array = array("content_id" => $content_id, "content_id" => $content_row['content_id'], "css" => URL . THEMES_DIR . get_setting('theme') . '/css/style.css');
 
                 // CONTROL PANEL
+                
+                
+                // get the Content
+                if ($multilanguage_field_list){
+                    foreach ($multilanguage_field_list as $i => $field) {
+                        //type_id, field_name, field_type, validation, command, param, layout, position, published
+                        extract($field);
+
+                        // PARAMS
+                        $param_array = array("content_id" => $content_id, "content_id" => $content_row['content_id'], "css" => URL . THEMES_DIR . get_setting('theme') . '/css/style.css');
+                        parse_str($param, $field_param_array);
+                        $param_array += $field_param_array;
+
+                        $input_layout = $layout ? $layout : "layout";
+                        $title = $type['lang_index'] . "_form_" . $name;
+                        $description = $type['lang_index'] . "_form_" . $name . "_field";
+                        $input_name = $lang_id . "_" . $name;
+                        $value = $content_row_lang[$name];
+
+                        $validation = LANG_ID == $lang_id ? $validation : null;
+
+                        if( $field_type == "word" ){
+                            $lang_icon = ( count($langs) > 1 ? "<a href=\"index.php?id=$content_id&lang_id=$lang_id\" class=\"tooltip\" title=\"" . get_msg("content_form_lang") . "\">" . $lang . " <img src=" . LANG_DIR . "$lang_id/$lang_id.gif></a>" : null );
+                            $this->form->open_table("content_form_table", $lang_icon, "table_elastic");
+                            $this->form->add_item("word", $lang_id . "_content", "content_form_content", "content_form_content_field", $content_row_lang['content'], LANG_ID == $lang_id ? "required" : null, $param_array);
+
+                            unset( $multilanguage_field_list[$i] );
+                            break;
+                        }
+
+                    }
+                }
+                
                 $lang_icon = ( count($langs) > 1 ? "<a href=\"index.php?id=$content_id&lang_id=$lang_id\" class=\"tooltip\" title=\"" . get_msg("content_form_lang") . "\">" . $lang . " <img src=" . LANG_DIR . "$lang_id/$lang_id.gif></a>" : null );
                 $this->form->open_table("content_form_table", $lang_icon, "table");
                 $this->form->add_item("text", $lang_id . "_title", "content_form_title", "content_form_title_field", $content_row_lang['title'], LANG_ID == $lang_id ? "required" : null, $param_array);
@@ -170,6 +204,7 @@
                         $validation = LANG_ID == $lang_id ? $validation : null;
 
                         switch ($field_type) {
+                            
                             case 'date':
                                 $value = $value ? time_format($value, DATE_FORMAT_SIMPLE) : null;
                                 $param_array += array('dateFormat' => SDATE_FORMAT);

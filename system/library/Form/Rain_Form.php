@@ -319,6 +319,7 @@
                     valid_elements: "*[*]",
                     relative_urls : false,
                     convert_urls : false,
+                    height: 400,
                     pagebreak_separator : "<!-- page break -->"' . $css;
             else
                 $tinymce_param = '
