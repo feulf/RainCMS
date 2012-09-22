@@ -719,6 +719,7 @@
             if ( !file_exists($load_area_file) || (file_exists($layout_file) && filemtime($load_area_file) < filemtime($layout_file) ) ) {
                 preg_match_all('/\{\$load_area\.(.*?)\}/si', file_get_contents($layout_file), $match);
 
+                $load_area = array();
                 // write on file the load_area found
                 foreach($match[1] as $l)
                     $load_area[$l] = array();
