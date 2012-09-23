@@ -22,8 +22,10 @@
                                 JOIN " . DB_PREFIX . "content_rel r ON c.content_id=r.content_id AND r.rel_type='parent'
                                 JOIN " . DB_PREFIX . "layout p ON p.layout_id = c.layout_id
                                 JOIN " . DB_PREFIX . "content_type t ON t.type_id = c.type_id
-                                LEFT JOIN ".DB_PREFIX."file f ON f.rel_id=c.content_id AND f.rel_type=".FILE_COVER."
-                                WHERE c.content_id=:content_id AND c.lang_id=:lang_id", array(":content_id" => $content_id, ":lang_id" => $lang_id)
+                                LEFT JOIN ".DB_PREFIX."file_rel fr ON fr.rel_id=c.content_id AND fr.rel_type=:rel_type
+                                LEFT JOIN ".DB_PREFIX."file f ON f.file_id=fr.file_id
+                                WHERE c.content_id=:content_id AND c.lang_id=:lang_id", 
+                                array(":rel_type"=>FILE_COVER, ":content_id" => $content_id, ":lang_id" => $lang_id)
             );
         }
 
@@ -35,11 +37,13 @@
             return DB::get_all("SELECT c.*, f.filepath AS cover, f.thumb AS cover_thumbnail, c.path AS link
                                 FROM " . DB_PREFIX . "content c
                                 JOIN " . DB_PREFIX . "content_rel r ON c.content_id=r.content_id AND r.rel_type='parent' AND r.rel_id=:parent_id
-                                LEFT JOIN ".DB_PREFIX."file f ON f.rel_id=c.content_id AND f.rel_type=".FILE_COVER."
+                                LEFT JOIN ".DB_PREFIX."file_rel fr ON fr.rel_id=c.content_id AND fr.rel_type=:rel_type
+                                LEFT JOIN ".DB_PREFIX."file f ON fr.file_id=f.file_id
                                 WHERE c.lang_id=:lang_id" .
-                            ( $only_published ? " AND c.published=1 " : null ) .
-                            ( $order ? " ORDER BY $order" : " ORDER BY r.position " ) .
-                            ( $limit ? " LIMIT $limit" : null ), array(":parent_id" => $content_id, ":lang_id" => $lang_id)
+                                ( $only_published ? " AND c.published=1 " : null ) .
+                                ( $order ? " ORDER BY $order" : " ORDER BY r.position " ) .
+                                ( $limit ? " LIMIT $limit" : null ), 
+                                array(":parent_id" => $content_id, ":rel_type"=>FILE_COVER, ":lang_id" => $lang_id)
             );
         }
 
@@ -61,10 +65,12 @@
             return DB::get_row("SELECT c.*, c.path AS link, f.filepath AS cover, f.thumb AS cover_thumbnail, r.position
                                 FROM " . DB_PREFIX . "content c
                                 JOIN " . DB_PREFIX . "content_rel r ON c.content_id=r.content_id AND r.rel_type='parent' AND r.rel_id=:parent_id
-                                LEFT JOIN ".DB_PREFIX."file f ON f.rel_id=c.content_id AND f.rel_type=".FILE_COVER."
+                                LEFT JOIN ".DB_PREFIX."file_rel fr ON fr.rel_id=c.content_id AND fr.rel_type=:rel_type
+                                LEFT JOIN ".DB_PREFIX."file f ON f.file_id ON fr.file_id
                                 WHERE c.lang_id=:lang_id AND r.position>:position" .
-                            ( $only_published ? " AND c.published=1 " : null ) .
-                            " LIMIT 1", array(":parent_id" => $parent_id, ":position" => $position, ":lang_id" => $lang_id)
+                                ( $only_published ? " AND c.published=1 " : null ) .
+                                " LIMIT 1", 
+                                array(":parent_id" => $parent_id, ":rel_type"=>FILE_COVER, ":lang_id" => $lang_id, ":position" => $position )
             );
         }
 
@@ -75,10 +81,12 @@
             return DB::get_row("SELECT c.*, c.path AS link, f.filepath AS cover, f.thumb AS cover_thumbnail, r.position
                                 FROM " . DB_PREFIX . "content c
                                 JOIN " . DB_PREFIX . "content_rel r ON c.content_id=r.content_id AND r.rel_type='parent' AND r.rel_id=:parent_id
-                                LEFT JOIN ".DB_PREFIX."file f ON f.rel_id=c.content_id AND f.rel_type=".FILE_COVER."
+                                LEFT JOIN ".DB_PREFIX."file_rel fr ON fr.rel_id=c.content_id AND fr.rel_type=:rel_type
+                                LEFT JOIN ".DB_PREFIX."file f ON f.file_id = fr.file_id
                                 WHERE c.lang_id=:lang_id AND r.position<:position" .
-                            ( $only_published ? " AND c.published=1" : null ) .
-                            " LIMIT 1", array(":parent_id" => $parent_id, ":position" => $position, ":lang_id" => $lang_id)
+                                ( $only_published ? " AND c.published=1" : null ) .
+                                " LIMIT 1", 
+                                array(":parent_id" => $parent_id, ":rel_type"=>FILE_COVER, ":lang_id" => $lang_id, ":position" => $position )
             );
         }
 
@@ -91,10 +99,12 @@
                                 JOIN " . DB_PREFIX . "content_rel r ON c.content_id=r.content_id AND r.rel_type='parent'
                                 JOIN " . DB_PREFIX . "layout p ON p.layout_id = c.layout_id
                                 JOIN " . DB_PREFIX . "content_type t ON t.type_id = c.type_id
-                                LEFT JOIN ".DB_PREFIX."file f ON f.rel_id=c.content_id AND f.rel_type=".FILE_COVER."
+                                LEFT JOIN ".DB_PREFIX."file_rel fr ON fr.rel_id=c.content_id AND fr.rel_type=:rel_type
+                                LEFT JOIN ".DB_PREFIX."file f ON f.file_id=fr.file_id
                                 WHERE c.path=:path AND lang_id=:lang_id" .
-                            ( $only_published ? " AND c.published=1" : null ) .
-                            " LIMIT 1", array(":path" => $path, ":lang_id" => $lang_id)
+                                ( $only_published ? " AND c.published=1" : null ) .
+                                " LIMIT 1", 
+                                array( ":rel_type"=>FILE_COVER, ":path" => $path, ":lang_id" => $lang_id )
             );
         }
 
@@ -107,10 +117,12 @@
                                 JOIN " . DB_PREFIX . "content_rel r ON c.content_id=r.content_id AND r.rel_type='parent'
                                 JOIN " . DB_PREFIX . "layout p ON p.layout_id = c.layout_id
                                 JOIN " . DB_PREFIX . "content_type t ON t.type_id = c.type_id
-                                LEFT JOIN ".DB_PREFIX."file f ON f.rel_id=c.content_id AND f.rel_type=".FILE_COVER."
+                                LEFT JOIN ".DB_PREFIX."file_rel fr ON fr.rel_id=c.content_id AND fr.rel_type=:rel_type
+                                LEFT JOIN ".DB_PREFIX."file f ON f.file_id=fr.file_id
                                 WHERE t.type_id=:type_id AND lang_id=:lang_id" .
-                            ( $only_published ? " AND c.published=1" : null ) .
-                            " LIMIT 1", array(":type_id" => $type_id, ":lang_id" => $lang_id)
+                                ( $only_published ? " AND c.published=1" : null ) .
+                                " LIMIT 1", 
+                                array( ":rel_type"=>FILE_COVER, ":type_id" => $type_id, ":lang_id" => $lang_id)
             );
         }
 
@@ -123,10 +135,12 @@
                                 JOIN " . DB_PREFIX . "content_rel r ON c.content_id=r.content_id AND r.rel_type='parent'
                                 JOIN " . DB_PREFIX . "layout p ON p.layout_id = c.layout_id
                                 JOIN " . DB_PREFIX . "content_type t ON t.type_id = c.type_id
-                                LEFT JOIN ".DB_PREFIX."file f ON f.rel_id=c.content_id AND f.rel_type=".FILE_COVER."
+                                LEFT JOIN ".DB_PREFIX."file_rel f ON fr.rel_id=c.content_id AND fr.rel_type=:rel_type
+                                LEFT JOIN ".DB_PREFIX."file f ON f.file_id=fr.file_id
                                 WHERE t.module=:module AND lang_id=:lang_id" .
-                            ( $only_published ? " AND c.published=1" : null ) .
-                            " LIMIT 1", array(":module" => $module, ":lang_id" => $lang_id));
+                                ( $only_published ? " AND c.published=1" : null ) .
+                                " LIMIT 1", 
+                                array(":rel_type"=>FILE_COVER, ":module" => $module, ":lang_id" => $lang_id));
         }
 
         /**
@@ -138,29 +152,28 @@
                                 FROM " . DB_PREFIX . "content c
                                 JOIN " . DB_PREFIX . "content_rel r ON c.content_id=r.content_id AND r.rel_type='parent'
                                 JOIN " . DB_PREFIX . "content_type t ON c.type_id=t.type_id 
-                                LEFT JOIN ".DB_PREFIX."file f ON f.rel_id=c.content_id AND f.rel_type=".FILE_COVER."
-                                WHERE c.content_id=:content_id AND c.lang_id=:lang_id", array(":content_id" => $content_id, ":lang_id" => $lang_id));
+                                LEFT JOIN ".DB_PREFIX."file_rel fr ON fr.rel_id=c.content_id AND fr.rel_type=:rel_type
+                                LEFT JOIN ".DB_PREFIX."file f ON f.file_id=fr.file_id
+                                WHERE c.content_id=:content_id AND c.lang_id=:lang_id", 
+                                array(":rel_type"=>FILE_COVER, ":content_id" => $content_id, ":lang_id" => $lang_id));
         }
 
         /**
         * Get the child of a content and the type associated to each child
         */
         static function get_childs_and_type($content_id, $lang_id = LANG_ID, $time = null, $order = null) {
-
-            $fields[":parent_id"] = $content_id;
-            $fields[":time"] = $time;
-            $fields[":lang_id"] = $lang_id;
             
             return DB::get_all("SELECT t.*, c.*, f.filepath AS cover, f.thumb AS cover_thumbnail, r.position, count(l.user_localization_id) AS n_user
                                 FROM " . DB_PREFIX . "content c
                                 JOIN " . DB_PREFIX . "content_rel r ON c.content_id=r.content_id AND r.rel_type='parent' AND r.rel_id=:parent_id
                                 JOIN " . DB_PREFIX . "content_type t ON c.type_id = t.type_id
                                 LEFT JOIN " . DB_PREFIX . "user_localization l ON l.content_id = c.content_id AND l.time >= :time
-                                LEFT JOIN ".DB_PREFIX."file f ON f.rel_id=c.content_id AND f.rel_type=".FILE_COVER."
+                                LEFT JOIN ".DB_PREFIX."file_rel fr ON fr.rel_id=c.content_id AND fr.rel_type=:rel_type
+                                LEFT JOIN ".DB_PREFIX."file f ON f.file_id=fr.file_id
                                 WHERE c.lang_id=:lang_id
                                 GROUP BY c.content_id" .
                                 ( $order ? " ORDER BY $order" : " ORDER BY r.position ASC" ), 
-                                $fields
+                                array( ":parent_id"=>$content_id, ":time"=>$time, ":rel_type"=>FILE_COVER, ":lang_id"=>$lang_id )
             );
         }
 
@@ -431,35 +444,36 @@
         // get file
         static function get_file($file_id) {
             return DB::get_row("SELECT * 
-                                FROM " . DB_PREFIX . "file 
+                                FROM " . DB_PREFIX . "file
                                 WHERE file_id = ?", array($file_id)
             );
         }
 
-        static function get_file_list($rel_id, $module, $file_status = FILE_LIST) {
-            $prepared = array( $module, $rel_id );
-            if( $file_status > 0 || $file_status == FILE_LIST )
-                $prepared[] = $file_status;
+        static function get_file_list($rel_id, $rel_type = FILE_LIST) {
+
             $file_list = DB::get_all("SELECT * 
-                                    FROM " . DB_PREFIX . "file
-                                    WHERE module=? AND rel_id=? " . ( $file_status > 0 || $file_status == FILE_LIST ? "AND rel_type=?" : null ) . "
-                                    ORDER BY position", 
-                                    $prepared
+                                      FROM " . DB_PREFIX . "file_rel fr
+                                      JOIN " . DB_PREFIX . "file f ON fr.file_id=f.file_id 
+                                      WHERE fr.rel_id=:rel_id AND fr.rel_type=:rel_type
+                                      ORDER BY position", 
+                                      array( ":rel_id"=>$rel_id, ":rel_type"=>$rel_type )
             );
             return $file_list;
         }
         
         static function file_delete_by_content_id( $content_id ){
-            $file_list = Content::get_file_list( $content_id, "content" );
+            $file_list = Content::get_file_list( $content_id );
             foreach( $file_list as $file )
                 Content::file_delete( $file['file_id'] );
         }
 
         // delete file
         static function file_delete($file_id) {
-            // se trovo il file lo cancello
-            if ($file = DB::get_row("SELECT * FROM " . DB_PREFIX . "file WHERE file_id=?", array($file_id))) {
-                
+            // search the file
+            $file = DB::get_row( "SELECT * FROM ".DB_PREFIX."file WHERE file_id=?", array($file_id) );
+
+            if ( $file ) {
+ 
                 if( $file['rel_type'] == FILE_LIST OR $file['rel_type'] == FILE_CONTENT )
                     Content::clean_cache( $file['rel_id'] );
 

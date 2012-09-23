@@ -78,7 +78,7 @@
         }
 
         function get_file_list() {
-            return Content::get_file_list($this->content['content_id'], "content");
+            return Content::get_file_list($this->content['content_id']);
         }
 
         function get_comment_list() {

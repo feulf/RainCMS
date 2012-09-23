@@ -555,7 +555,7 @@
                 }
 
                 // get the file position
-                $position = db::get_field("SELECT position+1 AS position FROM " . DB_PREFIX . "file WHERE rel_id=? AND module='content' ORDER BY position DESC LIMIT 1", array($content_id), "position");
+                $position = db::get_field("SELECT position+1 AS position FROM " . DB_PREFIX . "file_rel WHERE rel_id=? AND rel_type=? ORDER BY position DESC LIMIT 1", array($content_id, FILE_LIST), "position");
 
                 // update last edit
                 db::query("UPDATE " . DB_PREFIX . "content
@@ -563,11 +563,16 @@
                         WHERE content_id=?", array($content_id));
 
                 db::query("INSERT INTO " . DB_PREFIX . "file 
-                           ( rel_id, module, name, filepath, ext, thumb, type_id, rel_type, size, width, height, last_edit_time ) 
-                           VALUES ( :content_id, 'content', :name, :filepath, :ext, :thumbnail_filepath, :file_type_id, :rel_type, :size, :width, :height, UNIX_TIMESTAMP() )", 
-                           array(":content_id" => $content_id, ":name" => $name, ":filepath" => $filepath, ":ext" => $ext, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":rel_type" => FILE_LIST, ":size" => $size, ":width" => $width, ":height" => $height));
+                           ( name, filepath, ext, thumb, type_id, size, width, height, last_edit_time ) 
+                           VALUES ( :name, :filepath, :ext, :thumbnail_filepath, :file_type_id, :size, :width, :height, UNIX_TIMESTAMP() )", 
+                           array(":name" => $name, ":filepath" => $filepath, ":ext" => $ext, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":size" => $size, ":width" => $width, ":height" => $height));
 
                 $file_id = db::get_last_id();
+
+                db::query("INSERT INTO " . DB_PREFIX . "file_rel
+                           ( file_id, rel_id, rel_type, position ) 
+                           VALUES ( :file_id, :content_id, :rel_type, :position )", 
+                           array(":file_id"=>$file_id, ":content_id" => $content_id, ":rel_type" => FILE_LIST, "position"=>$position ) );
 
                 // update the size total used space
                 db::query("UPDATE " . DB_PREFIX . "setting SET value=value+? WHERE setting='space_used'", array($size));
@@ -585,7 +590,7 @@
             $sortable = explode("&", str_replace("f[]=", "", $sortable));
 
             for ($i = 0; $i < count($sortable); $i++)
-                db::query("UPDATE " . DB_PREFIX . "file SET position=:position WHERE file_id=:file_id AND rel_id=:content_id AND module='content' LIMIT 1;", array(":position" => $i, ":file_id" => $sortable[$i], ":content_id" => $content_id));
+                db::query("UPDATE " . DB_PREFIX . "file_rel SET position=:position WHERE file_id=:file_id AND rel_id=:content_id AND rel_type=:rel_type LIMIT 1;", array(":position" => $i, ":file_id" => $sortable[$i], ":content_id" => $content_id, ":rel_type"=>FILE_LIST));
         }
 
         /**
@@ -622,13 +627,17 @@
                 $thumbnail_filepath = $file_info["thumbnail_filepath"];
                 $file_type_id = IMAGE;
 
-                DB::query("INSERT INTO " . DB_PREFIX . "file 
-                        ( rel_id, module, name, filepath, thumb, type_id, rel_type, size, last_edit_time )
-                        VALUES ( :content_id, 'content', :name, :filepath, :thumbnail_filepath, :file_type_id, :rel_type, :size, UNIX_TIMESTAMP() )", 
-                        array(":content_id" => $content_id, ":name" => $name, ":filepath" => $filepath, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":rel_type" => FILE_EMBED, ":size" => $size)
-                );
+                db::query("INSERT INTO " . DB_PREFIX . "file 
+                           ( name, filepath, ext, thumb, type_id, size, width, height, last_edit_time ) 
+                           VALUES ( :name, :filepath, :ext, :thumbnail_filepath, :file_type_id, :size, :width, :height, UNIX_TIMESTAMP() )", 
+                           array(":name" => $name, ":filepath" => $filepath, ":ext" => $ext, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":size" => $size, ":width" => $width, ":height" => $height));
 
-                $file_id = DB::get_last_id();
+                $file_id = db::get_last_id();
+
+                db::query("INSERT INTO " . DB_PREFIX . "file_rel
+                           ( file_id, rel_id, rel_type) 
+                           VALUES ( :file_id, :content_id, :rel_type )", 
+                           array(":file_id"=>$file_id, ":content_id" => $content_id, ":rel_type" => FILE_EMBED ) );
 
                 return json_encode(array('result' => true, 'file_id' => $file_id, 'filepath' => $filepath, 'dir' => UPLOADS_URL));
             }
@@ -655,35 +664,41 @@
                 $w = isset($p['w']) ? $p['w'] : null;    // image width
                 $h = isset($p['h']) ? $p['h'] : null;    // image height
                 $s = isset($p['s']) ? $p['s'] : false;   // image is square
+
                 //cover thumb
                 $tw = isset($p['tw']) ? $p['tw'] : null;
                 $th = isset($p['th']) ? $p['th'] : null;
                 $ts = isset($p['ts']) ? $p['ts'] : false;
 
                 if ($file_info = upload_image('cover', THUMB_PREFIX, $tw, $th, $ts)) {
-
-                    $name = $file_info["name"];
-                    $size = $file_info["size"];
-                    $upload_path = $file_info["upload_path"];
-                    $filename = $file_info["filename"];
-                    $filepath = $file_info["filepath"];
+                    
+                    $name               = $file_info["name"];
+                    $ext                = file_ext($name);
+                    $size               = $file_info["size"];
+                    $upload_path        = $file_info["upload_path"];
+                    $filename           = $file_info["filename"];
+                    $filepath           = $file_info["filepath"];
                     $thumbnail_filename = $file_info["thumbnail_filename"];
                     $thumbnail_filepath = $file_info["thumbnail_filepath"];
-                    
-                    if (image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $filepath, $w, $h, $s)) {
+
+                    if ( image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $filepath, $w, $h, $s)) {
 
                         $thumb = THUMB_PREFIX . $filepath;
                         $file_type_id = IMAGE;
                         list($width, $height) = getimagesize(UPLOADS_DIR . $filepath);
 
-                        DB::query("INSERT INTO " . DB_PREFIX . "file 
-                                ( rel_id, module, name, filepath, thumb, type_id, rel_type, size, width, height, last_edit_time )
-                                VALUES ( :content_id, 'content', :name, :filepath, :thumbnail_filepath, :file_type_id, :rel_type, :size, :width, :height, UNIX_TIMESTAMP() )", 
-                                array(":content_id" => $content_id, ":name" => $name, ":filepath" => $filepath, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":rel_type" => FILE_COVER, ":size" => $size, ":width"=>$width, ":height"=>$height )
-                        );
+                        db::query("INSERT INTO " . DB_PREFIX . "file 
+                                ( name, filepath, ext, thumb, type_id, size, width, height, last_edit_time ) 
+                                VALUES ( :name, :filepath, :ext, :thumbnail_filepath, :file_type_id, :size, :width, :height, UNIX_TIMESTAMP() )", 
+                                array(":name" => $name, ":filepath" => $filepath, ":ext" => $ext, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":size" => $size, ":width" => $width, ":height" => $height));
 
-                        
-                        $file_id = DB::get_last_id();
+                        $file_id = db::get_last_id();
+
+                        db::query("INSERT INTO " . DB_PREFIX . "file_rel
+                                ( file_id, rel_id, rel_type ) 
+                                VALUES ( :file_id, :content_id, :rel_type )", 
+                                array(":file_id"=>$file_id, ":content_id" => $content_id, ":rel_type" => FILE_COVER ) );
+
 
                         // update the size total used space
                         DB::query("UPDATE " . DB_PREFIX . "setting SET value=value+? WHERE setting='space_used'", array($size) );
@@ -709,16 +724,18 @@
             //    return false;
             if ($content = Content::get_content($content_id)) {
                 $content_id = $content['content_id'];
-                if ($cover = DB::get_row("SELECT file_id
-                                                FROM " . DB_PREFIX . "file
-                                                WHERE rel_id=? AND module='content' AND rel_type=?
-                                                LIMIT 1;", array($content_id, FILE_COVER)
+                if ($cover = DB::get_field($query="SELECT f.file_id
+                                          FROM " . DB_PREFIX . "file_rel fr
+                                          JOIN " . DB_PREFIX . "file f ON f.file_id=fr.file_id
+                                          WHERE fr.rel_id=:rel_id AND fr.rel_type=:rel_type
+                                          LIMIT 1;", 
+                                          array(":rel_id"=>$content_id, ":rel_type"=>FILE_COVER)
                 ))
-                    Content::file_delete($cover['file_id']);
+                    Content::file_delete($file_id);
 
                 DB::query("UPDATE " . DB_PREFIX . "content
-                                SET cover = ''
-                                WHERE content_id=?", array($content_id)
+                           SET cover = ''
+                           WHERE content_id=?", array($content_id)
                 );
                 return true;
             }

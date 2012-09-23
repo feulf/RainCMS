@@ -281,7 +281,15 @@
                             $param_array += array('css' => URL . VIEWS_DIR . 'aimg/style.tinymce.css', "content_id" => $content_row['content_id'], "module" => "content");
                             break;
                         case 'cover':
-                            $param_array += array('content_id' => $content_id, 'cover'=>$content_row['cover'], 'cover_thumbnail'=>$content_row['cover_thumbnail']);
+                            $cover = DB::get_row( "SELECT *
+                                                     FROM ".DB_PREFIX."file_rel fr
+                                                     JOIN ".DB_PREFIX."file f f.file_id=fr.file_id
+                                                     WHERE fr.rel_id=:rel_id AND rel_type=:rel_type",
+                                                     array(":rel_id"=>$content_id, ":rel_type"=>FILE_COVER )
+                                                  );
+                            dump( $cover );
+                            
+                            $param_array += array('content_id' => $content_id, 'cover'=>$cover, 'cover_thumbnail'=>$content_row['cover_thumbnail']);
                     }
 
                     $this->form->add_item($field_type, $input_name, $title, $description, $value, $validation, $param_array, $input_layout);
@@ -452,8 +460,8 @@
             $order_by = get('forder') ? get('forder') : "position";
             $order = get('forder_by') == "desc" ? "desc" : "asc";
 
-            $file_list = Content::get_file_list($rel_id = $content_row['content_id'], "content", FILE_LIST);
-            
+            $file_list = Content::get_file_list($rel_id = $content_row['content_id'], FILE_LIST );
+
             $view = new View;
             $view->assign('file_list', $file_list);
             $view->assign($content_row);

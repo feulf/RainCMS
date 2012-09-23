@@ -23,7 +23,7 @@
 
         protected   $ajax_mode,
                     $head,
-                    $layout_vars,
+                    $layout_vars = array(),
                     $content,
                     $content_id,
                     $content_path,

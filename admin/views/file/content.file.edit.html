@@ -1,0 +1,118 @@
+<link href="{#URL#}{#ADM_JS_DIR#}Jcrop/css/jquery.Jcrop.css#" type="text/css" rel="stylesheet" />
+<script src="{#URL#}{#ADM_JS_DIR#}Jcrop/jquery.Jcrop.min.js#" type="text/javascript"></script>
+<script>
+var saved_coords, orig_w, orig_h;
+function showPreview(coords)
+{
+	var rx = $('#t_width').val()/ coords.w;
+	var ry = $('#t_height').val()/ coords.h;
+
+	var w =  $('#cropbox').width();
+	var h =  $('#cropbox').height();
+	
+	$('#preview').css({
+		width: Math.round(rx * w ) + 'px',
+		height: Math.round(ry * h ) + 'px',
+		marginLeft: '-' + Math.round(rx * coords.x) + 'px',
+		marginTop: '-' + Math.round(ry * coords.y) + 'px'
+	});
+	
+	saved_coords = coords
+};
+
+function changeSize(){
+	var w =  $('#t_width').val();
+	var h =  $('#t_height').val();
+	$('#preview_box').css('width',w + 'px' );
+	$('#preview_box').css('height',h + 'px' );
+	
+	if( saved_coords )
+		showPreview( saved_coords )
+}
+
+function saveThumbnail(file_id){
+
+	var tw =  $('#t_width').val();
+	var th =  $('#t_height').val();
+	var img_width =  $('#cropbox').width();
+	var img_height =  $('#cropbox').height();
+	
+	var cy = saved_coords.y
+	var cx = saved_coords.x
+	var cw = saved_coords.w
+	var ch = saved_coords.h
+	
+	cx = ( orig_w / img_width) * cx
+	cy = ( orig_h / img_height ) * cy
+	cw = ( orig_w / img_width ) * cw
+	ch = ( orig_h / img_height ) * ch
+
+	$.get('admin.server.php', {module:'content',cp:'file/thumb',file_id:file_id ,x:cx,y:cy,w:cw,h:ch,targ_w:tw,targ_h:th}, function(html){
+
+		var src = $('#original_thumb').attr('src')
+		$('#original_thumb').attr('src', null )
+		$('#original_thumb').attr('src', src + "?" + 1001 )
+		
+		$('#crop').fadeOut("slow");
+		$('#btnOpenEdit').show()
+		$('#btnCloseEdit').hide()
+	});
+}
+
+
+function openEditThumb(){
+	
+	$('#crop').fadeIn("slow");
+	if( !orig_w || !orig_h ){
+		orig_w = $('#cropbox').width()
+		orig_h = $('#cropbox').height()
+		$('#cropbox').Jcrop({onChange: showPreview,onSelect: showPreview});
+	}
+	
+	$('#cropbox').css( 'max-width','500px');
+
+	$('#btnOpenEdit').hide()
+	$('#btnCloseEdit').show()
+
+	var w = $('#original_thumb').width();
+	var h = $('#original_thumb').height();
+	$('#preview_box').css('width',w).css('height',h);
+	$('#t_width').val(w);
+	$('#t_height').val(h);
+	
+	
+}
+
+function closeEditThumb(){
+	$('#crop').fadeOut("slow");
+	$('#btnOpenEdit').show()
+	$('#btnCloseEdit').hide()
+}
+
+</script>
+
+<div id="file_edit" class="thumbnail_list">
+	<button id="file_edit_exit" onclick="file_edit_close()" style="float:right;">Chiudi</button><br>
+	<div style="float:left;"><b>{$type_name}</b></div><br>
+	<br>
+	filepath: {$filepath}<br>
+	<hr>
+	{if="$type_id==IMAGE"}Width x Height: {$width}x{$height}<br>
+	<a href="{#UPLOADS_URL#}{$filepath}" rel="lightbox">click to see the original image</a><br>
+	{/if}
+	<a href="download.php?file_id={$file_id}&rel_id={$rel_id}">click to download</a>
+	<hr>
+	<br><br>
+
+	<img src="{#UPLOADS_URL#}{$thumb}#" id="original_thumb"><br><br>
+	<button id="btnOpenEdit" onclick="openEditThumb()">Edit thumbnail</button><br>
+
+	<div id="crop" style="display:none;">
+		<fieldset><legend>Edit Thumbnail</legend>
+		<button onclick="saveThumbnail('{$file_id}')">Save Thumbnail</button> <button id="btnCloseEdit" onclick="closeEditThumb()" style="display:none;">Cancel</button><br><br>
+		<div id="preview_box" style="width:100px;height:100px;overflow:hidden;"><img src="{#UPLOADS_URL#}{$filepath}#" id="preview" /></div><br>
+		<div><input id="t_width" name="t_width" type="text" value="100" onchange="changeSize();" size="4"> x <input id="t_height" name="t_height" type="text" value="100" onchange="changeSize();" size="4"></div><br>
+		<img src="{#UPLOADS_URL#}{$filepath}#" id="cropbox"/>
+		</fieldset>
+	</div>
+</div>
