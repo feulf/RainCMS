@@ -82,10 +82,11 @@
 			var tree_top_new = tree_top_orig - $('#header').height()
 			var win_height = $(window).height()
 
+                        var tree_top = $('#site_tree').offset().top
+                        var tree_height = $('#site_tree').height()
+
 			$(window).scroll( function(){
 
-				var tree_top = $('#site_tree').offset().top
-				var tree_height = $('#site_tree').height()
 				var win_scroll = $(window).scrollTop()
 
 				if( win_scroll > tree_top_orig && (tree_top + tree_height < win_height) )
