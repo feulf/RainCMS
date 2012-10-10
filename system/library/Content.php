@@ -66,7 +66,7 @@
                                 FROM " . DB_PREFIX . "content c
                                 JOIN " . DB_PREFIX . "content_rel r ON c.content_id=r.content_id AND r.rel_type='parent' AND r.rel_id=:parent_id
                                 LEFT JOIN ".DB_PREFIX."file_rel fr ON fr.rel_id=c.content_id AND fr.rel_type=:rel_type
-                                LEFT JOIN ".DB_PREFIX."file f ON f.file_id ON fr.file_id
+                                LEFT JOIN ".DB_PREFIX."file f ON f.file_id = fr.file_id
                                 WHERE c.lang_id=:lang_id AND r.position>:position" .
                                 ( $only_published ? " AND c.published=1 " : null ) .
                                 " LIMIT 1", 
