@@ -361,6 +361,50 @@
         function file_delete($file_id) {
             Content::file_delete($file_id);
         }
+        
+
+        /**
+         * file edit
+         * @param type $file_id 
+         */
+        function file_edit($file_id){
+            $file = Content::get_file($file_id);
+
+            // INIT CONTROL PANEL
+            $this->load_library("form");
+            $this->form->init_form( URL . "admin.ajax.php/content/file_save/$file_id/", "post", "file_edit");
+            $this->form->open_table("Edit File");
+            $this->form->add_html( '<img src="'.UPLOADS_URL.$file['thumb'].'">');
+            $this->form->add_item("text", "title", "content_form_title", "content_form_title_field", $file['name'] );
+            $this->form->add_item("text", "subtitle", "content_form_subtitle", "content_form_subtitle_field", $file['subtitle'] );
+            $this->form->add_item("textarea", "content", "content_form_content", "content_form_content_field", $file['description'] );
+            $this->form->add_button("save");
+            $this->form->close_table();
+            $this->form->draw($ajax = true);
+            
+            echo get_style();
+            echo get_javascript();
+            
+        }
+        
+
+        function file_save($file_id){
+    
+            $title = post("title");
+            $description = post("content");
+            $subtitle = post("subtitle");
+            DB::update(DB_PREFIX."file", array("name"=>$title, "description"=>$description, "subtitle"=>$subtitle), "file_id=$file_id" );
+            
+            echo "Saved. <a href='javascript:history.back();'>Go back</a>";
+        }
+
+
+        
+        
+        /**
+         * Private methods 
+         */
+
 
         // delete file by content id    
         function _file_delete_by_content_id($content_id) {
@@ -666,8 +710,8 @@
                 $s = isset($p['s']) ? $p['s'] : false;   // image is square
 
                 //cover thumb
-                $tw = isset($p['tw']) ? $p['tw'] : null;
-                $th = isset($p['th']) ? $p['th'] : null;
+                $tw = isset($p['tw']) ? $p['tw'] : 256;
+                $th = isset($p['th']) ? $p['th'] : 200;
                 $ts = isset($p['ts']) ? $p['ts'] : false;
 
                 if ($file_info = upload_image('cover', THUMB_PREFIX, $tw, $th, $ts)) {
@@ -681,13 +725,13 @@
                     $thumbnail_filename = $file_info["thumbnail_filename"];
                     $thumbnail_filepath = $file_info["thumbnail_filepath"];
 
-                    if ( image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $filepath, $w, $h, $s)) {
+                    if (image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $filepath, $w, $h, $s)) {
 
                         $thumb = THUMB_PREFIX . $filepath;
                         $file_type_id = IMAGE;
                         list($width, $height) = getimagesize(UPLOADS_DIR . $filepath);
 
-                        db::query("INSERT INTO " . DB_PREFIX . "file 
+                        db::query( "INSERT INTO " . DB_PREFIX . "file 
                                 ( name, filepath, ext, thumb, type_id, size, width, height, last_edit_time ) 
                                 VALUES ( :name, :filepath, :ext, :thumbnail_filepath, :file_type_id, :size, :width, :height, UNIX_TIMESTAMP() )", 
                                 array(":name" => $name, ":filepath" => $filepath, ":ext" => $ext, ":thumbnail_filepath" => $thumbnail_filepath, ":file_type_id" => $file_type_id, ":size" => $size, ":width" => $width, ":height" => $height));
@@ -703,7 +747,7 @@
                         // update the size total used space
                         DB::query("UPDATE " . DB_PREFIX . "setting SET value=value+? WHERE setting='space_used'", array($size) );
 
-                        return json_encode(array('status' => true, 'thumb_src' => UPLOADS_URL . $thumb, 'src' => UPLOADS_URL . $filepath));
+                        return json_encode(array('status' => true, 'thumb_src' => UPLOADS_DIR . $thumbnail_filepath, 'src' => UPLOADS_URL . $filepath ) );
                     }
                     else
                         return json_encode(array('status' => false, 'msg' => 'Resize images error'));
@@ -724,14 +768,15 @@
             //    return false;
             if ($content = Content::get_content($content_id)) {
                 $content_id = $content['content_id'];
-                if ($cover = DB::get_field($query="SELECT f.file_id
+                if ($file_id = DB::get_field("SELECT f.file_id
                                           FROM " . DB_PREFIX . "file_rel fr
                                           JOIN " . DB_PREFIX . "file f ON f.file_id=fr.file_id
                                           WHERE fr.rel_id=:rel_id AND fr.rel_type=:rel_type
                                           LIMIT 1;", 
                                           array(":rel_id"=>$content_id, ":rel_type"=>FILE_COVER)
-                ))
-                    Content::file_delete($file_id);
+                                            )
+                   )
+                    Content::file_delete( $file_id );
 
                 DB::query("UPDATE " . DB_PREFIX . "content
                            SET cover = ''

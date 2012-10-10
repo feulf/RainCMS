@@ -1,6 +1,7 @@
 <?php
 
     add_script("content.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
+    add_script("file.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
     add_style("content.css", ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
 
     require "content_base.php";
@@ -130,7 +131,7 @@
             
             foreach ($installed_lang as $lang)
                 $langs[$lang["lang_id"]] = $lang["language"];
-            if (!load_lang("admin." . $type["type"]))
+            if (!load_lang("admin." . $type["lang_index"]))
                 $type["lang_index"] = "content";
 
             // GET FIELD
@@ -232,24 +233,32 @@
 
 
                 // LIST OF CONTENTS WHERE THIS CONTENT CAN BE COPIED
-                DB::get_all("SELECT id, title
-                                                            FROM " . DB_PREFIX . "content AS c
-                                                            WHERE type_id IN
-                                                            ( SELECT parent_id
-                                                            FROM " . DB_PREFIX . "content_type_tree AS t
-                                                            WHERE type_id = ? )
-                                                            ORDER BY c.position;", array($type['type_id']), "content_id", "title"
-                );
+                $options = DB::get_all("SELECT c.content_id, c.title
+                                        FROM " . DB_PREFIX . "content c
+                                        JOIN " . DB_PREFIX . "content_rel r ON c.content_id = r.rel_id AND r.rel_type='parent'
+                                        WHERE type_id IN
+                                        ( SELECT parent_id
+                                          FROM " . DB_PREFIX . "content_type_tree AS t
+                                          WHERE type_id = ?
+                                        )
+                                        ORDER BY r.position;", 
+                                        array($type['type_id']), 
+                                        "content_id", "title"
+                                       );
 
                 // LIST OF CONTENTS WHERE THIS CONTENT IS COPIED
-                $value = DB::get_all("SELECT parent_id, id
-                                                        FROM " . DB_PREFIX . "content
-                                                        WHERE content_id = ?", array($content_row['content_id']), "parent_id", "content_id"
+                $value = DB::get_all("SELECT r.rel_id AS parent_id, c.content_id
+                                      FROM " . DB_PREFIX . "content c
+                                      JOIN " . DB_PREFIX . "content_rel r ON c.content_id = r.rel_id AND r.rel_type='parent'
+                                      WHERE c.content_id = ?", 
+                                      array($content_row['content_id']), 
+                                      "parent_id", "content_id"
                 );
 
                 $this->form->add_item("linked_copy", "linked_copy", "{$type['lang_index']}_form_linked_copy", "{$type['lang_index']}_form_linked_copy_field", $value, null, array('options' => $options, 'content_id' => $content_row['parent_id']), "row");
             }
             // LINKED COPY
+            
             // FIELD
             $field_list = Content::get_content_type_fields($type_id, $only_published = true, $multilanguage = false);
 
@@ -281,15 +290,15 @@
                             $param_array += array('css' => URL . VIEWS_DIR . 'aimg/style.tinymce.css', "content_id" => $content_row['content_id'], "module" => "content");
                             break;
                         case 'cover':
-                            $cover = DB::get_row( "SELECT *
+                            $cover = DB::get_row( "SELECT filepath AS cover, thumb AS cover_thumbnail 
                                                      FROM ".DB_PREFIX."file_rel fr
-                                                     JOIN ".DB_PREFIX."file f f.file_id=fr.file_id
+                                                     JOIN ".DB_PREFIX."file f ON f.file_id=fr.file_id
                                                      WHERE fr.rel_id=:rel_id AND rel_type=:rel_type",
-                                                     array(":rel_id"=>$content_id, ":rel_type"=>FILE_COVER )
+                                                     array( ":rel_id"=>$content_id, ":rel_type"=>FILE_COVER )
                                                   );
-                            dump( $cover );
                             
-                            $param_array += array('content_id' => $content_id, 'cover'=>$cover, 'cover_thumbnail'=>$content_row['cover_thumbnail']);
+                            $param_array += array( 'content_id' => $content_id, 'cover'=>$cover['cover'], 'cover_thumbnail'=>$cover['cover_thumbnail'] );
+
                     }
 
                     $this->form->add_item($field_type, $input_name, $title, $description, $value, $validation, $param_array, $input_layout);
