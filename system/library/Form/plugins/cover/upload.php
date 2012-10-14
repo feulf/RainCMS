@@ -4,13 +4,31 @@
     define("RAINCMS", 1);                // security check
 
     define("RELATIVE_BASE_DIR", "../../../../../");
+
+    $url = $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']) . "/" . RELATIVE_BASE_DIR;
+    $url = reduce_path_upload( $url );
+    
+    function reduce_path_upload( $path ){
+            $path = str_replace( "://", "@not_replace@", $path );
+            $path = preg_replace( "#(/+)#", "/", $path );
+            $path = preg_replace( "#(/\./+)#", "/", $path );
+            $path = str_replace( "@not_replace@", "://", $path );
+            
+            while( preg_match( '#\.\./#', $path ) ){
+                $path = preg_replace('#\w+/\.\./#', '', $path );
+            }
+            return $path;
+    }
+    
+    define( URL, 'http://'.$url );
+
+    
     include RELATIVE_BASE_DIR . "config/dir.php";
     include RELATIVE_BASE_DIR . "config/url.php";
     include RELATIVE_BASE_DIR . "system/const/constants.php";
     include RELATIVE_BASE_DIR . "system/const/rain.constants.php";
     include RELATIVE_BASE_DIR . "system/library/functions.php";
-
-    define("RAIN_FORM_DIR", ADMIN_VIEWS_IMAGES_DIR . "Form/", ADMIN_VIEWS_IMAGES_URL . "Form/");
+    define("RAIN_UPLOAD_PLUGIN_URL", LIBRARY_URL . "Form/plugins/cover/" );
 ?>
 
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -43,7 +61,7 @@
                         },
                         onComplete: function( file, response ){
                             if( response )
-                                window.parent.cover_update( response['src'], response['thumb_src'], '<?php echo get('content_id'); ?>', '<?php echo RAIN_FORM_DIR . "plugins/cover/" ?>' )
+                                window.parent.cover_update( response['src'], response['thumb_src'], '<?php echo get('content_id'); ?>', '<?php echo RAIN_UPLOAD_PLUGIN_URL; ?>' )
                         }
                     });
                 });
