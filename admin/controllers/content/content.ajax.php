@@ -325,7 +325,7 @@
 
             // sub contents
             $childs = Content::get_childs($content_id, LANG_ID, null, null, $only_published = false);
-            for ($i = 0; $i < count($childs); $i++)
+            for ($i = 0, $n=count($childs); $i < $n; $i++)
                 $this->delete($childs[$i]['content_id'], LANG_ID);
 
             // If there aren't any other content with same content_id I delete all the linked files
@@ -409,14 +409,15 @@
         // delete file by content id    
         function _file_delete_by_content_id($content_id) {
 
-            // lista dei file
-            $file_list = db::get_all("SELECT * 
-                                                    FROM " . DB_PREFIX . "file 
-                                                    WHERE rel_id=? AND module='content'", array($content_id)
+            // file list
+            $file_list = db::get_all("SELECT *
+                                      FROM " . DB_PREFIX . "file f
+                                      JOIN " . DB_PREFIX . "file_rel fr ON f.file_id=fr.file_id
+                                      WHERE fr.rel_id=?", array($content_id)
             );
 
             for ($i = 0; $i < count($file_list); $i++)
-            // cancello i file
+            // delete the files
                 Content::file_delete($file_list[$i]['file_id']);
         }
 
