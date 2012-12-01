@@ -1,8 +1,8 @@
 <?php
 
-    add_script("content.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
-    add_script("file.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
-    add_style("content.css", ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
+    Layout::addScript("content.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
+    Layout::addScript("file.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
+    Layout::addStyle("content.css", ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
 
     require "content_base.php";
 
@@ -10,7 +10,7 @@
 
         function index($content_id = null, $file_id = null, $action = null) {
 
-            add_javascript("var content_id='$content_id';");
+            Layout::addJavascript("var content_id='$content_id';");
 
             if (!isset($_SESSION['content_tree']))
                 $_SESSION['content_tree'] = Array();
@@ -147,8 +147,7 @@
                 $param_array = array("content_id" => $content_id, "content_id" => $content_row['content_id'], "css" => URL . THEMES_DIR . get_setting('theme') . '/css/style.css');
 
                 // CONTROL PANEL
-                
-                
+
                 // get the Content
                 if ($multilanguage_field_list){
                     foreach ($multilanguage_field_list as $i => $field) {
@@ -184,7 +183,7 @@
                 $this->form->open_table("content_form_table", $lang_icon, "table");
                 $this->form->add_item("text", $lang_id . "_title", "content_form_title", "content_form_title_field", $content_row_lang['title'], LANG_ID == $lang_id ? "required" : null, $param_array);
 
-                if ($multilanguage_field_list)
+                if ($multilanguage_field_list){
                     foreach ($multilanguage_field_list as $field) {
 
                         //type_id, field_name, field_type, validation, command, param, layout, position, published
@@ -214,6 +213,7 @@
 
                         $this->form->add_item($field_type, $input_name, $title, $description, $value, $validation, $param_array, $input_layout);
                     }
+                }
 
 
                 if ($type['tags_enabled'])
@@ -221,6 +221,7 @@
                 $this->form->add_item("yes", $lang_id . "_published", "content_form_published", "content_form_published_field", $content_row_lang['published'], null, $param_array);   // pubblica si/no
                 $this->form->close_table();
             }
+            
             // !CREATE MULTILANGUAGE FIELD
             // CONTENT INFO
             $this->form->open_table("content_form_table_info");
@@ -308,7 +309,6 @@
             // PAGE LAYOUT
 
             if ((count($layout_list = Content::get_layout_list()) > 1) && User::is_super_admin()) {
-
                 foreach ($layout_list as $content_id => $layout_row)
                     $layout_list_temp[$content_id] = $layout_row['name'];
                 $layout_list = $layout_list_temp;
@@ -318,22 +318,6 @@
             else
                 $this->form->add_hidden("layout_id", LAYOUT_ID_GENERIC);
             // PAGE LAYOUT
-            // CONTENT TEMPLATE
-            $template_index = THEMES_DIR . get_setting('theme') . "/" . ( $type['template_index'] ? $type['template_index'] : null );
-            $template_list_temp = glob($template_index . "*");
-            $strlen_index = strlen($template_index);
-
-            for ($i = 0, $template_list = array(); $i < count($template_list_temp); $i++) {
-                $l = file_name(substr($template_list_temp[$i], $strlen_index));
-                // i get all layout that has not "block." in the name
-                if (!preg_match('#^block\.#', $l) && !is_dir($template_list_temp[$i]))
-                    $template_list[$l] = $l;
-            }
-
-            if (count($template_list) > 1)
-                $this->form->add_item("select", "template", "content_form_template", "content_form_template_field", $content_row['template'], null, array('options' => $template_list));
-            else
-                $this->form->add_hidden("template", array_shift($template_list));
 
             // CONTENT TEMPLATE
             // MENU
@@ -396,7 +380,7 @@
 
             // check if the content is sortable
             if ( null==$type['order_by'] OR preg_match('/position/', $type['order_by'] ) ){
-                add_javascript("content_sortable('{$content_id}');", $onload = true);
+                Layout::addJavascript("content_sortable('{$content_id}');", $onload = true);
                 $sortable = true;
             }
             else
@@ -453,7 +437,7 @@
 
             $allowed_ext = ( $type['image_enabled'] ? get_setting("image_ext") . "," : null ) . ( $type['audio_enabled'] ? get_setting("audio_ext") . "," : null ) . ( $type['video_enabled'] ? get_setting("video_ext") . "," : null ) . ( $type['document_enabled'] ? get_setting("document_ext") . "," : null ) . ( $type['archive_enabled'] ? get_setting("archive_ext") . "," : null );
 
-            add_script('ajaxupload.js', ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
+            Layout::addScript('ajaxupload.js', ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
 
             $javascript = "";
             $javascript .= "var msg_file_delete = '" . get_msg("file_msg_delete") . "', msg_file_editname = '" . get_msg("file_msg_editname") . "', msg_extension_not_allowed = '" . get_msg("file_type_not_allowed") . " $allowed_ext';";
@@ -463,8 +447,8 @@
             $javascript_onload .= "file_sortable( '$content_id' );";
             $javascript_onload .= "file_enable_upload_btn( '$content_id', '" . get_setting("admin_max_file_size_upload") . "' );";
 
-            add_javascript($javascript);
-            add_javascript($javascript_onload, $onload = true);
+            Layout::addJavascript($javascript);
+            Layout::addJavascript($javascript_onload, $onload = true);
 
             $order_by = get('forder') ? get('forder') : "position";
             $order = get('forder_by') == "desc" ? "desc" : "asc";

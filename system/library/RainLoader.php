@@ -5,6 +5,7 @@
     require LIBRARY_DIR     . "error.functions.php";
     require LIBRARY_DIR     . "functions.php";
     require LIBRARY_DIR     . "Plugin.php";
+    require LIBRARY_DIR     . "Layout.php";
 
 
     /**
@@ -254,7 +255,7 @@
             require LIBRARY_DIR . "View.php";
 
             // get the theme directory
-            $this->theme_dir = str_replace("//", "/", THEMES_DIR . $this->theme . "/");
+            $this->theme_dir = reduce_path( THEMES_DIR . $this->theme . "/" );
 
             // if theme is not found load the default theme
             if (!is_dir($this->theme_dir))
@@ -263,11 +264,15 @@
             if (!$this->ajax_mode)
                 $this->set_layout($this->layout);
 
-            View::configure("cache_dir", CACHE_DIR . THEMES_DIR);
-            View::configure("link_url", URL);
-            View::configure("file_url", URL);
-            View::configure("base_url", URL );
-            View::configure("tpl_dir", $this->theme_dir);
+            $conf = array(
+                            "cache_dir" => CACHE_DIR . THEMES_DIR,
+                            "link_url"  => URL,
+                            "file_url"  => URL,
+                            "base_url"  => URL,
+                            "tpl_dir"   => $this->theme_dir
+                         );
+            
+            View::configure( $conf );
         }
 
         
@@ -276,23 +281,22 @@
          * Load all the javascript and stylesheet 
          */
         function load_head() {
-            //add_style("rain.edit.css", CSS_DIR, CSS_URL);
+            //Layout::addStyle("rain.edit.css", CSS_DIR, CSS_URL);
 
             // add javascript
-            add_script("jquery.min.js", JQUERY_DIR, JQUERY_URL);
-            add_script("rain/generic.js", JAVASCRIPT_DIR, JAVASCRIPT_URL );
-            add_script("rain/popup.js", JAVASCRIPT_DIR, JAVASCRIPT_URL );
-            
-            // urls
-            add_javascript("var url             ='" . URL . "';");
-            add_javascript("var css_url         ='" . CSS_URL . "';");
-            add_javascript("var javascript_url  ='" . JAVASCRIPT_URL . "';");
-            add_javascript("var ajax_file       ='" . AJAX_URL . "';");
-            add_javascript("var admin_file      ='" . ADMIN_FILE_URL . "';");
-            
-            // variables
-            add_javascript("var content_id='" . $this->content_id . "';");
+            Layout::addScript("jquery.min.js", JQUERY_DIR, JQUERY_URL);
+            Layout::addScript("rain/generic.js", JAVASCRIPT_DIR, JAVASCRIPT_URL );
+            Layout::addScript("rain/popup.js", JAVASCRIPT_DIR, JAVASCRIPT_URL );
 
+            // urls
+            Layout::addJavascript("var url             ='" . URL . "';");
+            Layout::addJavascript("var css_url         ='" . CSS_URL . "';");
+            Layout::addJavascript("var javascript_url  ='" . JAVASCRIPT_URL . "';");
+            Layout::addJavascript("var ajax_file       ='" . AJAX_URL . "';");
+            Layout::addJavascript("var admin_file      ='" . ADMIN_FILE_URL . "';");
+
+            // variables
+            Layout::addJavascript("var content_id='" . $this->content_id . "';");
             
         }
 
@@ -311,7 +315,7 @@
          * @param string $module_class_name Classname of the module
          */
         function load_module($module = null, $action = null, $params = array(), $load_area = "center", $selected = true, $content = null, $module_extension = null, $module_class_name = null, $page_not_found_on_error = true ) {
-
+        
             // load the Module class
             require_once LIBRARY_DIR     . "Module.php";
 
@@ -323,7 +327,6 @@
             if (!$module_class_name) 
                 $module_class_name = self::$module_class_name;
 
-
             // - Set info ------
             if ($module === null && $this->module)
                 $module = $this->module;
@@ -331,7 +334,6 @@
             if ($content === null && $this->content)
                 $content = $this->content;
 
-            
             // load the language for this module
             load_lang( $module );
             
@@ -348,6 +350,7 @@
             
             // - LOAD MODULE ------
             if (file_exists( $module_filepath = self::$modules_dir . $module . "/" . $module . $module_extension)) {
+                
                 require_once $module_filepath;
 
                 // - RENDER THE MODULE ------
@@ -498,38 +501,30 @@
          * @param mixed $value Value
          */
         function assign($variable, $value = null) {
-            if (is_array($variable))
-                $this->layout_vars += $variable;
-            else
-                $this->layout_vars[$variable] = $value;
+            Layout::assign( $variable, $value );
         }
-        
-        
-        
+
+
+
         /**
          * Draw the website
          * @param boolean $to_string Set true if you want to get the page in a string
          */
         function draw($to_string = false) {
 
-            $tpl = new View;
-
-            // assign all variable
-            $tpl->assign($this->layout_vars);
-
             // - WEB PAGE INFO ------
-            $tpl->assign('title', $this->content['title']);
-            $tpl->assign('description', strip_tags($this->content['content']));
-            $tpl->assign('content', $this->content);
-            $tpl->assign('keywords', get_setting('keywords') + $this->content['tags']);
-            $tpl->assign('copyright', get_setting('copyright'));
-            $tpl->assign('last_edit', get_setting('last_edit_time'));
-            $tpl->assign('path', Content::draw_path());
+            Layout::assign('title', $this->content['title']);
+            Layout::assign('description', strip_tags($this->content['content']));
+            Layout::assign('content', $this->content);
+            Layout::assign('keywords', get_setting('keywords') + $this->content['tags']);
+            Layout::assign('copyright', get_setting('copyright'));
+            Layout::assign('last_edit', get_setting('last_edit_time'));
+            Layout::assign('path', Content::draw_path());
 
 
             // - HEAD & FOOT ------
-            $tpl->assign("head", get_style() ); // style on the header
-            $tpl->assign("foot", get_javascript() . get_javascript_onload() ); // all javascript in the footer
+            Layout::assign("head", Layout::getStyle() ); // style on the header
+            Layout::assign("foot", Layout::getJavascript() . Layout::getJavascriptOnload() ); // all javascript in the footer
 
 
             // - LOAD AREA ----
@@ -538,18 +533,18 @@
             if( $this->load_area_array )
                 foreach ($this->load_area_array as $load_area_name => $blocks)
                     $load_area[$load_area_name] = $this->_blocks_wrapper($blocks, $load_area_name);
-            $tpl->assign("load_area", $load_area);
+            Layout::assign("load_area", $load_area);
 
 
             // - BENCHMARK ------
             list( $timer, $memory ) = $this->get_benchmark();
-            $tpl->assign("execution_time", $timer);
-            $tpl->assign("memory_used", $memory);
-            $tpl->assign("loaded_modules", $this->loaded_modules);
-            $tpl->assign("included_files", get_included_files());
-            $tpl->assign("n_query", class_exists("DB") ? DB::get_executed_query() : null );
-            $tpl->assign("user", User::get_user() );
-            $html = $tpl->draw( $this->layout, $to_string = true);
+            Layout::assign("execution_time", $timer);
+            Layout::assign("memory_used", $memory);
+            Layout::assign("loaded_modules", $this->loaded_modules);
+            Layout::assign("included_files", get_included_files());
+            Layout::assign("n_query", class_exists("DB") ? DB::get_executed_query() : null );
+            Layout::assign("user", User::get_user() );
+            $html = Layout::draw( $this->layout, $to_string = true);
             
             $context = load_actions( "before_draw", array( "loader"=>$this, "html"=>$html ) );
             $html = $context["html"];
@@ -675,8 +670,8 @@
          * @param type $html 
          */
         protected function _draw_ajax($html = null) {
-            echo $this->load_style ? get_style() : null;
-            echo $this->load_javascript ? get_javascript() : null;
+            echo Layout::getStyle();
+            echo Layout::getJavascript();
             echo $html;
             die;
         }

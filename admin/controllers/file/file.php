@@ -1,7 +1,7 @@
 <?php
 
-    add_script("file.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
-    add_style("file.css", ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
+    Layout::addScript("file.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
+    Layout::addStyle("file.css", ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
 
     require "file_base.php";
 
@@ -28,7 +28,7 @@
 
             $allowed_ext = get_setting("image_ext") . "," . get_setting("audio_ext") . "," . get_setting("video_ext") . "," . get_setting("document_ext") . "," . get_setting("archive_ext");
 
-            add_script('ajaxupload.js', ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
+            Layout::addScript('ajaxupload.js', ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
 
             $javascript = "";
             $javascript .= "var msg_file_delete = '" . get_msg("file_msg_delete") . "', msg_file_editname = '" . get_msg("file_msg_editname") . "', msg_extension_not_allowed = '" . get_msg("file_type_not_allowed") . " $allowed_ext';";
@@ -37,8 +37,8 @@
             $javascript_onload = "";
             $javascript_onload .= "file_enable_upload_btn( '" . get_setting("admin_max_file_size_upload") . "' );";
 
-            add_javascript($javascript);
-            add_javascript($javascript_onload, $onload = true);
+            Layout::addJavascript($javascript);
+            Layout::addJavascript($javascript_onload, $onload = true);
 
             $order_by = get('forder') ? get('forder') : "position";
             $order = get('forder_by') == "desc" ? "desc" : "asc";

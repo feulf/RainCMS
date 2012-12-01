@@ -5,12 +5,12 @@
     load_lang('admin.user');
 
     // add javascript
-    add_script("jquery.validate.min.js", JQUERY_DIR, JQUERY_URL);
-    add_script("jquery.form.min.js", JQUERY_DIR, JQUERY_URL);
-    add_script('user.js', ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
+    Layout::addScript("jquery.validate.min.js", JQUERY_DIR, JQUERY_URL);
+    Layout::addScript("jquery.form.min.js", JQUERY_DIR, JQUERY_URL);
+    Layout::addScript('user.js', ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
 
     // add style
-    add_style('user.css', ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
+    Layout::addStyle('user.css', ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
 
     //include base controller
     require_once "user_base_controller.php";

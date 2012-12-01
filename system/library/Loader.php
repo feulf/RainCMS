@@ -10,7 +10,7 @@
     require LIBRARY_DIR   . "error.functions.php";
     require LIBRARY_DIR   . "functions.php";
     require LIBRARY_DIR   . "Plugin.php";
-
+    require LIBRARY_DIR   . "Layout.php";
 
     /**
     * Load and init all the classes of the framework
@@ -244,32 +244,30 @@
 
         function draw($to_string = false) {
 
-            $tpl = new View;
-
             // assign all variable
-            $tpl->assign($this->layout_vars);
+            Layout::assign($this->layout_vars);
 
             // - HEAD & FOOT ------
-            $tpl->assign("head", get_style() ); // style on the header
-            $tpl->assign("foot", get_javascript() . get_javascript_onload() ); // all javascript in the footer
+            Layout::assign("head", Layout::getStyle() ); // style on the header
+            Layout::assign("foot", Layout::getJavascript() . Layout::getJavascriptOnLoad() ); // all javascript in the footer
 
             // - LOAD AREA ----
             // wrap all the blocks in a load area
             $load_area = array();
             foreach ($this->load_area as $load_area_name => $blocks)
                 $load_area[$load_area_name] = $this->_blocks_wrapper($blocks, $load_area_name);
-            $tpl->assign("load_area", $load_area);
+            Layout::assign("load_area", $load_area);
 
 
             // - BENCHMARK ------
             list( $timer, $memory ) = $this->get_benchmark();
-            $tpl->assign("execution_time", $timer);
-            $tpl->assign("memory_used", $memory);
-            $tpl->assign("loaded_controller", $this->loaded_controller);
-            $tpl->assign("included_files", get_included_files());
-            $tpl->assign("n_query", class_exists("DB") ? DB::get_executed_query() : null );
+            Layout::assign("execution_time", $timer);
+            Layout::assign("memory_used", $memory);
+            Layout::assign("loaded_controller", $this->loaded_controller);
+            Layout::assign("included_files", get_included_files());
+            Layout::assign("n_query", class_exists("DB") ? DB::get_executed_query() : null );
 
-            return $tpl->draw($this->layout, $to_string);
+            return Layout::draw($this->layout, $to_string);
         }
 
         function set_layout($layout) {
@@ -341,8 +339,8 @@
         }
 
         protected function _draw_ajax($html = null) {
-            echo $this->load_style ? get_style() : null;
-            echo $this->load_javascript ? get_javascript() : null;
+            echo Layout::getStyle();
+            echo Layout::getJavascript();
             echo $html;
             die;
         }

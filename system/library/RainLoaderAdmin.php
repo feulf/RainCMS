@@ -57,16 +57,16 @@
             $folders .= "var admin_css_url            = '" . ADMIN_CSS_URL . "';" . "\n";
             $folders .= "var admin_views_images_url    = '" . ADMIN_VIEWS_IMAGES_URL . "';" . "\n";
             
-            add_javascript( $folders );
+            Layout::addJavascript( $folders );
 
 
-            add_script( 'jquery.min.js', JQUERY_DIR, JQUERY_URL );
-            add_script( 'ui/jquery-ui-1.8.16.custom.js', JQUERY_DIR, JQUERY_URL );   // all jquery ui
-            add_script( 'jquery.tooltip.min.js', JQUERY_DIR, JQUERY_URL );           // tooltip
-            add_script( 'admin.js', ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL );    // generic admin function
+            Layout::addScript( 'jquery.min.js', JQUERY_DIR, JQUERY_URL );
+            Layout::addScript( 'ui/jquery-ui-1.8.16.custom.js', JQUERY_DIR, JQUERY_URL );   // all jquery ui
+            Layout::addScript( 'jquery.tooltip.min.js', JQUERY_DIR, JQUERY_URL );           // tooltip
+            Layout::addScript( 'admin.js', ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL );    // generic admin function
             
-            add_script( 'jquery.lightbox-0.5.min.js', JQUERY_DIR, JQUERY_URL );      // lightbox
-            add_style( 'jquery.lightbox-0.5.css', CSS_DIR, CSS_URL );
+            Layout::addScript( 'jquery.lightbox-0.5.min.js', JQUERY_DIR, JQUERY_URL );      // lightbox
+            Layout::addStyle( 'jquery.lightbox-0.5.css', CSS_DIR, CSS_URL );
 
         }
         
@@ -80,12 +80,12 @@
             // set the correct URL
             foreach( $menu as &$v )
                 $v["link"] = str_replace( array("{URL}","{ADMIN_FILE_URL}" ), array( URL, ADMIN_FILE_URL ), $v["link"] );
-            $this->assign( "menu", $menu );
+            Layout::assign( "menu", $menu );
         }
         
         function draw( $to_string = false ){
-            $this->assign( "title", $this->title );
-            $this->assign( "user", User::get_user() );
+            Layout::assign( "title", $this->title );
+            Layout::assign( "user", User::get_user() );
             return parent::draw( $to_string );
         }
 

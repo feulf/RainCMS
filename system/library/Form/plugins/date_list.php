@@ -5,10 +5,10 @@
     */
     function form_date_list($name, $value, $parameters, $cp) {
 
-        add_script("ui/ui.datepicker.js", JQUERY_DIR, JQUERY_URL );
-        add_script( "date_list.js", LIBRARY_DIR . "Form/plugins/" );
-        add_style("themes/smoothness/ui.all.css", JQUERY_DIR, JQUERY_URL);
-        add_style("date_list.css", LIBRARY_DIR . "Form/plugins/" );
+        Layout::addScript("ui/ui.datepicker.js", JQUERY_DIR, JQUERY_URL );
+        Layout::addScript( "date_list.js", LIBRARY_DIR . "Form/plugins/" );
+        Layout::addStyle("themes/smoothness/ui.all.css", JQUERY_DIR, JQUERY_URL);
+        Layout::addStyle("date_list.css", LIBRARY_DIR . "Form/plugins/" );
 
         $time = time();
         $date = time_format($time, DATE_FORMAT);
@@ -23,7 +23,7 @@
         for ($i=0, $n=count($date_list); $i < $n; $i++) {
             $start_time = $date_list[$i]['start_time'];
             $end_time = $date_list[$i]['end_time'];
-            add_javascript("add_date( '$start_time', '$end_time' )", $onLoad = true);
+            Layout::addJavascript("add_date( '$start_time', '$end_time' )", $onLoad = true);
         }
 
         $html .= "</div>";

@@ -736,13 +736,13 @@
 
     // draw a message styled as SUCCESS, WARNING, ERROR or INFO. See .box in style.css for the style
     function draw_msg($msg, $type = SUCCESS, $close = false, $autoclose = 0) {
-        add_script("jquery.min.js", JQUERY_DIR);
-        add_style("box.css", CSS_DIR);
+        Layout::addScript("jquery.min.js", JQUERY_DIR);
+        Layout::addStyle("box.css", CSS_DIR);
         $box_id = rand(0, 9999) . "_" . time();
         if ($close)
             $close = '<div class="close"><a onclick="$(\'#box_' . $box_id . '\').slideUp();">x</a></div>';
         if ($autoclose)
-            add_javascript('setTimeout("$(\'#box_' . $box_id . '\').slideUp();", "' . ($autoclose * 1000) . '")', $onload = true);
+            Layout::addJavascript('setTimeout("$(\'#box_' . $box_id . '\').slideUp();", "' . ($autoclose * 1000) . '")', $onload = true);
 
         switch ($type) {
             case SUCCESS: $class = 'success';
@@ -849,9 +849,9 @@
 
     function reduce_path( $path ){
             $path = str_replace( "://", "@not_replace@", $path );
-            $path = preg_replace( "#(/+)#", "/", $path );
-            $path = preg_replace( "#(/\./+)#", "/", $path );
-            $path = str_replace( "@not_replace@", "://", $path );
+            $path = preg_replace( "#(/+)#", "/", $path ); // remove // or ///
+            $path = preg_replace( "#(/\./+)#", "/", $path ); // transform a/../b in b
+            $path = str_replace( "@not_replace@", "://", $path ); // 
             
             while( preg_match( '#\.\./#', $path ) ){
                 $path = preg_replace('#\w+/\.\./#', '', $path );

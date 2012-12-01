@@ -1,0 +1,7 @@
+{
+    "module"        :"home",
+    "version"       :"1.0",
+    "description"   :"Home page",
+    "author"        :"Federico Ulfo",
+    "dependency"    :["content"]
+}

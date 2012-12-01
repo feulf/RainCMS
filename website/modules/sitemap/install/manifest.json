@@ -1,0 +1,7 @@
+{
+    "module"        :"sitemap",
+    "version"       :"1.0",
+    "description"   :"Create the sitemap",
+    "author"        :"Federico Ulfo",
+    "dependency"    :["content"]
+}

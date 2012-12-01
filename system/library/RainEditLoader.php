@@ -14,7 +14,7 @@
         }
 
         function load_head() {
-            
+
             $this->edit_mode = get('edit_mode');
 
             parent::load_head();
@@ -44,34 +44,33 @@
             
             $js .= "var user_name               = '".User::get_user_field("name")."';" . "\n";
 
-            add_javascript($js);
+            Layout::addJavascript($js);
 
 
             // rain toolbox
-            add_style("rain.toolbox.css", CSS_DIR, CSS_URL);
-            add_script("rain/toolbox.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
-            
-            add_javascript("RainToolbox.init();");
-            
+            Layout::addStyle("rain.toolbox.css", CSS_DIR, CSS_URL);
+            Layout::addScript("rain/toolbox.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
+
+            Layout::addJavascript("RainToolbox.init();");
+
             if( $this->edit_mode ){
 
                 // rain edit mode
-                add_script("rain/edit.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
-                add_style("rain.edit.css", CSS_DIR, CSS_URL);
+                Layout::addScript("rain/edit.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
+                Layout::addStyle("rain.edit.css", CSS_DIR, CSS_URL);
 
                 // aloha
-                add_script( "rain/aloha-config.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
-                add_script( "aloha/lib/aloha.js",   JAVASCRIPT_DIR, JAVASCRIPT_URL, array("data-aloha-plugins" => "common/format,common/highlighteditables,common/list,common/link,common/undo,common/paste,common/block"));
-                add_style(  "aloha/css/aloha.css",  JAVASCRIPT_DIR, JAVASCRIPT_URL);
-            
+                Layout::addScript( "rain/aloha-config.js", JAVASCRIPT_DIR, JAVASCRIPT_URL);
+                Layout::addScript( "aloha/lib/aloha.js",   JAVASCRIPT_DIR, JAVASCRIPT_URL, array("data-aloha-plugins" => "common/format,common/highlighteditables,common/list,common/link,common/undo,common/paste,common/block"));
+                Layout::addStyle(  "aloha/css/aloha.css",  JAVASCRIPT_DIR, JAVASCRIPT_URL);
 
                 // block sort
-                add_script('ui/jquery-ui-1.8.16.custom.js', JQUERY_DIR, JQUERY_URL); // all jquery ui
+                Layout::addScript('ui/jquery-ui-1.8.16.custom.js', JQUERY_DIR, JQUERY_URL); // all jquery ui
 
                 // drag and drop image
-                add_script("jquery.filedrop.js", JQUERY_DIR, JQUERY_URL);
+                Layout::addScript("jquery.filedrop.js", JQUERY_DIR, JQUERY_URL);
                 
-                add_javascript("RainEdit.init();");
+                Layout::addJavascript("RainEdit.init();");
 
             }
 

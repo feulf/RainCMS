@@ -5,11 +5,11 @@
     load_lang('admin.user');
 
     // add javascript
-    add_script("jquery.min.js", JQUERY_DIR, JQUERY_URL);
-    add_script("user.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
+    Layout::addScript("jquery.min.js", JQUERY_DIR, JQUERY_URL);
+    Layout::addScript("user.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
 
     // add style
-    add_style("user.css", ADMIN_CSS_DIR, ADMIN_CSS_URL);
+    Layout::addStyle("user.css", ADMIN_CSS_DIR, ADMIN_CSS_URL);
 
 
     //include base controller

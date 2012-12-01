@@ -25,7 +25,7 @@
 
     $loader->load_module();
 
-    $loader->load_blocks();
+    //$loader->load_blocks();
 
     $loader->load_menu();
 

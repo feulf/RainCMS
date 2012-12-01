@@ -6,8 +6,8 @@
 
 /* TOOLBOX */
 
-    #toolbox			{ position: fixed; bottom: 0px; left: 0px; font-size: 11px; height:25px; margin:5px; border:1px solid #ccc;}
-    #toolbox a			{ display: block; color:#000; padding: 4px 10px 3px; float: left; text-decoration:none; border-right: 1px solid #bbb; outline-style: none;cursor:pointer;background:#eee;}
+    #toolbox			{ position: fixed; bottom: 0px; left: 0px; font-size: 11px; height:25px; line-height:25px; margin:5px; border:1px solid #ccc; background:#eee;}
+    #toolbox a			{ display: block; color:#000; padding:0 10px; float: left; text-decoration:none; border-right: 1px solid #bbb; outline-style: none;cursor:pointer;}
     #toolbox a:last-child       { border-right:0;}
     #toolbox a:hover            { background: #f6f6f6;}
 

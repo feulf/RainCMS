@@ -11,7 +11,7 @@
         if (!$value)
             $value = get_setting('website_address');
 
-        add_javascript("
+        Layout::addJavascript("
 
                             var map, stepDisplay, marker, old_position, old_address = '" . $value . "';
 

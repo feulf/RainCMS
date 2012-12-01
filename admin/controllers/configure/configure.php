@@ -1,8 +1,8 @@
 <?php
 
     load_lang("admin.configure");
-    add_script("conf.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
-    add_style("conf.css", ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
+    Layout::addScript("conf.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
+    Layout::addStyle("conf.css", ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
 
     class ConfigureController extends Controller {
 
@@ -179,7 +179,7 @@
             $language_list = db::get_all("SELECT * FROM " . DB_PREFIX . "language ORDER BY position");
 
             // content sortable
-            add_javascript("lang_sortable();", $onload = true);
+            Layout::addJavascript("lang_sortable();", $onload = true);
 
             $view = new View;
             $view->assign("language_list", $language_list);
@@ -188,7 +188,7 @@
 
         protected function _layout() {
 
-            add_javascript("layout_sortable();", $onload = true);
+            Layout::addJavascript("layout_sortable();", $onload = true);
 
             $layout_list = db::get_all("SELECT * FROM " . DB_PREFIX . "layout ORDER BY position DESC");
 
@@ -199,7 +199,7 @@
 
         protected function _themes() {
 
-            add_javascript("theme_sortable();", $onload = true);
+            Layout::addJavascript("theme_sortable();", $onload = true);
 
             $theme_list = db::get_all("SELECT * FROM " . DB_PREFIX . "theme ORDER BY date DESC");
 
@@ -214,7 +214,7 @@
             $module_list = db::get_all("SELECT * FROM " . DB_PREFIX . "module ORDER BY module");
 
             // content sortable
-            add_javascript("module_sortable();", $onload = true);
+            Layout::addJavascript("module_sortable();", $onload = true);
 
             $view = new View;
             $view->assign("module_list", $module_list);

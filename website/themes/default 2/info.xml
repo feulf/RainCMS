@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<theme>
+	<name>Default</name>
+	<description>A simple twitter bootstrap theme easy to extend</description>
+	<tags>Default Rain</tags>
+	<colors>Black and white</colors>
+	<author>Federico Ulfo with Twitter Bootstrap</author>
+	<author_email>rainelemental@gmail.com</author_email>
+	<author_website>http://www.federicoulfo.it/</author_website>
+</theme>

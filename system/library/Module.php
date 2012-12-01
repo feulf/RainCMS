@@ -100,6 +100,14 @@
         function page_not_found($msg = null) {
             $this->loader->_page_not_found($msg);
         }
+        
+        function assign($variable, $value = null){
+            $this->loader->assign($variable, $value);
+        }
+        
+        function set_layout($layout){
+            $this->loader->set_layout($layout);
+        }
 
         function filter_before() {
 

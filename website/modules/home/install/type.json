@@ -1,0 +1,58 @@
+{
+    "type":[{
+        "type_id":"2",
+        "type":"home",
+        "icon":"home.gif",
+        "lang_index":"home",
+        "module":"home",
+        "action":"",
+        "template_index":"home/",
+        "published":"1",
+        "multilanguage":"1",
+        "comment_enabled":"0",
+        "link_other_content":"0",
+        "linked_copy":"0",
+        "files_enabled":"1",
+        "audio_enabled":"1",
+        "video_enabled":"1",
+        "document_enabled":"1",
+        "archive_enabled":"1",
+        "file_enabled":"1",
+        "tags_enabled":"1",
+        "order_by":"r.position",
+        "searchable":"1",
+        "cache":"-1",
+        "unique":"1",
+        "write_access":"0",
+        "path_type":"{title}",
+        "path_short":"0",
+        "changefreq":"2",
+        "priority":"0.7",
+        "fields":[{
+            "name" : "content",
+            "field_type" : "word",
+            "validation" : "required",
+            "command" : "",
+            "param" : "",
+            "layout" : "row",
+            "multilanguage" : "1",
+            "position" : "3",
+            "multilanguage" : "1"
+        }],
+        "parents":["0"]
+    }],
+    "block_type":[{
+        "block_type_id":"1",
+        "type":"content",
+        "lang_index":"content",
+        "template":"block",
+        "options":[{
+            "name" : "n_contents",
+            "field_type" : "text",
+            "validation" : "required",
+            "position"   : "1"
+        }]
+    }]
+    
+
+}

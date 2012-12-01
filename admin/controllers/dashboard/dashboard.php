@@ -1,8 +1,8 @@
 <?php
 
     load_lang("admin.configure");
-    add_script("conf.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
-    add_style("conf.css", ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
+    Layout::addScript("conf.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
+    Layout::addStyle("conf.css", ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
 
     class DashboardController extends Controller {
 

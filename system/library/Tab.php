@@ -1,13 +1,13 @@
 <?php
 
     // add style
-    add_style("default.css", LIBRARY_DIR . "Tab/tpl/", LIBRARY_URL . "Tab/tpl/");
+    Layout::addStyle("default.css", LIBRARY_DIR . "Tab/tpl/", LIBRARY_URL . "Tab/tpl/");
 
     // add javascript
-    add_script("jquery.min.js", JQUERY_DIR, JQUERY_URL);
+    Layout::addScript("jquery.min.js", JQUERY_DIR, JQUERY_URL);
 
     // add javascript code
-    add_javascript("function tabSel(id){\n\$('.tabs_content').hide();\n\$('#tab_'+id).show();\n\$('.tabs_btn div').removeClass('selected');\n\$('#btn_'+id).addClass('selected');}");
+    Layout::addJavascript("function tabSel(id){\n\$('.tabs_content').hide();\n\$('#tab_'+id).show();\n\$('.tabs_btn div').removeClass('selected');\n\$('#btn_'+id).addClass('selected');}");
 
     class Tab {
 

@@ -3,7 +3,7 @@
     // To add a cover
     function form_cover($name, $value, $parameters, $validation, $cp) {
         
-        add_script("cover.js", $script_dir = LIBRARY_DIR . "Form/plugins/cover/" );
+        Layout::addScript("cover.js", $script_dir = LIBRARY_DIR . "Form/plugins/cover/" );
         
         $content_id = $parameters['content_id'];
         $cover = $parameters['cover'];

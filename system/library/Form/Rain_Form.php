@@ -31,10 +31,10 @@
             load_lang("form");
 
             // add style
-            add_style("style.css", self::$form_dir . "Form/tpl/$layout/", SYSTEM_URL . self::$form_dir . "Form/tpl/$layout/");
+            Layout::addStyle("style.css", self::$form_dir . "Form/tpl/$layout/", SYSTEM_URL . self::$form_dir . "Form/tpl/$layout/");
 
             // add javascript
-            add_script("jquery.min.js", JQUERY_DIR, JQUERY_URL);
+            Layout::addScript("jquery.min.js", JQUERY_DIR, JQUERY_URL);
 
             require_once self::$form_dir . "Form/tpl/$layout/form.php"; // include theme
 
@@ -124,7 +124,7 @@
         function add_validation($name, $validation, $message = null) {
 
             // add the validation
-            add_script("jquery.validate.min.js", JQUERY_DIR, JQUERY_URL);
+            Layout::addScript("jquery.validate.min.js", JQUERY_DIR, JQUERY_URL);
 
             if ($validation) {
 
@@ -157,7 +157,7 @@
 
             if ($ajax) {
                 // add ajax jquery script
-                add_script("jquery.form.min.js", JQUERY_DIR, JQUERY_URL);
+                Layout::addScript("jquery.form.min.js", JQUERY_DIR, JQUERY_URL);
                 $ajax = file_get_contents(self::$form_dir . "Form/tpl/{$this->layout_name}/ajax.js");
                 $ajax = str_replace('{$name}', $this->name, $ajax);
             }
@@ -197,7 +197,7 @@
             $script = '$("#' . $this->name . '").validate({' . "\n" . ( $this->tiny_mce ? 'submit: function(){ tinyMCE.triggerSave() },' : null) . "\n" . $ajax . "\n" . $validation . "\n" . '    });';
 
             // add the javascript
-            add_javascript($script, $onLoad = true);
+            Layout::addJavascript($script, $onLoad = true);
 
             $html = '<div id="' . $this->name . '_loading" style="display:none;"><img src="' . URL . self::$form_dir . 'Form/tpl/' . $this->layout_name . '/img/loading.gif" alt="loading"/>Loading</div>' . "\n" .
                     '<div id="' . $this->name . '_result" style="display:none;"></div>' . "\n" .
@@ -290,8 +290,8 @@
         function _word($name, $value, $param) {
 
 
-            add_script('jquery.webkitresize.js', JQUERY_DIR, JQUERY_URL);
-            add_script("jquery.tinymce.js", self::$form_dir . "Form/plugins/tiny_mce/", SYSTEM_URL . self::$form_dir . "Form/plugins/tiny_mce/");
+            Layout::addScript('jquery.webkitresize.js', JQUERY_DIR, JQUERY_URL);
+            Layout::addScript("jquery.tinymce.js", self::$form_dir . "Form/plugins/tiny_mce/", SYSTEM_URL . self::$form_dir . "Form/plugins/tiny_mce/");
             $mode = isset($param['mode']) && $param['mode'] == 'simple' ? 'simple' : 'advanced';
             $css = isset($param['css']) ? ',content_css:"' . $param['css'] . '"' : null;
 
@@ -339,7 +339,7 @@
                     convert_urls : false,
                     valid_elements: "*[*]"' . $css;
 
-            add_javascript('$("textarea.mce_' . $name . '").tinymce({
+            Layout::addJavascript('$("textarea.mce_' . $name . '").tinymce({
                                         script_url : "' . URL . self::$form_dir . 'Form/plugins/tiny_mce/tiny_mce.js",
                                         theme: "advanced",
                                         language: "' . LANG_ID . '",
@@ -369,9 +369,9 @@
 
         function _date($name, $value, $param) {
             $dateFormat = isset($param['dateFormat']) ? $param['dateFormat'] : DATE_FORMAT_SIMPLE;
-            add_javascript("$('#label_$name').datepicker({yearRange:'-70:0',dateFormat: '$dateFormat'});", $onload = true);
-            add_script("ui/jquery.ui.datepicker.js", JQUERY_DIR, JQUERY_URL);
-            add_style("themes/smoothness/ui.all.css", JQUERY_DIR, JQUERY_URL);
+            Layout::addJavascript("$('#label_$name').datepicker({yearRange:'-70:0',dateFormat: '$dateFormat'});", $onload = true);
+            Layout::addScript("ui/jquery.ui.datepicker.js", JQUERY_DIR, JQUERY_URL);
+            Layout::addStyle("themes/smoothness/ui.all.css", JQUERY_DIR, JQUERY_URL);
             return '<input name="' . $name . '" type="text" id="label_' . $name . '" value="' . $value . '" class="text" />';
         }
 

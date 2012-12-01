@@ -8,7 +8,7 @@ class InstallerModule extends Module {
 
     function index() {
 
-        add_script( "installer/js/installer.js", $this->loader->theme_dir );
+        Layout::addScript( "installer/js/installer.js", $this->loader->theme_dir );
 
         // installed modules
         $installed_modules = Content::get_module_list();
@@ -29,10 +29,9 @@ class InstallerModule extends Module {
         
         $download_list = json_decode( file_get_contents( $this->app_list_url ), $assoc = true );
 
-        $tpl = new View;
-        $tpl->assign("modules_list", $modules_list );
-        $tpl->assign("download_list", $download_list );
-        $tpl->draw("installer/installer");
+        $this->assign("modules_list", $modules_list );
+        $this->assign("download_list", $download_list );
+        $this->set_layout("layout.installer");
 
     }
 
