@@ -117,6 +117,10 @@
 
         }
 
+        function filter($params,$action){
+            $this->page_not_found();
+        }
+
     }
 
     // -- end

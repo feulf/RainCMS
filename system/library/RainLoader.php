@@ -172,7 +172,6 @@
             require_once LIBRARY_DIR . "Router.php";
             $router = new Router;
             $this->path = $router->get_route();
-            
 
             // if null path = ""
             if (null === $this->path)
@@ -183,8 +182,9 @@
                 $this->content = $content;
                 $this->action = $content['action'] ? $content['action'] : "draw";
                 $this->params = array();
+                
             }
-
+            
             // Content not found for that path
             else {
 
@@ -197,7 +197,7 @@
                 do {
 
                     $path = $this->_check_route($path) . "/";
-                    
+
                     // no more element in the path
                     if (strlen($path) == 1) {
                         break;
@@ -375,10 +375,10 @@
                     
                     $controller_obj = new $controller_class($init_params);
 
-                    if (is_callable(array($controller_obj, $action))){
-                        
-                        try{
+                    
+                    if ( is_callable(array($controller_obj, $action)) ){
 
+                        try{
                             ob_start();                                                         // start the output buffer
                             call_user_func_array( array($controller_obj, $action), $params );   // call the selected action
                             $html = ob_get_clean();                                             // close the output buffer
@@ -390,6 +390,20 @@
 
                         }
                         
+                    }
+                    // if action was not found, try to execute the action "filter"
+                    elseif ( is_callable(array($controller_obj, "filter")) ){
+
+                        try{
+                            ob_start();                                                                          // start the output buffer
+                            call_user_func_array( array($controller_obj, "filter"), array($action, $params) );   // call the selected action
+                            $html = ob_get_clean();                                                              // close the output buffer
+                        }catch( Exception $e ){
+                            $status = ERROR;
+                            $html = $e->getMessage();
+
+                        }
+
                     }
                     else{
                         $status = ERROR;
@@ -747,6 +761,7 @@
             // remove the last part of the path
             $path_array = explode("/", $path);
             array_pop($path_array);
+            
 
             // new path
             return implode("/", $path_array);
