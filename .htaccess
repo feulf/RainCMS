@@ -65,9 +65,6 @@ AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css a
 
 # Front-end ---
 
-    # search
-    RewriteRule ^search/(.*)$ index.php?path=search/&search=$1 [L,NC]
-
     # files
     RewriteCond %{QUERY_STRING} (.*)
     RewriteRule ^files/(.*)/(.*) download.php?file_id=$1&name=$2&%1 [L,NC]

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{$title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="{$description}">
+
+        <!-- Le styles -->
+        <link href="css/style.css" rel="stylesheet">
+
+        <!-- Le fav and touch icons -->
+        <link rel="shortcut icon" href="ico/favicon.ico">
+
+        <!-- Le fav and touch icons -->
+        <link rel="shortcut icon" href="http://raincms.org/website/themes/raincms2/img/icon/favicon.ico">
+        <link rel="apple-touch-icon" href="http://raincms.org/website/themes/raincms2/img/icon/apple-touch-icon.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="http://raincms.org/website/themes/raincms2/img/icon/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="http://raincms.org/website/themes/raincms2/img/icon/apple-touch-icon-114x114.png">
+
+        <!-- styles & javascript -->
+        {$head}
+
+    </head>
+
+    <body>
+
+        <header>
+            <div class="nav_container">
+                <nav>
+                    {loop="menu"}
+                    <a href="{$value.link}" {$value.selected?'class="selected"':null}>{$value.name}</a>
+                    {/loop}
+                </nav>
+            </div>
+        </header>
+        <section>
+
+            <div class="content">
+                <h1>{$title}</h1>
+            </div>
+
+            <form onsubmit="return search_form(this)" class="container">
+                <input type="text" name="search" value="{$search}" class="span6">
+                <input class="btn btn-primary btn-large span2" type="submit" value="{'search'|get_msg}">
+            </form>
+
+            <div id="search_result">
+                {loop="content_list"}
+                    <div class="voice">
+                        {if="$value.cover && file_exists( UPLOADS_DIR . THUMB_PREFIX . $value.cover )"}<div class="cover"><a href="{$value.link}"><img src="{#UPLOADS_URL#}{#THUMB_PREFIX#}{$value.cover}#" alt="{$value.title}"></a></div>{/if}
+                        <h2><a href="{$value.link}">{$value.title}</a></h2>
+                        <div class="text">{$value.content|cut_html:200}</div>
+                        <div class="continue"><a href="{$value.link}">{"read more"|get_msg}</a></div>
+                    </div>
+                {else}
+                    <h2>{"search no results"|get_msg}</h2>
+                {/loop}
+            </div>
+
+        </section>
+
+        <footer>
+            <p>execution time: <span id="execution_time">{$execution_time}</span> &nbsp; memory used: <span id="memory_used">{$memory_used}</span><br>included files: <span id="included_files">{$included_files|count}</span> &nbsp; queries: <span id="n_query">{$n_query}</span></p>
+        </footer>
+        {$foot}
+
+    </body>
+</html>
