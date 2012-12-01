@@ -1,8 +1,8 @@
 <?php
 
     class Rain_EditAjaxModule extends Module {
-        
-        
+
+
         //-------------------------------------------------------------
         //
         //                          Block

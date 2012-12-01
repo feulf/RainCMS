@@ -1,76 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>{$title}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{$description}">
+    <head>
+        <meta charset="utf-8">
+        <title>{$title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="{$description}">
 
-    <!-- Le styles -->
-    <link href="css/style.css" rel="stylesheet">
+        <!-- Le styles -->
+        <link href="css/style.css" rel="stylesheet">
 
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="assets/ico/favicon.ico">
-    
-    {$head}
+        <!-- Le fav and touch icons -->
+        <link rel="shortcut icon" href="ico/favicon.ico">
 
-  </head>
+        <!-- Le fav and touch icons -->
+        <link rel="shortcut icon" href="http://raincms.org/website/themes/raincms2/img/icon/favicon.ico">
+        <link rel="apple-touch-icon" href="http://raincms.org/website/themes/raincms2/img/icon/apple-touch-icon.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="http://raincms.org/website/themes/raincms2/img/icon/apple-touch-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="http://raincms.org/website/themes/raincms2/img/icon/apple-touch-icon-114x114.png">
 
-  <body>
+        <!-- styles & javascript -->
+        {$head}
 
-    <div class="container">
+    </head>
 
-        <div class="content">
-            <h1 class="title">{$content.title}</h1>
-            <div class="text">
-                <div class="content">
-                    <h1>{"Installer"|get_msg}</h1>
-                    <div>{"list of installed modules"|get_msg}</div>
-                    <br>
+    <body>
 
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab1" data-toggle="tab">Installed Modules</a></li>
-                        <li><a href="#tab2" data-toggle="tab">App store</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="tab1">
-                            <div>
-                                {loop="modules_list"}
-                                <div class="module_{$value.module}">
-                                    <h4>{$value.module}</h4> version {$value.version} {if="$value.installed"}<a class="rain_module_deactivate">Deactivate</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_activate">Activate</a>{/if}
-                                    <br><small>{$value.description}</small>
-                                </div>
-                                <hr>
-                                {/loop}
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tab2">
-                            <div>
-                                {loop="download_list"}
-                                <div class="module_{$value.module}">
-                                    <h4>{$value.module}</h4> version {$value.version} {if="$value.installed"}<a class="rain_module_deactivate">Deactivate</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_download">Download and Install</a>{/if}
-                                    <br><small>{$value.description}</small>
-                                </div>
-                                <hr>
-                                {/loop}
-                            </div>
-                        </div>
-                    </div>
-                </div>          
+        <header>
+            <div class="nav_container">
+                <nav>
+                    {loop="menu"}
+                    <a href="{$value.link}" {$value.selected?'class="selected"':null}>{$value.name}</a>
+                    {/loop}
+                </nav>
             </div>
-        </div>
+        </header>
 
-        <hr>
+        <section>
+            <h1>{"Installed Module"|get_msg}</h1>
+            <div>
+                {loop="modules_list"}
+                <div class="module_{$value.module}">
+                    <h4>{$value.module}</h4> version {$value.version} {if="$value.installed"}<a class="rain_module_deactivate">Deactivate</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_activate">Activate</a>{/if}
+                    <br><small>{$value.description}</small>
+                </div>
+                <hr>
+                {/loop}
+            </div>
+            <br><br>
+            <h1>{"Available Modules"|get_msg}</h1>
+            <div>
+                {loop="download_list"}
+                <div class="module_{$value.module}">
+                    <h4>{$value.module}</h4> version {$value.version} {if="InstallerModule::isInstalled($value.module)"}<a class="rain_module_deactivate">Deactivate</a> <a class="rain_module_remove">Remove</a>{else}<a class="rain_module_download">Download and Install</a>{/if}
+                    <br><small>{$value.description}</small>
+                </div>
+                <hr>
+                {/loop}
+            </div>
+
+        </section>
 
         <footer>
             <p>execution time: <span id="execution_time">{$execution_time}</span> &nbsp; memory used: <span id="memory_used">{$memory_used}</span><br>included files: <span id="included_files">{$included_files|count}</span> &nbsp; queries: <span id="n_query">{$n_query}</span></p>
         </footer>
+        {$foot}
 
-    </div> <!-- /container -->
-    
-
-
-    {$foot}
-
-  </body>
+    </body>
 </html>

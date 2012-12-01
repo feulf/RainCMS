@@ -3,7 +3,6 @@
     class BlogModule extends Module {
 
         function draw() {
-
             $this->assign($this->get_content());
             $this->assign("file_list", $this->get_file_list());
             $this->assign("content_list", $this->get_childs());

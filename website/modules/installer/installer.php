@@ -26,13 +26,18 @@ class InstallerModule extends Module {
                 $modules_list[$module]["installed"] = isset($installed_modules[$module]) && $installed_modules[$module]["published"] == 1 ? true : false;
             }
         }
-        
+
         $download_list = json_decode( file_get_contents( $this->app_list_url ), $assoc = true );
 
         $this->assign("modules_list", $modules_list );
         $this->assign("download_list", $download_list );
         $this->set_layout("layout.installer");
 
+    }
+    
+    static function isInstalled($module){
+        return isset($modules_list[$module]);
+            
     }
 
 }
