@@ -9,13 +9,6 @@
     /* HTML5 display-role reset for older browsers */
     article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
 
-    .row{float:left;clear:both;width:100%;}
-    .span12{width:100%;float:left;}
-    .span8{width:66%;float:left;}
-    .span6{width:50%;float:left;}
-    .span4{width:33%;float:left;}
-    .span2{width:25%;float:left;}
-    
 /*-----------------------------------------
 
     Rain Theme
@@ -33,28 +26,23 @@
 
     body{font-family:"Lucida Grande", "Lucida Sans", sans-serif;font-size:13px;color:#444;background:#fff;margin:0px;height:100%;}
 
+/* Header */
+    .home header{height:400px;background:url(../img/cloud.png) bottom center repeat-x #60b5e6}
+    header .content{padding:70px 0;display:block}
+
 /* Nav */
-    header{}
     header .nav_container{background:#369;}
     nav{height:40px;line-height:40px;margin:0 auto;width:1024px;}
     nav a{display:block;float:left;padding:0 20px;text-decoration:none;color:#fff;}
     nav a.selected, nav a:hover{color:#fff;background:#036;text-decoration:none}
-
-
     
 /* Section */
-    section {width:1024px;height:300px;margin:0 auto;}
+    section {width:1024px;margin:30px auto;}
 
 /* Footer */
     footer{ font-size:11px;color:#999;margin:0 auto;width:1024px;height:100px;}
     footer a{text-decoration:none;color:#369}
     footer a:hover{text-decoration:underline;}
-
-    
-    
-/* Header */
-    header{height:400px;background:url(../img/cloud.png) bottom center repeat-x #60b5e6}
-    header .content{padding:70px 0;display:block}
 
 /* Header Home */
     #logo{ float:left;display:block;margin:100px}
@@ -72,3 +60,13 @@
     .content_list{}
     .content_list .voice{overflow:hidden;margin:30px 0;}
     .content_list .date{color:#999;}
+    
+    
+/* Fluid design */
+    .row{float:left;clear:both;width:100%;}
+    .span12{width:100%;float:left;}
+    .span8{width:66%;float:left;}
+    .span6{width:50%;float:left;}
+    .span4{width:33%;float:left;}
+    .span2{width:25%;float:left;}
+    
