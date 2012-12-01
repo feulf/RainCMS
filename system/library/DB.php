@@ -18,7 +18,8 @@
                 $nquery = 0,
                 $link,
                 $config_dir = CONFIG_DIR,
-                $config_file = "db.php";
+                $config_file = "db.php",
+                $last_query;
 
         /**
         * Init the database connection. Call this function only once for database instance.
@@ -94,6 +95,7 @@
         */
         static function query($query = null, $field = array()) {
             try {
+                self::$last_query = $query;
                 self::$statement = self::$link->prepare($query);
                 self::$statement->execute($field);
                 self::$nquery++;
@@ -169,6 +171,14 @@
         */
         static function get_last_id() {
             return self::$link->lastInsertId();
+        }
+        
+        
+        /**
+         * Return the last query executed
+         */
+        static function get_last_query(){
+            return self::$last_query;
         }
 
         /**
