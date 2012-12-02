@@ -182,7 +182,6 @@
                 $this->content = $content;
                 $this->action = $content['action'] ? $content['action'] : "draw";
                 $this->params = array();
-                
             }
             
             // Content not found for that path
@@ -205,18 +204,13 @@
 
                 } while (!$content = Content::get_content_by_path($path));
 
-                $this->content = $content;
-
-                $extra_path = substr($this->path, strlen($path));
-                if (is_numeric($extra_path[0])) {
+                if( $content ){
+                    $this->content = $content;
+                    $extra_path = substr($this->path, strlen($path));
+                    $params = explode( "/",$extra_path );
                     $this->action = "filter";
-                    $params = $extra_path;
-                } else {
-                    $this->action = rtrim(substr($this->path, strlen($path)), "/");
-                    $params = null;
+                    $this->params = array( $extra_path, $params );
                 }
-
-                $this->params = array($params);
 
             }
 
@@ -338,9 +332,9 @@
             load_lang( $module );
             
             // check if the module is activated
-//            $module_row = Content::get_module($module);
-//            if( !$module_row["published"] )
-//                $this->_page_not_found ();
+            $module_row = Content::get_module($module);
+            if( !$module_row["published"] )
+                $this->_page_not_found ();
 
 
             // everything is OK
@@ -350,13 +344,15 @@
             
             // - LOAD MODULE ------
             if (file_exists( $module_filepath = self::$modules_dir . $module . "/" . $module . $module_extension)) {
-                
+
                 require_once $module_filepath;
 
                 // - RENDER THE MODULE ------
 
                 $this->_start_benchmark("module");
 
+
+                
                 // define module class
                 $controller_class = $module . $module_class_name;
 
@@ -372,17 +368,16 @@
                 $init_params = array("loader" => $this, "selected" => $selected, "content" => $content );
 
                 if( class_exists($controller_class) ){
-                    
+
                     $controller_obj = new $controller_class($init_params);
 
-                    
+                    // the function can be executed
                     if ( is_callable(array($controller_obj, $action)) ){
 
                         try{
                             ob_start();                                                         // start the output buffer
                             call_user_func_array( array($controller_obj, $action), $params );   // call the selected action
                             $html = ob_get_clean();                                             // close the output buffer
-
                         }catch( Exception $e ){
                             
                             $status = ERROR;
@@ -391,20 +386,24 @@
                         }
                         
                     }
-                    // if action was not found, try to execute the action "filter"
+                    // the function cannot be executed
                     elseif ( is_callable(array($controller_obj, "filter")) ){
-
+                        
                         try{
-                            ob_start();                                                                          // start the output buffer
-                            call_user_func_array( array($controller_obj, "filter"), array($action, $params) );   // call the selected action
-                            $html = ob_get_clean();                                                              // close the output buffer
+                            ob_start();                                                         // start the output buffer
+                            $params = explode("/",$this->path);
+                            call_user_func_array( array($controller_obj, "filter"), array($this->path, $params) );   // call the selected action
+                            $html = ob_get_clean();                                             // close the output buffer
+
                         }catch( Exception $e ){
+                            
                             $status = ERROR;
                             $html = $e->getMessage();
 
                         }
 
                     }
+                    // else
                     else{
                         $status = ERROR;
                         $html = "module not found";

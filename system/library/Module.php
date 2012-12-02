@@ -117,7 +117,7 @@
 
         }
 
-        function filter($params,$action){
+        function filter($path,$params){
             $this->page_not_found();
         }
 
