@@ -9,7 +9,7 @@
         function __init() {
 
             if (get_setting('google_login') && get_setting('google_password')) {
-                
+
                 self::$api = new analytics_api();
                 if (isset($_SESSION['analytics_auth']))
                     self::$api_auth = self::$api->auth = $_SESSION['analytics_auth'];
