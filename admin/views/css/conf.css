@@ -11,3 +11,15 @@
 
 #content_main ul{}
 #content_main ul li{}
+
+/* Module List */
+.module_list {width:500px}
+.module_list .row{padding:20px;border-bottom:1px solid #eee;overflow:hidden;}
+.module_list .row:hover{background:#fea}
+.module_list .disabled{background:#fee}
+.module_list h4{margin:0;font-size:14px;}
+.module_list .version{font-size:10px;display:inline;color:#999;font-weight:normal;}
+.module_list .description{font-size:12px;margin-bottom:5px;}
+.module_list .info{float:left;}
+.module_list .action{float:right;}
+.module_list .action a{color:#369;cursor:pointer;margin-right:5px;}

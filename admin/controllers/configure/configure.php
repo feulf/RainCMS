@@ -2,6 +2,7 @@
 
     load_lang("admin.configure");
     Layout::addScript("conf.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
+    Layout::addScript("installer.js", ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
     Layout::addStyle("conf.css", ADMIN_VIEWS_CSS_DIR, ADMIN_VIEWS_CSS_URL);
 
     class ConfigureController extends Controller {
@@ -9,7 +10,9 @@
         /**
         * @var Form
         */
-        var $form;
+        var $form,
+            $app_download = "http://localhost/RainInstaller/download.php",
+            $app_list_url = "http://localhost/RainInstaller/module_list.php";
 
         function index($selection = "info", $type_id = null) {
 
@@ -36,7 +39,7 @@
             $this->load_library("tab");
             $this->tab->add_tab("settings", $html_settings, "conf_button_settings", "", ADMIN_FILE_URL . "Configure/settings/");
             //$this->tab->add_tab("content_types", $html_content_types, "conf_button_content_types", "", ADMIN_FILE_URL . "Configure/content_types/");
-            //$this->tab->add_tab("modules", $html_modules, "conf_button_modules", "", ADMIN_FILE_URL . "Configure/modules/");
+            $this->tab->add_tab("modules", $html_modules, "conf_button_modules", "", ADMIN_FILE_URL . "Configure/modules/");
             //$this->tab->add_tab("languages", $html_languages, "conf_button_languages", "", ADMIN_FILE_URL . "Configure/languages/");
             //$this->tab->add_tab("pages", $html_layout, "conf_button_layout", "", ADMIN_FILE_URL . "Configure/pages/");
             $this->tab->add_tab("themes", $html_themes, "conf_button_themes", "", ADMIN_FILE_URL . "Configure/themes/");
@@ -211,14 +214,31 @@
 
         protected function _modules() {
 
-            $module_list = db::get_all("SELECT * FROM " . DB_PREFIX . "module ORDER BY module");
 
-            // content sortable
-            Layout::addJavascript("module_sortable();", $onload = true);
+            // installed modules
+            $installed_modules = Content::get_module_list();
+
+            // available modules
+            $available_modules = dir_list( MODULES_DIR );
+            $modules_list = array();
+
+            foreach( $available_modules as $module_dir ){
+                if( file_exists( $file_manifest = MODULES_DIR . $module_dir . "/install/manifest.json" ) ){
+                    $manifest_json = file_get_contents( $file_manifest );
+                    $manifest = json_decode( $manifest_json, $assoc = true );
+                    $module = $manifest["module"];
+                    $modules_list[$module] = $manifest;
+                    $modules_list[$module]["installed"] = isset($installed_modules[$module]) && $installed_modules[$module]["published"] == 1 ? true : false;
+                }
+            }
+
+            $download_list = json_decode( file_get_contents( $this->app_list_url ), $assoc = true );
 
             $view = new View;
-            $view->assign("module_list", $module_list);
+            $view->assign("module_list", $modules_list);
+            $view->assign("download_list", $download_list );
             return $view->draw("conf/modules.list", $to_string = true);
+
         }
 
         protected function _content_types($type_id = 1) {
