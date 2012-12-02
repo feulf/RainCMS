@@ -60,7 +60,8 @@
 
                 // childs
                 if ($child)
-                    $this->tab->add_tab("content_list", '<div id="content_list">' . $this->_content_list($content_id) . '</div>', "content_button_content_list", "content_button_content_list_caption");
+                    $this->tab->add_tab("content_list", $this->_content_list($content_id), "content_button_content_list", "content_button_content_list_caption");
+
 
                 $html = $this->tab->draw($to_string = true);
 
@@ -398,8 +399,6 @@
 
                     // Check if there is any unique type already inserted in the list
                     if (!$child_is_unique || !Content::get_content_by_type($child_type_id, $lang_id = LANG_ID, $only_published = false)) {
-
-
                         $child_type[$child_type_id] = get_msg("type_" . str_replace(" ", "_", $child_type_name));
                     }
                 }
