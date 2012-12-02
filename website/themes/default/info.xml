@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <theme>
 	<name>Default</name>
-	<description>A simple twitter bootstrap theme easy to extend</description>
+	<description>RainCMS default theme</description>
 	<tags>Default Rain</tags>
-	<colors>Black and white</colors>
-	<author>Federico Ulfo with Twitter Bootstrap</author>
+	<colors>white,blue</colors>
+	<author>Federico Ulfo</author>
 	<author_email>rainelemental@gmail.com</author_email>
 	<author_website>http://www.federicoulfo.it/</author_website>
 </theme>
