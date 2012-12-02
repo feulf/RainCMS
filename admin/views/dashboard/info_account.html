@@ -1,0 +1,11 @@
+<div class="block">
+    <div class="title">{"welcome"|get_msg} {$name}</div>
+    <div class="content">
+        <div><b>Your Account Information:</b></div>
+        <div>{$firstname} {$lastname}</div>
+        <div>{$address} {$city} {$zip}</div>
+        <div>{$tel}</div>
+        <div>{$email}</div>
+        <div><a href="{#ADMIN_FILE_URL#}/User/View/{$user_id}/">{"Change Your Data"|get_msg}</a></div>
+    </div>
+</div>

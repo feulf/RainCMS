@@ -9,7 +9,7 @@
         function __init() {
 
             if (get_setting('google_login') && get_setting('google_password')) {
-
+                
                 self::$api = new analytics_api();
                 if (isset($_SESSION['analytics_auth']))
                     self::$api_auth = self::$api->auth = $_SESSION['analytics_auth'];
@@ -21,9 +21,10 @@
                     self::$analytics_profile_id = $_SESSION['analytics_profile_id'];
                 } else {
                     $site = get_setting('website_domain');
-                    self::$api->load_accounts();
-                    self::$analytics_id = $_SESSION['analytics_id'] = self::$api->accounts[$site]['tableId'];
-                    self::$analytics_profile_id = $_SESSION['analytics_profile_id'] = self::$api->accounts[$site]['profileId'];
+                    if( self::$api->load_accounts() ){
+                        self::$analytics_id = $_SESSION['analytics_id'] = self::$api->accounts[$site]['tableId'];
+                        self::$analytics_profile_id = $_SESSION['analytics_profile_id'] = self::$api->accounts[$site]['profileId'];
+                    }
                 }
             }
         }
@@ -38,7 +39,8 @@
 
             if (file_exists($file = CACHE_DIR . $page . "_analytics.html") && ( time() - ( $ft = filemtime($file) ) ) < (60 * get_setting('google_analytics_refresh_time')))
                 return file_get_contents($file);
-            else {
+            else if(self::$api_auth){
+                
                 $dimensions = 'ga:date';
                 $metrics = 'ga:visits'; //,ga:uniquePageviews,ga:bounces,ga:entrances,ga:exits,ga:newVisits,ga:timeOnPage';
                 $sort = 'ga:date';
@@ -59,7 +61,7 @@
                 $tpl->assign("stats", $stats);
                 $tpl->assign("summary", $summary);
                 $tpl->assign("last_refresh", time());
-                $html = $tpl->draw("conf/info_stats", true);
+                $html = $tpl->draw("dashboard/info_stats", true);
 
                 file_put_contents($file, $html);
 

@@ -9,7 +9,7 @@
         function index() {
 
             $html = "";
-            //$html = $this->_account_info();
+            $html = $this->_account_info();
             $html .= $this->_space_info();
             $html .= $this->_analytics_info();
             echo $html;
@@ -30,13 +30,13 @@
             $view = new View;
             $view->assign("title", "Memory usage");
             $view->assign("content", $chart_pie);
-            return $view->draw("conf/info_space", true);
+            return $view->draw("dashboard/info_space", true);
         }
 
         protected function _account_info() {
             $view = new View;
             $view->assign(User::get_user());
-            return $view->draw("conf/info_account", $to_string = true);
+            return $view->draw("dashboard/info_account", $to_string = true);
         }
 
         protected function _analytics_info() {
