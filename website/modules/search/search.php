@@ -58,11 +58,14 @@
             $this->assign("content_list", $content_list);
             $this->set_layout("layout.search");
         }
-        
-        function filter( $action, $params ){
-            $search = $action;
-            $this->index( $search );
-            
+
+        /**
+         * Search works with filter
+         * example:
+         * raincms.com/search/keyword-to-search
+         */
+        function filter( $path, $params ){
+            $this->index( $params[1] );
         }
 
     }

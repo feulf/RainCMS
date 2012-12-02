@@ -36,11 +36,7 @@
         </header>
         <section>
 
-            <div class="content">
-                <h1>{$title}</h1>
-            </div>
-
-            <form onsubmit="return search_form(this)" class="container">
+            <form onsubmit="return search_form(this)" id="search_form">
                 <input type="text" name="search" value="{$search}" class="span6">
                 <input class="btn btn-primary btn-large span2" type="submit" value="{'search'|get_msg}">
             </form>
