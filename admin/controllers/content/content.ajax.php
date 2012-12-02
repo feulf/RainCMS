@@ -349,6 +349,12 @@
             echo $this->_cover_upload($content_id);
         }
 
+        function cover_choose(){
+            $content_id= get_post('content_id');
+            $file_id= get_post('file_id');
+            echo $this->_cover_choose($content_id,$file_id);
+        }
+
         function cover_delete() {
             $content_id = get_post('content_id');
             echo $this->_cover_delete($content_id);
@@ -362,65 +368,6 @@
             Content::file_delete($file_id);
         }
         
-
-        /**
-         * file edit
-         * @param type $file_id 
-         */
-        function file_edit($file_id){
-            $file = Content::get_file($file_id);
-
-            // INIT CONTROL PANEL
-            $this->load_library("form");
-            $this->form->init_form( URL . "admin.ajax.php/content/file_save/$file_id/", "post", "file_edit");
-            $this->form->open_table("Edit File");
-            $this->form->add_html( '<img src="'.UPLOADS_URL.$file['thumb'].'">');
-            $this->form->add_item("text", "title", "content_form_title", "content_form_title_field", $file['name'] );
-            $this->form->add_item("text", "subtitle", "content_form_subtitle", "content_form_subtitle_field", $file['subtitle'] );
-            $this->form->add_item("textarea", "content", "content_form_content", "content_form_content_field", $file['description'] );
-            $this->form->add_button("save");
-            $this->form->close_table();
-            $this->form->draw($ajax = true);
-            
-            echo get_style();
-            echo get_javascript();
-            
-        }
-        
-
-        function file_save($file_id){
-    
-            $title = post("title");
-            $description = post("content");
-            $subtitle = post("subtitle");
-            DB::update(DB_PREFIX."file", array("name"=>$title, "description"=>$description, "subtitle"=>$subtitle), "file_id=$file_id" );
-            
-            echo "Saved. <a href='javascript:history.back();'>Go back</a>";
-        }
-
-
-        
-        
-        /**
-         * Private methods 
-         */
-
-
-        // delete file by content id    
-        function _file_delete_by_content_id($content_id) {
-
-            // file list
-            $file_list = db::get_all("SELECT *
-                                      FROM " . DB_PREFIX . "file f
-                                      JOIN " . DB_PREFIX . "file_rel fr ON f.file_id=fr.file_id
-                                      WHERE fr.rel_id=?", array($content_id)
-            );
-
-            for ($i = 0; $i < count($file_list); $i++)
-            // delete the files
-                Content::file_delete($file_list[$i]['file_id']);
-        }
-
         /**
         * Get path
         */
@@ -671,6 +618,7 @@
                 $filepath = $file_info["filepath"];
                 $thumbnail_filepath = $file_info["thumbnail_filepath"];
                 $file_type_id = IMAGE;
+                list($width,$height)= getimagesize( UPLOADS_DIR . $filepath );
 
                 db::query("INSERT INTO " . DB_PREFIX . "file 
                            ( name, filepath, ext, thumb, type_id, size, width, height, last_edit_time ) 
@@ -688,6 +636,7 @@
             }
         }
 
+        
         /**
         * Content Cover Upload
         */
@@ -698,7 +647,6 @@
             //    return false;
 
             if ($content = Content::get_content($content_id)) {
-                $content_id = $content['content_id'];
                 $type_id = $content['type_id'];
 
 
@@ -710,6 +658,7 @@
                 $h = isset($p['h']) ? $p['h'] : null;    // image height
                 $s = isset($p['s']) ? $p['s'] : false;   // image is square
 
+                
                 //cover thumb
                 $tw = isset($p['tw']) ? $p['tw'] : 256;
                 $th = isset($p['th']) ? $p['th'] : 200;
@@ -725,11 +674,11 @@
                     $filepath           = $file_info["filepath"];
                     $thumbnail_filename = $file_info["thumbnail_filename"];
                     $thumbnail_filepath = $file_info["thumbnail_filepath"];
+                    $file_type_id = IMAGE;
 
-                    if (image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $filepath, $w, $h, $s)) {
+                    if( $w || $h )
+                        image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $filepath, $w, $h, $s);
 
-                        $thumb = THUMB_PREFIX . $filepath;
-                        $file_type_id = IMAGE;
                         list($width, $height) = getimagesize(UPLOADS_DIR . $filepath);
 
                         db::query( "INSERT INTO " . DB_PREFIX . "file 
@@ -749,15 +698,70 @@
                         DB::query("UPDATE " . DB_PREFIX . "setting SET value=value+? WHERE setting='space_used'", array($size) );
 
                         return json_encode(array('status' => true, 'thumb_src' => UPLOADS_DIR . $thumbnail_filepath, 'src' => UPLOADS_URL . $filepath ) );
+
                     }
                     else
-                        return json_encode(array('status' => false, 'msg' => 'Resize images error'));
-                }
-                else
                     return json_encode(array('status' => false, 'msg' => 'Upload images error'));
             }
         }
 
+        
+        
+        /**
+        * Content Cover Upload
+        */
+        function _cover_choose($content_id, $file_id) {
+
+            // check if user has access
+            //if( !content_access( $content_id ) )
+            //    return false;
+
+            if ($content = Content::get_content($content_id) && $file = Content::get_file($file_id)) {
+                $type_id = $content['type_id'];
+
+                // SET PARAMETER width, height, square of cover and cover thumb
+                $field = DB::get_field("SELECT param FROM " . DB_PREFIX . "content_type_field WHERE name='cover' AND type_id=?", array($type_id));
+                parse_str($field, $p);
+
+                $w = isset($p['w']) ? $p['w'] : null;    // image width
+                $h = isset($p['h']) ? $p['h'] : null;    // image height
+                $s = isset($p['s']) ? $p['s'] : false;   // image is square
+                
+                //cover thumb
+                $tw = isset($p['tw']) ? $p['tw'] : 256;
+                $th = isset($p['th']) ? $p['th'] : 200;
+                $ts = isset($p['ts']) ? $p['ts'] : false;
+
+                // if a cover is already there
+                if( DB::get_row("SELECT * 
+                                 FROM ".DB_PREFIX."file_rel 
+                                 WHERE rel_id=:rel_id AND rel_type=:rel_type"
+                                 ,array(":rel_id"=>$content_id, ":rel_type"=>FILE_COVER )
+                                ) ){
+                
+                    db::query("UPDATE " . DB_PREFIX . "file_rel
+                               SET file_id=:file_id
+                               WHERE rel_id=:rel_id AND rel_type=:rel_type
+                              ", 
+                              array(":file_id"=>$file_id, ":rel_id" => $content_id, ":rel_type"=>FILE_COVER ) );
+                }
+                else{
+                    db::query("INSERT INTO " . DB_PREFIX . "file_rel 
+                               ( file_id, rel_id, rel_type )
+                               VALUES ( :file_id, :rel_id, :rel_type )", 
+                               array(":file_id"=>$file_id, ":rel_id" => $content_id, ":rel_type" => FILE_COVER ) );
+                }
+
+                $src                = UPLOADS_DIR . $file['filepath'];
+                $thumbnail_filepath = UPLOADS_DIR . $file['thumb'];
+                image_resize( $src, $thumbnail_filepath, $tw, $th, $ts );
+
+                return json_encode(array('status' => true, 'thumb_src' => $thumbnail_filepath, 'src' => $src ) );
+
+            }
+        }
+        
+        
         /**
         * Content cover delete
         *
@@ -768,23 +772,60 @@
             //if( !content_access( $content_id ) )
             //    return false;
             if ($content = Content::get_content($content_id)) {
-                $content_id = $content['content_id'];
-                if ($file_id = DB::get_field("SELECT f.file_id
+                
+                $file_list = DB::get_all("SELECT f.file_id
                                           FROM " . DB_PREFIX . "file_rel fr
                                           JOIN " . DB_PREFIX . "file f ON f.file_id=fr.file_id
-                                          WHERE fr.rel_id=:rel_id AND fr.rel_type=:rel_type
-                                          LIMIT 1;", 
+                                          WHERE fr.rel_id=:rel_id AND fr.rel_type=:rel_type",
                                           array(":rel_id"=>$content_id, ":rel_type"=>FILE_COVER)
-                                            )
-                   )
-                    Content::file_delete( $file_id );
+                                        );
 
-                DB::query("UPDATE " . DB_PREFIX . "content
-                           SET cover = ''
-                           WHERE content_id=?", array($content_id)
+                if( $file_list )
+                    foreach( $file_list as $file )
+                        Content::file_delete( $file['file_id'] );
+                
+                
+                DB::query( "DELETE FROM ".DB_PREFIX."file_rel 
+                            WHERE rel_id=:rel_id AND rel_type=:rel_type",
+                            array(":rel_id"=>$content_id, ":rel_type"=>FILE_COVER)
                 );
+
                 return true;
             }
+        }
+        
+
+        /**
+         * file edit
+         * @param type $file_id 
+         */
+        function file_edit($file_id){
+            $file = Content::get_file($file_id);
+
+            // INIT CONTROL PANEL
+            $this->load_library("form");
+            $this->form->init_form( URL . "admin.ajax.php/content/file_save/$file_id/", "post", "file_edit");
+            $this->form->open_table("Edit File");
+            $this->form->add_html( '<img src="'.UPLOADS_URL.$file['thumb'].'">');
+            $this->form->add_item("text", "title", "content_form_title", "content_form_title_field", $file['name'] );
+            $this->form->add_item("text", "subtitle", "content_form_subtitle", "content_form_subtitle_field", $file['subtitle'] );
+            $this->form->add_item("textarea", "content", "content_form_content", "content_form_content_field", $file['description'] );
+            $this->form->add_button("save");
+            $this->form->close_table();
+            $this->form->draw($ajax = true);
+            
+            
+
+    }
+
+        function file_save($file_id){
+            
+            $title = post("title");
+            $description = post("content");
+            $subtitle = post("subtitle");
+            DB::update(DB_PREFIX."file", array("name"=>$title, "description"=>$description, "subtitle"=>$subtitle), "file_id=$file_id" );
+            
+            echo "Saved. <a href='javascript:history.back();'>Go back</a>";
         }
         
 

@@ -136,70 +136,17 @@
 		} )
 	}
 
-	
-	
-
-	
-
-	//------------------------------------------
-	// Rss functions
-	//------------------------------------------
-	
-	function add_rss( url, content_id, timestamp, i ){
-
-		$('#row_'+i).fadeOut("slow");
-		$.getJSON( ajax_file, {module:'content', cp:'content/addRss', timestamp:timestamp, rssurl:url, content_id:content_id }, function(result){
-			if( result['result'] ){
-				$('#row_'+i).html( '<img src="'+admin_views_images_url+'tick.gif">' );
-				$('#row_'+i).fadeIn("slow");
-			}
-			else{
-				alert( result['msg'])
-			}
-		});
-		
-
-	}
-	
-
-	
-	
-	//------------------------------------------
-	// Block Sortable
-	//------------------------------------------
-	
-	// Enable blocks drag&drop order in the pages
-	function block_sortable( content_id, layout_id ){
-		$( ".edit_mode_load_area_content").sortable({
-			opacity: 0.5,
-			connectWith: '.edit_mode_load_area_content',
-			handle: '.edit_mode_block_header',
-			scroll: true,
-			tolerance: 'pointer',
-			update: function(){
-				var load_area = this.content_id.substr(6)
-				var sortedList = $('#lname_' + load_area).sortable( 'serialize' )
-				$.post( ajax_file, {module:'conf',cp:'block/sort',content_id: content_id, layout_id: layout_id, load_area: load_area, sortable:sortedList }, function( html ){
-					//alert( html )
-				})
-			}
-		});
-	}
-	
-	function block_delete( block_id ){
-		
-		$('#block_'+block_id).slideUp( "slow", function(){
-			$('#block'+block_id).remove()
-		})
-		$.get( ajax_file, { module: 'conf', cp: 'block/delete', block_id: block_id }, function( html ){
-			//alert( html )
-		})
-
-	}
-	
 	function addBlock( load_area ){
 		// mostra menu a tendina con scelta tra:
 		// Immagine >> upload o carica dal sito
 		// Testo >> deve apparire una finestra popup con il testo nella lingua selezionata
 		// Modulo >> deve apparire una lista dei moduli disponibili da includere in quel punto
 	}
+        
+        
+        // Install a cover
+        function set_cover(content_id,file_id){
+                $.get( ajax_file + "content/cover_choose/", { content_id : content_id, file_id:file_id }, function(status){
+                    window.location.reload();
+                });
+        }
