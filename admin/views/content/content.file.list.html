@@ -23,7 +23,6 @@
                      {elseif="$cover_enabled"}
                      <a href="javascript:set_cover('{$content_id}','{$value.file_id}')"><img src="../aimg/picture.png" alt="del" class="tooltip" title="{"content_button_file_delete_caption"|get_msg}"/></a>
                 {/if}
-
             </div>
             <img id="img_{$value.file_id}" src="{#UPLOADS_URL#}{$value.thumb}#" alt="" class="thumb thumb_image tooltip drag {if="$value.file_id==$file_id"}selected{/if}" title="{$value.name} - {$value.width}x{$value.height}<br>{$value.size|byte_format}"/>
                                                                                                                      {else}

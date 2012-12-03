@@ -24,9 +24,7 @@ function cover_choose(content_id){
         $('body').css('overflow','hidden').append( html );
     }
     $('#popup').fadeIn("fast");
-
-
-    $.get( admin_file + '/file/file_list/', {content_id:content_id}, function(result){
+    $.get( admin_file + 'file/file_list/', {content_id:content_id}, function(result){
             $('#popup .content_inside').hide().html(result).fadeIn();
     });
 }

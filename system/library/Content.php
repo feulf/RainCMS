@@ -109,6 +109,25 @@
         }
 
         /**
+        * Get the content by the path
+        */
+        static function get_content_by_path_autocomplete($path = "", $lang_id = LANG_ID, $only_published = true) {
+            $path = $path . "%";
+            return DB::get_all("SELECT c.*, f.filepath AS cover, f.thumb AS cover_thumbnail, c.path AS link, r.rel_id AS parent_id, r.position, p.template AS layout, t.*
+                                FROM " . DB_PREFIX . "content c
+                                JOIN " . DB_PREFIX . "content_rel r ON c.content_id=r.content_id AND r.rel_type='parent'
+                                JOIN " . DB_PREFIX . "layout p ON p.layout_id = c.layout_id
+                                JOIN " . DB_PREFIX . "content_type t ON t.type_id = c.type_id
+                                LEFT JOIN ".DB_PREFIX."file_rel fr ON fr.rel_id=c.content_id AND fr.rel_type=:rel_type
+                                LEFT JOIN ".DB_PREFIX."file f ON f.file_id=fr.file_id
+                                WHERE c.path LIKE :path AND lang_id=:lang_id" .
+                                ( $only_published ? " AND c.published=1" : null )
+                                , 
+                                array( ":rel_type"=>FILE_COVER, ":path" => $path, ":lang_id" => $lang_id )
+            );
+        }
+
+        /**
         * Get content by the type
         */
         static function get_content_by_type($type_id, $lang_id = LANG_ID, $only_published = true) {

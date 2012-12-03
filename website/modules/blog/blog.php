@@ -9,6 +9,19 @@
             $this->assign("comment_list", $this->get_comment_list());
             $this->set_layout("layout.blog");
         }
+        
+        function filter($path,$params){
+            
+            $content = $this->auto_complete($path);
+            if(sizeof($content)==1){
+                header('location: ' . URL . $content[0]['path'] );
+            }
+            else{
+                
+            }
+            
+            
+        }
 
     }
 

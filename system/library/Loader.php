@@ -157,18 +157,17 @@
 
                 $this->_start_benchmark("controller");
 
-
                 // start the output buffer
                 ob_start();
                 call_user_func_array(array($controller_obj, "filter_before"), $params);    // call the method filter_before
                 $action_status = call_user_func_array(array($controller_obj, $action), $params); // call the selected action
                 call_user_func_array(array($controller_obj, "filter_after"), $params);    // call the method filter_after
                 $html = ob_get_clean();
+
                 // close the output buffer
                 // verify that the action was executed
                 if (false === $action_status)
                     $html = "Action <b>$action</b> not found in controller <b>$class</b>! Method not declared or declared with different private access";
-
 
                 list( $time, $memory ) = $this->get_benchmark();
                 $this->loaded_controller[] = array("controller" => $controller, "execution_time" => $time, "memory_used" => $memory);
@@ -182,6 +181,7 @@
                         $this->load_area[$load_area] = array();
                     $this->load_area[$load_area][] = array("controller" => $controller, "html" => $html);
                 }
+
             }
         }
 

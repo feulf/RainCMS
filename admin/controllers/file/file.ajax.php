@@ -17,8 +17,6 @@
         */
         function _file_upload() {
 
-
-
             // get the upload_id, when the updload is complete this function return the upload_id, so the javascript function knows which element to update.
             $upload_id = get_post("upload_id");
 

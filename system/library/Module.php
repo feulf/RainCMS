@@ -120,6 +120,10 @@
         function filter($path,$params){
             $this->page_not_found();
         }
+        
+        function auto_complete($path){
+            return Content::get_content_by_path_autocomplete($path);
+        }
 
     }
 

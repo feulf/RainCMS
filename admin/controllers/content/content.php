@@ -10,7 +10,9 @@
 
         function index($content_id = null, $file_id = null, $action = null) {
 
-            Layout::addJavascript("var content_id='$content_id';");
+            $sel_id = get('sel_id');
+
+            add_javascript("var content_id='$content_id';");
 
             if (!isset($_SESSION['content_tree']))
                 $_SESSION['content_tree'] = Array();
@@ -19,7 +21,7 @@
             if (!$content_id) {
                 $content_id = 0;
                 $title = get_msg("content_root");
-                $html = $this->_content_list($content_id, get('sel_id'), get('order_by'), get('order'));
+                $html = $this->_content_list($content_id, $sel_id, get('order_by'), get('order'));
                 $tools = '<a href="' . URL . '" class="tooltip" title="' . get_msg("content_button_view_caption") . '"><img src="' . VIEWS_DIR . 'aimg/preview.gif" alt="' . get("content_button_view") . '" /></a>';
             } elseif ($content_row = Content::get_content($content_id)) {
 
@@ -61,7 +63,6 @@
                 // childs
                 if ($child)
                     $this->tab->add_tab("content_list", $this->_content_list($content_id), "content_button_content_list", "content_button_content_list_caption");
-
 
                 $html = $this->tab->draw($to_string = true);
 
@@ -132,7 +133,7 @@
             
             foreach ($installed_lang as $lang)
                 $langs[$lang["lang_id"]] = $lang["language"];
-            if (!load_lang("admin." . $type["lang_index"]))
+            if (!load_lang("admin." . $type["type"]))
                 $type["lang_index"] = "content";
 
             // GET FIELD
@@ -149,6 +150,7 @@
 
                 // CONTROL PANEL
 
+                
                 // get the Content
                 if ($multilanguage_field_list){
                     foreach ($multilanguage_field_list as $i => $field) {
@@ -179,6 +181,7 @@
 
                     }
                 }
+                
                 
                 $lang_icon = ( count($langs) > 1 ? "<a href=\"index.php?id=$content_id&lang_id=$lang_id\" class=\"tooltip\" title=\"" . get_msg("content_form_lang") . "\">" . $lang . " <img src=" . LANG_DIR . "$lang_id/$lang_id.gif></a>" : null );
                 $this->form->open_table("content_form_table", $lang_icon, "table");
@@ -434,6 +437,9 @@
             $type_id = $content_row['type_id'];
             $type = Content::get_content_type($type_id);
 
+            $cover_enabled = DB::get_row("SELECT * FROM ".DB_PREFIX."content_type_field WHERE type_id=:type_id AND name='cover'", array(":type_id"=>$type_id) )?true:false;
+            
+
             $allowed_ext = ( $type['image_enabled'] ? get_setting("image_ext") . "," : null ) . ( $type['audio_enabled'] ? get_setting("audio_ext") . "," : null ) . ( $type['video_enabled'] ? get_setting("video_ext") . "," : null ) . ( $type['document_enabled'] ? get_setting("document_ext") . "," : null ) . ( $type['archive_enabled'] ? get_setting("archive_ext") . "," : null );
 
             Layout::addScript('ajaxupload.js', ADMIN_JAVASCRIPT_DIR, ADMIN_JAVASCRIPT_URL);
@@ -452,11 +458,27 @@
             $order_by = get('forder') ? get('forder') : "position";
             $order = get('forder_by') == "desc" ? "desc" : "asc";
 
-            $file_list = Content::get_file_list($rel_id = $content_row['content_id'], FILE_LIST );
+            $file_list=DB::get_all("SELECT *
+                                    FROM " . DB_PREFIX . "file_rel fr
+                                    JOIN " . DB_PREFIX . "file f ON fr.file_id=f.file_id
+                                    WHERE rel_id=:rel_id
+                                    GROUP BY f.file_id
+                                    ORDER BY fr.position",
+                                    array(":rel_id"=>$content_id)
+            );
+            
+            $cover_id = DB::get_field("SELECT fr.file_id 
+                                       FROM ".DB_PREFIX."file f 
+                                       JOIN ".DB_PREFIX."file_rel fr ON f.file_id=fr.file_id
+                                       WHERE fr.rel_id=:rel_id AND fr.rel_type=:rel_type
+                                      ",
+                                      array(":rel_id"=>$content_id,":rel_type"=>FILE_COVER));
 
             $view = new View;
             $view->assign('file_list', $file_list);
             $view->assign($content_row);
+            $view->assign("cover_enabled", $cover_enabled );
+            $view->assign("cover_id", $cover_id );
             $view->assign("content_id", $content_id);
             $view->assign("file_id", $file_id);
             $view->assign("cp", "file/upload");

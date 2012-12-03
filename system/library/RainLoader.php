@@ -209,7 +209,7 @@
                     $extra_path = substr($this->path, strlen($path));
                     $params = explode( "/",$extra_path );
                     $this->action = "filter";
-                    $this->params = array( $extra_path, $params );
+                    $this->params = array( $this->path, $params );
                 }
 
             }

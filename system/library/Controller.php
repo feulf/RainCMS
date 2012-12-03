@@ -12,8 +12,8 @@
             $this->selected = $init_params['selected'];
         }
 
-        function ajax_mode($load_javascript = false, $load_style = false, $load_layout = false) {
-            $this->loader->ajax_mode($load_javascript, $load_style, $load_layout);
+        function ajax_mode($load_javascript = false, $load_style = false) {
+            $this->loader->ajax_mode($load_javascript, $load_style);
         }
 
         function load_library($library) {

@@ -6,7 +6,7 @@
 
 
     class RainLoaderAdmin extends Loader{
-        
+
         public $title = "Rain CMS - Admin";
 
         function init_settings(){
