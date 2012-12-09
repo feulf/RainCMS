@@ -12,7 +12,7 @@
 
             $sel_id = get('sel_id');
 
-            add_javascript("var content_id='$content_id';");
+            Layout::addJavascript("var content_id='$content_id';");
 
             if (!isset($_SESSION['content_tree']))
                 $_SESSION['content_tree'] = Array();
