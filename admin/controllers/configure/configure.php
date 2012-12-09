@@ -162,7 +162,7 @@
             $this->form->add_item("text", "settings_image_quality", "conf_image_quality", "conf_image_quality_field", get_setting('image_quality'), "number,min=30,max=100");
 
             // image/thumbnail sizes
-            $this->form->add_item("textarea", "settings_thumbnail_size", "conf_thumbnail_size", "conf_thumbnail_size_field", get_setting('thumbnail_sizes'), "maxlength=255", array('height' => 200, 'mode' => 'simple'), "row");
+            $this->form->add_item("text", "settings_thumbnail_size", "conf_thumbnail_size", "conf_thumbnail_size_field", get_setting('thumbnail_size'), "maxlength=7");
             $this->form->add_item("textarea", "settings_image_size_allowed", "conf_image_size_allowed", "conf_image_size_allowed_field", get_setting('image_sizes'), "maxlength=255", array('height' => 200, 'mode' => 'simple'), "row");
 
             $this->form->add_button();

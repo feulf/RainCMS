@@ -535,14 +535,16 @@
             $filepath = $file_info["filepath"];
             $upload_path = $file_info["upload_path"];
 
-            // prepare the array
-            $thumbnail_filename = $file_info["thumbnail_filename"] = $thumb_prefix . $filename;
-            $thumbnail_filepath = $file_info["thumbnail_filepath"] = $upload_path . $thumbnail_filename;
+            if( $thumb_prefix ){
+                // prepare the array
+                $thumbnail_filename = $file_info["thumbnail_filename"] = $thumb_prefix . $filename;
+                $thumbnail_filepath = $file_info["thumbnail_filepath"] = $upload_path . $thumbnail_filename;
 
-            //try to create the thumbnail
-            if ($thumb_prefix && !image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $thumbnail_filepath, $w, $h)) {
-                unlink(UPLOADS_DIR . $filename);
-                return false;
+                //try to create the thumbnail
+                if ($thumb_prefix && !image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $thumbnail_filepath, $w, $h)) {
+                    unlink(UPLOADS_DIR . $filename);
+                    return false;
+                }
             }
 
             return $file_info;

@@ -699,11 +699,12 @@
 
         function upload_image_content($content_id) {
 
-            $w = 100;
-            $h = 100;
-
             $content = Content::get_content($content_id);
 
+            // thumbnail size
+            $thumbnail_size = get_setting("thumbnail_size");
+            list($w,$h) = explode("x", $thumbnail_size );
+            
             if (isset($_FILES['file']) && $file_info = upload_image('file', $thumb_prefix = "t_", $w, $h, false)) {
 
                 $name = $file_info['name'];

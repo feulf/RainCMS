@@ -515,7 +515,11 @@
                 switch ($file_type_id) {
 
                     case IMAGE:
-                        if ($file_info = upload_image('file', THUMB_PREFIX)) {
+                        // thumbnail size
+                        $thumbnail_size = get_setting("thumbnail_size");
+                        list($w,$h) = explode("x", $thumbnail_size );
+
+                        if ($file_info = upload_image('file', THUMB_PREFIX, $w, $h)) {
 
                             $filepath = $file_info["filepath"];
                             $thumbnail_filepath = $file_info["thumbnail_filepath"];
@@ -605,8 +609,11 @@
         function _upload_image_content($content_id) {
 
             $content = Content::get_content($content_id);
+            // thumbnail size
+            $thumbnail_size = get_setting("thumbnail_size");
+            list($w,$h) = explode("x", $thumbnail_size );
 
-            if (isset($_FILES['file']) && $file_info = upload_image('file')) {
+            if (isset($_FILES['file']) && $file_info = upload_image('file', THUMB_PREFIX,$w,$h)) {
 
                 $name = $file_info['name'];
                 $size = $file_info['size'];
@@ -628,8 +635,6 @@
                            ( file_id, rel_id, rel_type) 
                            VALUES ( :file_id, :content_id, :rel_type )", 
                            array(":file_id"=>$file_id, ":content_id" => $content_id, ":rel_type" => FILE_EMBED ) );
-
-                create_thumbnails($filepath);
                 
                 return json_encode(array('result' => true, 'file_id' => $file_id, 'filepath' => $filepath, 'dir' => UPLOADS_URL));
             }

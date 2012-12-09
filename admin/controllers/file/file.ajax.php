@@ -37,8 +37,13 @@
 
                 switch ($file_type_id) {
 
+
                     case IMAGE:
-                        if ($file_info = upload_image('file', THUMB_PREFIX)) {
+                        // thumbnail size
+                        $thumbnail_size = get_setting("thumbnail_size");
+                        list($w,$h) = explode("x", $thumbnail_size );
+
+                        if ($file_info = upload_image('file', THUMB_PREFIX, $w, $h)) {
 
                             $filepath = $file_info["filepath"];
                             $thumbnail_filepath = $file_info["thumbnail_filepath"];

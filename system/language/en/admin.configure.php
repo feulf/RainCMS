@@ -89,8 +89,8 @@
     $lang["conf_max_file_size_upload_field"] = "";
     $lang["conf_image_quality"] = "Image resize quality";
     $lang["conf_image_quality_field"] = "Set the quality of the resized image (from 30 to 100, 90 default)";
-    $lang["conf_thumbnail_size"] = "Automatic thumbnail sizes";
-    $lang["conf_thumbnail_size_field"] = "Set the sizes you want to resize all uploaded images, separated by comma, for example: 100x100,200x150";
+    $lang["conf_thumbnail_size"] = "Thumbnail size";
+    $lang["conf_thumbnail_size_field"] = "Set the thumbnail size, for example: 200x150";
     $lang["conf_image_size_allowed"] = "Image size allowed";
     $lang["conf_image_size_allowed_field"] = "Set the sizes allowed by rainthumb.php to resize images on the fly. All sizes in 'Automatic thumbnail sizes' are already allowed, so is not necessary to repeat them.";
 

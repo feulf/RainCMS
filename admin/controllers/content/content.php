@@ -39,7 +39,6 @@
                 /*
                 $ca = content_access( $content_id );
                 $sa = subcontent_access( $content_id );
-
                 */
 
                 // set tab
@@ -51,9 +50,7 @@
                 else
                     $this->tab->sel_tab("content_edit");
 
-
                 // SET CONTROL PANEL
-
                 $this->tab->add_tab("content_edit", $this->_content_edit($content_id), "content_button_content", "content_button_content_caption");
 
                 // files
