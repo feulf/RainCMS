@@ -94,17 +94,27 @@
                 if (isset($settings_image_quality))
                     db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='image_quality'", array($settings_image_quality));
                 if (isset($settings_thumbnail_size))
-                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='thumbnail_size'", array($settings_thumbnail_size));
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='thumbnail_sizes'", array($settings_thumbnail_size));
                 if (isset($settings_image_size_allowed))
-                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='image_size_allowed'", array($settings_image_size_allowed));
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='image_sizes'", array($settings_image_size_allowed));
             
+                // thumbnail sizes
+                preg_match_all( "#\d*x\d*#", $settings_thumbnail_size, $matches);
+                $thumbnail_sizes = "'" . implode("','",$matches[0]) . "'";
+
                 // get the allowed image size and create the config file
                 $image_sizes = $settings_thumbnail_size . "," . $settings_image_size_allowed;
                 preg_match_all( "#\d*x\d*#", $image_sizes, $matches);
                 $image_size_allowed = "'" . implode("','",$matches[0]) . "'";
                 
                 $image_size_conf_file = CONFIG_DIR . "image_sizes.php";
-                $file_content = "<?php \$image_sizes_allowed=array(" . $image_size_allowed . ");";
+                
+                $file_content        = "<?php" . "\n" . "global \$thumbnail_sizes, \$image_size_allowed;" . "\n" .
+                                                        "\$thumbnail_sizes=array(" . $thumbnail_sizes . ");" . "\n" .
+                                                        "\$image_sizes_allowed=array(" . $image_size_allowed . ");";
+                                        
+                
+                
                 file_put_contents( $image_size_conf_file, $file_content );
                 
             }

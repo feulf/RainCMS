@@ -606,7 +606,7 @@
 
             $content = Content::get_content($content_id);
 
-            if (isset($_FILES['file']) && $file_info = upload_image('file', $thumb_prefix = "t_", $w, $h, false)) {
+            if (isset($_FILES['file']) && $file_info = upload_image('file')) {
 
                 $name = $file_info['name'];
                 $size = $file_info['size'];
@@ -629,6 +629,8 @@
                            VALUES ( :file_id, :content_id, :rel_type )", 
                            array(":file_id"=>$file_id, ":content_id" => $content_id, ":rel_type" => FILE_EMBED ) );
 
+                create_thumbnails($filepath);
+                
                 return json_encode(array('result' => true, 'file_id' => $file_id, 'filepath' => $filepath, 'dir' => UPLOADS_URL));
             }
         }

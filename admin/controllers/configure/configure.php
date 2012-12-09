@@ -16,7 +16,7 @@
 
         function index($selection = "info", $type_id = null) {
 
-            $html_info = $html_settings = $html_content_types = $html_languages = $html_modules = $html_themes = $html_layout = null;
+            $html_info = $html_settings = $html_content_types = $html_languages = $html_modules = $html_themes = $html_layout = $html_files = null;
 
             switch ($selection) {
                 case 'files': $html_files = $this->_files();
