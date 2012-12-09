@@ -659,7 +659,7 @@
                 $tw = isset($p['tw']) ? $p['tw'] : 256;
                 $th = isset($p['th']) ? $p['th'] : 200;
 
-                if ($file_info = upload_image('cover', THUMB_PREFIX, $tw, $th, $ts)) {
+                if ($file_info = upload_image('cover', THUMB_PREFIX, $tw, $th)) {
                     
                     $name               = $file_info["name"];
                     $ext                = file_ext($name);
@@ -672,7 +672,7 @@
                     $file_type_id = IMAGE;
 
                     if( $w || $h )
-                        image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $filepath, $w, $h, $s);
+                        image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $filepath, $w, $h);
 
                         list($width, $height) = getimagesize(UPLOADS_DIR . $filepath);
 
@@ -720,12 +720,10 @@
 
                 $w = isset($p['w']) ? $p['w'] : null;    // image width
                 $h = isset($p['h']) ? $p['h'] : null;    // image height
-                $s = isset($p['s']) ? $p['s'] : false;   // image is square
                 
                 //cover thumb
                 $tw = isset($p['tw']) ? $p['tw'] : 256;
                 $th = isset($p['th']) ? $p['th'] : 200;
-                $ts = isset($p['ts']) ? $p['ts'] : false;
 
                 // if a cover is already there
                 if( DB::get_row("SELECT * 
@@ -749,7 +747,7 @@
 
                 $src                = UPLOADS_DIR . $file['filepath'];
                 $thumbnail_filepath = UPLOADS_DIR . $file['thumb'];
-                image_resize( $src, $thumbnail_filepath, $tw, $th, $ts );
+                image_resize( $src, $thumbnail_filepath, $tw, $th );
 
                 return json_encode(array('status' => true, 'thumb_src' => $thumbnail_filepath, 'src' => $src ) );
 

@@ -73,7 +73,6 @@ a:hover{color:#FF3A00;text-decoration:underline;}
 .tree .voice{position:relative;right:16px;}
 
 /* File */
-.button_upload{border:1px solid #999;padding:3px 12px 3px 12px;font-size:10px;background-color:#eee;color:#333;-moz-border-radius:5px;-webkit-border-radius:5px;cursor:pointer;}
 #upload_list{display:none;margin-top:10px;border:1px solid #ccc;background:#fff;padding:10px;}
 .thumbnail_list{margin:0px;padding:0px;}
 .thumbnail_list li{float:left;list-style:none;margin:10px 10px 0 0;height:160px;}

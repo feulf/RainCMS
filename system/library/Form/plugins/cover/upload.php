@@ -36,9 +36,8 @@
         <head>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <title>upload</title>
-            <!-- style -->
 
-            <link href="<?php echo RELATIVE_BASE_DIR; ?>admin/views/css/style.css" type="text/css" rel="stylesheet"/>
+            <link href="<?php echo RAIN_UPLOAD_PLUGIN_URL; ?>cover.css" type="text/css" rel="stylesheet"/>
 
             <!-- included javascript -->
             <script src="<?php echo RELATIVE_BASE_DIR; ?>public/js/jquery/jquery.min.js" type="text/javascript"></script>
@@ -67,7 +66,10 @@
                 });
             </script>
         </head>
-        <body style="margin:0px;">
-            <div id="upload_cover_button" class="upload_cover_button"><button class="button_upload"><?php echo 'Upload'; ?></button></div>
+        <body class="cover-plugin-inside">
+            <div  class="upload_cover_button">
+                <button id="upload_cover_button" class="cover-upload">Upload Cover</button>
+            </div>
+            <a class="cover-choose" href="javascript:parent.cover_choose(<?php echo get('content_id'); ?>)">Choose a cover</a>
         </body>
     </html>

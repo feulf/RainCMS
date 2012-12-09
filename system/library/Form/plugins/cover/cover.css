@@ -1,0 +1,6 @@
+.cover-plugin{}
+.cover-plugin iframe{width:220px;height:40px;overflow:hidden;border:0;}
+
+body.cover-plugin-inside{margin:0;font-family:Arial;}
+body.cover-plugin-inside .cover-upload{display:block;float:left;border:1px solid #999;padding:3px 12px 3px 12px;font-size:10px;background-color:#eee;color:#333;-moz-border-radius:5px;-webkit-border-radius:5px;cursor:pointer;margin:5px;}
+body.cover-plugin-inside .cover-choose{display:block;float:left;border:1px solid #999;padding:3px 12px 3px 12px;font-size:10px;background-color:#eee;color:#333;-moz-border-radius:5px;-webkit-border-radius:5px;cursor:pointer;width:75px;text-decoration:none;margin:5px;}
