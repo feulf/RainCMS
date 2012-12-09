@@ -40,6 +40,10 @@
             $this->form_obj->add_html($html);
         }
 
+        function add_space() {
+            $this->form_obj->add_space();
+        }
+
         //button can be a list or a string
         function add_button($button = null) {
             $this->form_obj->add_button($button);

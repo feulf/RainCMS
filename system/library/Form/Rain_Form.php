@@ -89,6 +89,10 @@
                 return $this->html .= $this->_layout_replace($title, $description, $function($name, $value, $param, $validation, $this), $layout);
             }
         }
+        
+        function add_space(){
+            $this->html .= '<div class="space">&nbsp;</div>';
+        }
 
         function add_hidden($name, $value) {
             $this->hidden .= "<input type=\"hidden\" name=\"$name\" value=\"$value\"/>";
@@ -323,6 +327,7 @@
                     pagebreak_separator : "<!-- page break -->"' . $css;
             else
                 $tinymce_param = '
+                    oninit: function () { $("#' . $name . '_ifr").webkitimageresize().webkittableresize().webkittdresize(); },
                     theme_advanced_buttons1 : "bold,italic,underline, strikethrough, separator,justifyleft, justifycenter,justifyright,justifyfull",
                     theme_advanced_buttons2: "",
                     theme_advanced_buttons3: "",
@@ -348,6 +353,7 @@
                                         force_br_newlines: true,
                                         tab_focus: ":prev,:next",
                                         convert_fonts_to_spans: false,
+                                        width: "100%",
                                         onchange_callback: function(editor) {
                                             tinyMCE.triggerSave();
                                             $("#" + editor.id).valid();

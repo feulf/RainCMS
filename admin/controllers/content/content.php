@@ -172,9 +172,9 @@
 
                         if( $field_type == "word" ){
                             $lang_icon = ( count($langs) > 1 ? "<a href=\"index.php?id=$content_id&lang_id=$lang_id\" class=\"tooltip\" title=\"" . get_msg("content_form_lang") . "\">" . $lang . " <img src=" . LANG_DIR . "$lang_id/$lang_id.gif></a>" : null );
-                            $this->form->open_table("content_form_table", $lang_icon, "table_elastic");
+                            //$this->form->open_table("content_form_table", $lang_icon, "table_elastic");
                             $this->form->add_item("word", $lang_id . "_content", "content_form_content", "content_form_content_field", $content_row_lang['content'], LANG_ID == $lang_id ? "required" : null, $param_array);
-
+                            $this->form->add_space();
                             unset( $multilanguage_field_list[$i] );
                             break;
                         }

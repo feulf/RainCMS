@@ -64,7 +64,13 @@
 		</script>
 </head>
 	<body style="margin:10px;">
-		Clicca il bottone upload per inserire la tua immagine
+            <!--
 		<div id="upload_cover_button" class="upload_cover_button"><img src="img/upload.gif" alt="upload"/></div>
+            -->
+                
+            <div  class="upload_cover_button">
+                <button id="upload_cover_button" class="cover-upload">Upload Cover</button>
+            </div>
+            <a class="cover-choose" href="javascript:parent.cover_choose(<?php echo get('content_id'); ?>)">Choose a cover</a>
 	</body>
 </html>
