@@ -67,6 +67,50 @@
             return true;
         }
 
+
+        function files_save($settings) {
+
+            // extract all the settings
+            extract($settings);
+            
+            if( User::is_super_admin() ){
+                
+                if (isset($settings_image_ext))
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='image_ext'", array($settings_image_ext));
+                if (isset($settings_audio_ext))
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='audio_ext'", array($settings_audio_ext));
+                if (isset($settings_video_ext))
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='video_ext'", array($settings_video_ext));
+                if (isset($settings_document_ext))
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='document_ext'", array($settings_document_ext));
+                if (isset($settings_archive_ext))
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='archive_ext'", array($settings_archive_ext));
+                if (isset($settings_other_ext))
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='other_ext'", array($settings_other_ext));
+
+                
+                if (isset($settings_max_file_size_upload))
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='max_file_size_upload'", array($settings_max_file_size_upload));
+                if (isset($settings_image_quality))
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='image_quality'", array($settings_image_quality));
+                if (isset($settings_thumbnail_size))
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='thumbnail_size'", array($settings_thumbnail_size));
+                if (isset($settings_image_size_allowed))
+                    db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='image_size_allowed'", array($settings_image_size_allowed));
+            
+                // get the allowed image size and create the config file
+                $image_sizes = $settings_thumbnail_size . "," . $settings_image_size_allowed;
+                preg_match_all( "#\d*x\d*#", $image_sizes, $matches);
+                $image_size_allowed = "'" . implode("','",$matches[0]) . "'";
+                
+                $image_size_conf_file = CONFIG_DIR . "image_sizes.php";
+                $file_content = "<?php \$image_sizes_allowed=array(" . $image_size_allowed . ");";
+                file_put_contents( $image_size_conf_file, $file_content );
+                
+            }
+            return true;
+        }
+
         function set_theme($theme_id) {
             if ($directory = db::get_field("SELECT directory FROM " . DB_PREFIX . "theme WHERE theme_id=?", array($theme_id), "directory"))
                 db::query("UPDATE " . DB_PREFIX . "setting SET value=? WHERE setting='theme' LIMIT 1", array($directory));

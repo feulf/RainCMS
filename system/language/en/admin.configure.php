@@ -9,6 +9,7 @@
     $lang["conf_button_languages"] = "Languages";
     $lang["conf_button_layout"] = "Layouts";
     $lang["conf_button_themes"] = "Themes";
+    $lang["conf_button_files"] = "Files";
 
     // form
     $lang["conf_form_website"] = "Site Configuration";
@@ -67,5 +68,30 @@
     $lang["conf_lang_unistall"] = "Do you want unistall this language?";
 
     $lang["conf_google_analytics_error"] = "Cannot load the statistics from Google Analytics.";
+    
+    // form files
+    
+    $lang["conf_button_file_type_allowed"] = "Type of files allowed";
+    $lang["conf_form_image_ext"] = "Image extensions allowed";
+    $lang["conf_form_image_ext_field"] = "Set the extension separated by comma, example: gif,png,jpeg,jpg";
+    $lang["conf_form_audio_ext"] = "Audio extensions allowed";
+    $lang["conf_form_audio_ext_field"] = "Set the extension separated by comma, example: wav,mp3";
+    $lang["conf_form_video_ext"] = "Video extensions allowed";
+    $lang["conf_form_video_ext_field"] = "Set the extension separated by comma, example: mp4,ogv,mov";
+    $lang["conf_form_document_ext"] = "Document extensions allowed";
+    $lang["conf_form_document_ext_field"] = "Set the extension separated by comma, example: doc,txt,rtf";
+    $lang["conf_form_archive_ext"] = "Archive extensions allowed";
+    $lang["conf_form_archive_ext_field"] = "Set the extension separated by comma, example: zip,rar,tar,gz,tar.gz";
+    
+    // File settings
+    $lang["conf_button_file_settings"] = "File settings";
+    $lang["conf_max_file_size_upload"] = "Max size to upload";
+    $lang["conf_max_file_size_upload_field"] = "";
+    $lang["conf_image_quality"] = "Image resize quality";
+    $lang["conf_image_quality_field"] = "Set the quality of the resized image (from 30 to 100, 90 default)";
+    $lang["conf_thumbnail_size"] = "Automatic thumbnail sizes";
+    $lang["conf_thumbnail_size_field"] = "Set the sizes you want to resize all uploaded images, separated by comma, for example: 100x100,200x150";
+    $lang["conf_image_size_allowed"] = "Image size allowed";
+    $lang["conf_image_size_allowed_field"] = "Set the sizes allowed by rainthumb.php to resize images on the fly. All sizes in 'Automatic thumbnail sizes' are already allowed, so is not necessary to repeat them.";
 
     // end

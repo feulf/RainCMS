@@ -604,9 +604,6 @@
 
         function _upload_image_content($content_id) {
 
-            $w = 100;
-            $h = 100;
-
             $content = Content::get_content($content_id);
 
             if (isset($_FILES['file']) && $file_info = upload_image('file', $thumb_prefix = "t_", $w, $h, false)) {

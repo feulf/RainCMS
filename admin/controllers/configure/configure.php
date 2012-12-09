@@ -19,6 +19,8 @@
             $html_info = $html_settings = $html_content_types = $html_languages = $html_modules = $html_themes = $html_layout = null;
 
             switch ($selection) {
+                case 'files': $html_files = $this->_files();
+                    break;
                 case 'content_types': $html_content_types = $this->_content_types($type_id);
                     break;
                 case 'languages': $html_languages = $this->_languages();
@@ -38,6 +40,10 @@
 
             $this->load_library("tab");
             $this->tab->add_tab("settings", $html_settings, "conf_button_settings", "", ADMIN_FILE_URL . "Configure/settings/");
+            
+            if( User::is_super_admin() )
+                $this->tab->add_tab("files", $html_files, "conf_button_files", "", ADMIN_FILE_URL . "Configure/files/");
+
             //$this->tab->add_tab("content_types", $html_content_types, "conf_button_content_types", "", ADMIN_FILE_URL . "Configure/content_types/");
             $this->tab->add_tab("modules", $html_modules, "conf_button_modules", "", ADMIN_FILE_URL . "Configure/modules/");
             //$this->tab->add_tab("languages", $html_languages, "conf_button_languages", "", ADMIN_FILE_URL . "Configure/languages/");
@@ -77,6 +83,10 @@
 
         function themes() {
             $this->index('themes');
+        }
+
+        function files() {
+            $this->index('files');
         }
 
         protected function _settings() {
@@ -130,51 +140,35 @@
             return $this->form->draw($ajax = true, $to_string = true);
         }
 
-        protected function _info() {
+        protected function _files() {
 
-            $html = "";
-            //$html = $this->_account_info();
-            $html .= $this->_space_info();
-            $html .= $this->_analytics_info();
+            $this->load_library("form");
+            $this->form->init_form(URL . "admin.ajax.php/configure/files/save/");
 
-            return $html;
-        }
+            //file type allowed
+            $this->form->open_table("conf_button_file_type_allowed");
+            $this->form->add_item("text", "settings_image_ext", "conf_form_image_ext", "conf_form_image_ext_field", get_setting('image_ext'), "maxlength=255");
+            $this->form->add_item("text", "settings_audio_ext", "conf_form_audio_ext", "conf_form_audio_ext_field", get_setting('audio_ext'), "maxlength=255");
+            $this->form->add_item("text", "settings_video_ext", "conf_form_video_ext", "conf_form_video_ext_field", get_setting('video_ext'), "maxlength=255");
+            $this->form->add_item("text", "settings_archive_ext", "conf_form_archive_ext", "conf_form_archive_ext_field", get_setting('archive_ext'), "maxlength=255");
+            $this->form->add_item("text", "settings_document_ext", "conf_form_document_ext", "conf_form_document_ext_field", get_setting('document_ext'), "maxlength=255");
+            $this->form->add_item("text", "settings_other_ext", "conf_form_other_ext", "conf_form_other_ext_field", get_setting('other_ext'), "maxlength=255");
+            $this->form->add_button();
+            $this->form->close_table();
 
-        protected function _space_info() {
+            // file size
+            $this->form->open_table("conf_button_file_settings");
+            $this->form->add_item("text", "settings_max_file_size_upload", "conf_max_file_size_upload", "conf_admin_max_file_size_upload_field", get_setting('max_file_size_upload'), "number");
+            $this->form->add_item("text", "settings_image_quality", "conf_image_quality", "conf_image_quality_field", get_setting('image_quality'), "number,min=30,max=100");
 
-            $used_space = get_setting('space_used');
-            $tot_space = get_setting('space_tot');
-            $free_space = $tot_space - $used_space;
+            // image/thumbnail sizes
+            $this->form->add_item("textarea", "settings_thumbnail_size", "conf_thumbnail_size", "conf_thumbnail_size_field", get_setting('thumbnail_sizes'), "maxlength=255", array('height' => 200, 'mode' => 'simple'), "row");
+            $this->form->add_item("textarea", "settings_image_size_allowed", "conf_image_size_allowed", "conf_image_size_allowed_field", get_setting('image_sizes'), "maxlength=255", array('height' => 200, 'mode' => 'simple'), "row");
 
-            //love easy
-            $this->load_library("Charts");
-            $data = array(array('used space: ' . byte_format($used_space), $used_space), array('free space: ' . byte_format($free_space), $free_space));
-            $this->charts->set_data($data);
-            $chart_pie = $this->charts->draw_pie($width = 400, $height = 250);
+            $this->form->add_button();
+            $this->form->close_table();
 
-            $view = new View;
-            $view->assign("title", "Memory usage");
-            $view->assign("content", $chart_pie);
-            return $view->draw("conf/info_space", true);
-        }
-
-        protected function _account_info() {
-            $view = new View;
-            $view->assign(User::get_user());
-            return $view->draw("conf/info_account", $to_string = true);
-        }
-
-        protected function _analytics_info() {
-            if (get_setting('google_analytics')) {
-                $this->load_library("Analytics");
-
-                try {
-                    $this->analytics->__init();
-                    $html = $this->analytics->draw_stats();
-                } catch (ErrorException $e) {
-                    $html = "Can't load analytics";
-                }
-            }
+            return $this->form->draw($ajax = true, $to_string = true);
         }
 
         protected function _languages() {

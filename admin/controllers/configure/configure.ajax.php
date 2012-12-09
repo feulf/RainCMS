@@ -12,7 +12,17 @@
             switch ($action) {
                 case 'save':
                     // get all settings
-                    $this->_settings_save(get_post(null, null));
+                    $this->_settings_save( get_post() );
+                    break;
+            }
+        }
+        
+        function files($action = null) {
+
+            switch ($action) {
+                case 'save':
+                    // get all settings
+                    $this->_files_save( get_post() );
                     break;
             }
         }
@@ -52,6 +62,11 @@
                 echo draw_msg("update_success", SUCCESS, $close = true, $autoClose = 10);
         }
         
+        function _files_save($settings) {
+            $this->load_model("configure");
+            if ($this->configure->files_save($settings))
+                echo draw_msg("update_success", SUCCESS, $close = true, $autoClose = 10);
+        }
         
         /* Module */
 
