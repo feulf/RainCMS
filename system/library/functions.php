@@ -526,10 +526,9 @@
     * @param string $thumb_prefix Prefisso della thumbnail
     * @param int $max_width
     * @param int $max_height
-    * @param bool $square
     * @return string Nome del file generato
     */
-    function upload_image($file, $thumb_prefix = null, $max_width = 128, $max_height = 128, $square = false) {
+    function upload_image($file, $thumb_prefix = null, $w = 128, $h = 128) {
         if ($file_info = upload_file($file)) {
 
             $filename = $file_info["filename"];
@@ -541,7 +540,7 @@
             $thumbnail_filepath = $file_info["thumbnail_filepath"] = $upload_path . $thumbnail_filename;
 
             //try to create the thumbnail
-            if ($thumb_prefix && !image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $thumbnail_filepath, $max_width, $max_height, $square)) {
+            if ($thumb_prefix && !image_resize(UPLOADS_DIR . $filepath, UPLOADS_DIR . $thumbnail_filepath, $w, $h)) {
                 unlink(UPLOADS_DIR . $filename);
                 return false;
             }
@@ -559,7 +558,7 @@
     /**
     * Create thumb from image
     */
-    function image_resize($source, $dest, $maxx = 100, $maxy = 100, $square = false, $quality = 90) {
+    function image_resize($source, $dest, $maxx = 100, $maxy = 100, $quality = 90) {
 
         // increase the memory limit for resizing the image
         if ($memory_limit = get_setting('memory_limit')) {
@@ -579,36 +578,26 @@
         }
 
         list($width, $height) = getimagesize($source);
-        if ($square) {
-            $new_width = $new_height = $maxx;
-            if ($width > $height) {
-                $x = ceil(( $width - $height ) / 2);
-                $width = $height;
-            } else {
-                $y = ceil(( $height - $width ) / 2);
-                $height = $width;
+        if ($maxx != 0 && $maxy != 0) {
+            if ($maxx < $width or $maxy < $height) {
+                $percent1 = $width / $maxx;
+                $percent2 = $height / $maxy;
+                $percent = max($percent1, $percent2);
+                $new_height = round($height / $percent);
+                $new_width = round($width / $percent);
+            }
+        } elseif ($maxx == 0 && $maxy != 0) {
+            if ($height > $maxy) {
+                $new_height = $maxy;
+                $new_width = $width * ( $maxy / $height );
             }
         } else {
-            if ($maxx != 0 && $maxy != 0) {
-                if ($maxx < $width or $maxy < $height) {
-                    $percent1 = $width / $maxx;
-                    $percent2 = $height / $maxy;
-                    $percent = max($percent1, $percent2);
-                    $new_height = round($height / $percent);
-                    $new_width = round($width / $percent);
-                }
-            } elseif ($maxx == 0 && $maxy != 0) {
-                if ($height > $maxy) {
-                    $new_height = $maxy;
-                    $new_width = $width * ( $maxy / $height );
-                }
-            } else {
-                if ($width > $maxx) {
-                    $new_width = $maxx;
-                    $new_height = $height * ( $maxx / $width );
-                }
+            if ($width > $maxx) {
+                $new_width = $maxx;
+                $new_height = $height * ( $maxx / $width );
             }
         }
+
 
         if (!isset($new_width) or !$new_width)
             $new_width = $width;

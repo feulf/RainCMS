@@ -653,13 +653,11 @@
 
                 $w = isset($p['w']) ? $p['w'] : null;    // image width
                 $h = isset($p['h']) ? $p['h'] : null;    // image height
-                $s = isset($p['s']) ? $p['s'] : false;   // image is square
 
                 
                 //cover thumb
                 $tw = isset($p['tw']) ? $p['tw'] : 256;
                 $th = isset($p['th']) ? $p['th'] : 200;
-                $ts = isset($p['ts']) ? $p['ts'] : false;
 
                 if ($file_info = upload_image('cover', THUMB_PREFIX, $tw, $th, $ts)) {
                     
