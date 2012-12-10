@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 02, 2012 at 04:59 PM
+-- Generation Time: Dec 10, 2012 at 05:37 PM
 -- Server version: 5.5.25
 -- PHP Version: 5.4.4
 
@@ -166,7 +166,7 @@ INSERT INTO `content` (`content_id`, `lang_id`, `type_id`, `layout_id`, `menu_id
 (2, 'en', 2, 3, 2, '', 'Home', '', '', '<p>123<img><img><img>4<img></p><div class="preview"><img></div>', '', 1353897123, '', 0, 1, 0, 1353897123, 2, 0.7, '', '', '', '', '', '', '', ''),
 (3, 'en', 1, 0, 0, '', 'Content Right', '', '', 'Hey this is another content', '', 0, '', 0, 1, 0, 0, 0, 0.0, '', '', '', '', '', '', '', ''),
 (38, 'en', 1, 0, 0, '', 'test', '', '', '123', '', 0, '', 0, 1, 0, 0, 0, 0.0, '', '', '', '', '', '', '', ''),
-(39, 'en', 21, 1, 0, 'Blog/2012/12/02/Change-blog-title2/', 'Change blog title2', '', '', '<p>test test test</p>', '', 1354463091, '', 0, 1, 0, 1354463091, 2, 0.7, '', '', '', '', '', '', '', ''),
+(39, 'en', 21, 1, 0, 'Blog/2012/12/02/Change-blog-title2/', 'Change blog title2', '', '', '<p>test test test</p>', '', 1354463091, '', 0, 1, 0, 1354837317, 2, 0.7, '', '', '', '', '', '', '', ''),
 (37, 'en', 1, 0, 0, '', 'TEST', '', '', '123', '', 0, '', 0, 1, 0, 0, 0, 0.0, '', '', '', '', '', '', '', ''),
 (34, 'en', 1, 0, 0, '', 'test', '', '', '123', '', 0, '', 0, 1, 0, 0, 0, 0.0, '', '', '', '', '', '', '', ''),
 (35, 'en', 1, 0, 0, '', '123', '', '', 'abc', '', 0, '', 0, 1, 0, 0, 0, 0.0, '', '', '', '', '', '', '', ''),
@@ -397,6 +397,32 @@ INSERT INTO `content_type_field` (`type_id`, `name`, `note`, `field_type`, `vali
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `content_type_setting`
+--
+
+CREATE TABLE `content_type_setting` (
+  `type_id` smallint(6) NOT NULL DEFAULT '0',
+  `name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `note` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `field_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `validation` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `command` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `param` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `layout` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `position` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`type_id`,`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `content_type_setting`
+--
+
+INSERT INTO `content_type_setting` (`type_id`, `name`, `note`, `field_type`, `validation`, `command`, `param`, `layout`, `position`) VALUES
+(10, 'news_per_page', 'number of news per page', 'text', 'numeric,minvalue=1', '', '', '', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `content_type_tree`
 --
 
@@ -443,7 +469,7 @@ CREATE TABLE `file` (
   `last_edit_time` int(11) NOT NULL,
   `read_access` tinyint(1) NOT NULL,
   PRIMARY KEY (`file_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=16 ;
 
 --
 -- Dumping data for table `file`
@@ -454,10 +480,9 @@ INSERT INTO `file` (`file_id`, `name`, `filepath`, `ext`, `thumb`, `subtitle`, `
 (2, 'stock-photo-11655246-sewing-hands.png', 'raincms.com/12/09/1e52b6e0554094a1b66152bed9e15f31.png', 'png', 'raincms.com/12/09/t_1e52b6e0554094a1b66152bed9e15f31.png', '', '', 1, '510', '347', 263619, 1348286143, 0),
 (3, 'newyork.png', 'raincms.com/12/09/5f6a4b96ef677bdaba2adbb1d5122c4b.png', 'png', 'raincms.com/12/09/t_5f6a4b96ef677bdaba2adbb1d5122c4b.png', '', '', 1, '1000', '666', 1014433, 1348323819, 0),
 (4, 'newyork.png', 'raincms.com/12/09/f5125a0e8f523ed8129e43455f3596de.png', 'png', 'raincms.com/12/09/t_f5125a0e8f523ed8129e43455f3596de.png', '', '', 1, '1000', '666', 1014433, 1348323842, 0),
-(5, 'IMG_0590.JPG', 'raincms.com/12/09/d4107fba754873d45084e49989c7f825.jpg', 'jpg', 'raincms.com/12/09/t_d4107fba754873d45084e49989c7f825.jpg', '', '', 1, '640', '480', 68618, 1348323929, 0),
+(15, '0013729c00250bb7b76907.jpeg', 'raincms.com/12/12/bf5c1f9062cdef5c5adf2bba963f1e09.jpeg', 'jpeg', 'raincms.com/12/12/t_bf5c1f9062cdef5c5adf2bba963f1e09.jpeg', '', '', 1, '599', '427', 80027, 1354837317, 0),
 (6, 'IMG_1058.JPG', 'raincms.com/12/09/4dfba1debbfdf735ce2b56d881fb4960.jpg', 'jpg', 'raincms.com/12/09/t_4dfba1debbfdf735ce2b56d881fb4960.jpg', '', '', 1, '600', '800', 134383, 1348323943, 0),
 (7, 'IMG_0825.JPG', 'raincms.com/12/09/9a5bf28783ce6d519287d4c47a6bc5ad.jpg', 'jpg', 'raincms.com/12/09/t_9a5bf28783ce6d519287d4c47a6bc5ad.jpg', '', '', 1, '597', '800', 70255, 1348329131, 0),
-(8, 'IMG_0638.JPG', 'raincms.com/12/09/90e9c1aac2ca444e25f053a2518f56f6.jpg', 'jpg', 'raincms.com/12/09/t_90e9c1aac2ca444e25f053a2518f56f6.jpg', '', '', 1, '640', '480', 81712, 1348329767, 0),
 (9, 'IMG_0503.JPG', 'raincms.com/12/09/e0637c8715c4d4f14bb937a2f837f76d.jpg', 'jpg', 'raincms.com/12/09/t_e0637c8715c4d4f14bb937a2f837f76d.jpg', '', '', 1, '640', '480', 73165, 1348329940, 0),
 (10, 'IMG_0590.JPG', 'raincms.com/12/09/d65dac1962ea933ea718fa453ad22ed1.jpg', 'jpg', 'raincms.com/12/09/t_d65dac1962ea933ea718fa453ad22ed1.jpg', '', '', 1, '640', '480', 68618, 1348329948, 0),
 (11, 'IMG_1213.JPG', 'raincms.com/12/09/9a568d5d7dbeb1486ffe653c893aef10.jpg', 'jpg', 'raincms.com/12/09/t_9a568d5d7dbeb1486ffe653c893aef10.jpg', '', '', 1, '600', '800', 144283, 1348330025, 0),
@@ -494,7 +519,8 @@ INSERT INTO `file_rel` (`file_id`, `rel_id`, `module`, `rel_type`, `position`) V
 (0, 2, '', 1, 0),
 (12, 30, '', 0, 0),
 (0, 39, '', 1, 0),
-(13, 39, '', 2, 0);
+(15, 39, '', 0, 0),
+(9, 39, '', 2, 0);
 
 -- --------------------------------------------------------
 
@@ -637,19 +663,19 @@ INSERT INTO `setting` (`setting`, `value`, `description`, `const`) VALUES
 ('time_format', '%d/%m/%Y %H:%M', 'Default time format', 0),
 ('timezone', 'America/New_York', 'Default timezone', 0),
 ('lang_id_admin', 'en', 'Default control panel language', 0),
-('email_admin', 'rainelemental@gmail.com', 'Admin email', 0),
+('email_admin', 'hi@raintm.com', 'Admin email', 0),
 ('website_url', 'http://localhost/buongiornonewyork/pro/', 'Website URL', 1),
 ('published', '1', 'Website published', 0),
 ('not_published_msg', '', 'Website under construction phrase (if not published)', 0),
 ('user_register', '1', 'User can register', 0),
-('email_noreply', 'noreply@poisonfx.com', 'Website noreply email', 0),
+('email_noreply', 'noreply@raincms.com', 'Website noreply email', 0),
 ('registration_confirm', '1', '0 => no registration confirm necessary, 1=>admin confirm user registration, 2=>confirm by email', 0),
 ('website_tel', '0', 'Website phone', 0),
 ('website_address', 'x', 'Website address', 0),
 ('theme_user', '1', 'user can change theme', 0),
-('space_used', '33455048', 'Space used by files', 0),
-('google_login', 'rainelemental', 'Google account login', 0),
-('google_password', 'password-here', 'Google password account', 0),
+('space_used', '33384745', 'Space used by files', 0),
+('google_login', 'raincms', 'Google account login', 0),
+('google_password', 'ilovegold81', 'Google password account', 0),
 ('website_domain', 'raincms.com', 'Website domain (necessary for Google Analytics)', 1),
 ('space_tot', '52428800', 'Total available space', 0),
 ('google_analytics', '1', 'Google Analytics enabled (1/0)', 0),
@@ -669,12 +695,10 @@ INSERT INTO `setting` (`setting`, `value`, `description`, `const`) VALUES
 ('video_ext', '', '', 0),
 ('document_ext', 'doc,docx,pdf,xls,csv,xlsx,txt,ttf,rtf', '', 0),
 ('archive_ext', 'zip,rar,gzip', '', 0),
-('thumbnail_default_width', '100', '', 0),
-('thumbnail_default_height', '100', '', 0),
-('thumbnail_default_is_square', '1', '', 0),
-('thumbnail_default_quality', '90', '', 0),
-('admin_max_file_size_upload', '10485760', 'max filesize upload for admin panel (5mb)', 0),
-('max_file_size_upload', '307200', '', 0);
+('image_sizes', '800x600', 'allowed sizes for images', 0),
+('image_quality', '90', 'quality of the image', 0),
+('max_file_size_upload', '307200', '', 0),
+('thumbnail_size', '180x150', 'size to create thumbnail when upload', 0);
 
 -- --------------------------------------------------------
 
@@ -749,7 +773,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `name`, `email`, `password`, `salt`, `activation_code`, `lang_id`, `sex`, `birth_date`, `firstname`, `lastname`, `company`, `address`, `zip`, `city`, `prov`, `country`, `state`, `tel`, `mobile`, `fax`, `web`, `web2`, `status`, `is_registered`, `data_reg`, `data_login`, `last_ip`, `mailing_list`, `note`) VALUES
-(1, 'demo', 'demo@demo.com', 'daccc1736e11022cff3aff7a9d3e62dc', '94415', '', '', NULL, NULL, 'demo', 'demo', '', '', NULL, '', '', '', '', '', '', '', '', '', 3, 1, 0, 1354412200, '127.0.0.1', 0, '');
+(1, 'demo', 'demo@demo.com', '61a66f7f0fec61836722d726c6dcafb1', '79816', '', '', NULL, NULL, 'demo', 'demo', '', '', NULL, '', '', '', '', '', '', '', '', '', 3, 1, 0, 1355099107, '', 0, '');
 
 -- --------------------------------------------------------
 
@@ -765,14 +789,6 @@ CREATE TABLE `usergroup` (
   `nuser` int(11) NOT NULL,
   PRIMARY KEY (`group_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
-
---
--- Dumping data for table `usergroup`
---
-
-INSERT INTO `usergroup` (`group_id`, `parent_id`, `name`, `position`, `nuser`) VALUES
-(1, 0, 'gruppo', 0, 0),
-(2, 0, 'New Group', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -826,10 +842,3 @@ CREATE TABLE `user_localization` (
   `gmt_offset` int(11) NOT NULL,
   PRIMARY KEY (`user_localization_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=254 ;
-
---
--- Dumping data for table `user_localization`
---
-
-INSERT INTO `user_localization` (`user_localization_id`, `sid`, `user_id`, `guest_id`, `name`, `ip`, `file`, `url`, `content_id`, `time`, `os`, `browser`, `time_first_click`, `country_code`, `country_name`, `region_code`, `region_name`, `city_name`, `zip`, `latitude`, `longitude`, `timezone_name`, `gmt_offset`) VALUES
-(253, '873780a1d98e75ec284bf41e8beb7115', 1, 0, 'demo', '127.0.0.1', 'edit.php', '/RainCMS/Blog/2012/12/02/Change-blog-title2/', 39, 1354463095, 'Macintosh', 'e 3', 1354412201, '', '', '', '', '', 0, 0, 0, '', 0);
