@@ -196,6 +196,8 @@
 
         protected function _themes() {
 
+            $this->_load_themes();
+            
             Layout::addJavascript("theme_sortable();", $onload = true);
 
             $theme_list = db::get_all("SELECT * FROM " . DB_PREFIX . "theme ORDER BY date DESC");
@@ -326,6 +328,29 @@
             return $view->draw("conf/content_type", $to_string = true);
         }
 
+        
+        /* themes */
+        protected function _load_themes() {
+
+            DB::query("DELETE FROM " . DB_PREFIX . "theme");
+            if ($theme_list = dir_list(THEMES_DIR)) {
+
+                foreach ($theme_list as $theme) {
+
+                    if ($xml = simplexml_load_file(THEMES_DIR . $theme . "/info.xml")) {
+                        $name = $xml->name;
+                        $description = $xml->description;
+                        $tags = $xml->tags;
+                        $colors = $xml->color;
+                        $author = $xml->author;
+                        $author_email = $xml->author_email;
+                        $author_website = $xml->author_website;
+
+                        DB::insert(DB_PREFIX . "theme", array("theme_id" => $theme, "theme" => $name, "description" => $description, "tags" => $tags, "colors" => $colors, "directory" => $theme, "author" => $author, "author_email" => $author_email, "author_website" => $author_website));
+                    }
+                }
+            }
+        }
     }
 
     // -- end
