@@ -15,13 +15,13 @@ var RainInstaller = {
     },
     
     download:function(classes){
-        var module = RainInstaller.get_selected_module(classes)
+        var module = RainInstaller.get_selected_module(classes);
         $.get( ajax_file + "configure/module_download/"+module, function( html ){
             location.reload(true);
         });
     },
     activate:function(classes){
-        var module = RainInstaller.get_selected_module(classes)
+        var module = RainInstaller.get_selected_module(classes);
         $.get( ajax_file + "configure/module_activate/"+module, function( html ){
             location.reload(true);
         });
@@ -33,10 +33,12 @@ var RainInstaller = {
         });
     },
     remove:function(classes){
-        var module = RainInstaller.get_selected_module(classes);
-        $.get( ajax_file + "configure/module_remove/"+module, function( html ){
-            location.reload(true);
-        });
+        if( confirm("Do you want to delete this module?") ){
+            var module = RainInstaller.get_selected_module(classes);
+            $.get( ajax_file + "configure/module_remove/"+module, function( html ){
+                location.reload(true);
+            });
+        }
     },
     get_selected_module: function(classes){
         var preg = /[^\w]module_(.*)/;

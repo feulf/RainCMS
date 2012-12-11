@@ -48,10 +48,9 @@
 
         function module_install( $module ) {
 
-
             // check if the module is already installed
-    //        if (Content::get_module($module))
-    //            return true;
+            if (Content::get_module($module))
+                return true;
 
             // read the manifest
             $manifest_filepath = MODULES_DIR . $module . "/install/manifest.json";
@@ -70,6 +69,10 @@
 
             // install the templates for this module
             $this->_install_templates($module);
+            
+            // Add module
+            DB::query("INSERT INTO " . DB_PREFIX . "module (module,published) VALUES (LOWER(?),0)", array($module) );
+
         }
 
         protected function _install_type($module) {
@@ -151,10 +154,13 @@
         }
 
         function module_activate($module) {
-            if( Content::get_module($module) )
-                DB::query("UPDATE " . DB_PREFIX . "module SET published=1 WHERE LOWER(module)=LOWER(?)", array($module));
-            else
-                DB::query("INSERT INTO " . DB_PREFIX . "module (module,published) VALUES (LOWER(?),1)", array($module));
+            $module_row = Content::get_module($module);
+            if( empty($module_row) ){
+                $this->module_install($module);
+            }
+            else{
+                DB::query("UPDATE " . DB_PREFIX . "module SET published=1 WHERE LOWER(module)=LOWER(?)", array($module) );
+            }
         }
 
         function module_download($module) {
