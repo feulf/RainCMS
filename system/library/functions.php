@@ -481,7 +481,8 @@
             copy($source, $dest);
             chmod($dest, fileperms($source));
         } else {
-            mkdir($dest, 0777);
+            if( !is_dir($dest) )
+                mkdir($dest, 0777);
             if ($l = dir_scan($source)) {
                 foreach ($l as $f)
                     dir_copy("$source/$f", "$dest/$f");
