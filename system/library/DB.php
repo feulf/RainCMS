@@ -17,6 +17,8 @@
                 $statement, // the PDO object variable
                 $nquery = 0,
                 $link,
+                $last_link,
+                $link_list = array(),
                 $config_dir = CONFIG_DIR,
                 $config_file = "db.php",
                 $last_query;
@@ -26,8 +28,8 @@
         * @param string $name identify which access information to load
         * 
         */
-        static function init() {
-            
+        static function init( $name = null ) {
+
             // load the variables
             require_once self::$config_dir . self::$config_file;
 
@@ -35,9 +37,8 @@
                 self::$db = $db;
             }
 
-
             // db account info
-            $name = DEFAULT_CONNECTION_NAME;
+            $name = $name ? $name : DEFAULT_CONNECTION_NAME;
             $driver = self::$db[$name]['driver'];
             $hostname = self::$db[$name]['hostname'];
             $database = self::$db[$name]['database'];
@@ -79,12 +80,26 @@
         * Select another database
         * @param type $name
         */
-        public function select_database($name) {
+        static function select_database($name) {
 
-            if (empty(self::$db[$name]))
+            // select the last link to PDO
+            self::$last_link = self::$link;
+
+            if (isset(self::$db[$name])){
                 self::init($name);
-
-            self::$link = &self::$db[$name]['link'];
+            }
+            
+            self::$link = self::$link_list[$name];
+            
+        }
+        
+        
+        /**
+        * Select the previous database
+        * @param type $name
+        */
+        static function select_prev_database() {
+            self::$link = self::$last_link;
         }
 
         /**
@@ -281,7 +296,7 @@
             try {
                 self::$link = new PDO($string, $username, $password);
                 self::$link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
-                self::$db[$name]['link'] = self::$link;
+                self::$link_list[$name] = self::$link;  
             } catch (PDOException $e) {
                 die("Error!: " . $e->getMessage() . "<br/>");
             }
