@@ -339,8 +339,10 @@
         }
 
         protected function _draw_ajax($html = null) {
-            echo Layout::getStyle();
-            echo Layout::getJavascript();
+            if($this->load_style)
+                echo Layout::getStyle();
+            if($this->load_javascript)
+                echo Layout::getJavascript();
             echo $html;
             die;
         }
