@@ -29,9 +29,9 @@
             $html .= '<div id="site_tree" class="tree">' . "\n";
             $html .= '    <a href="' . ADMIN_FILE_URL . 'Content/content_list/0/"><img src="' . ADMIN_VIEWS_IMAGES_URL . 'tree/content.gif" title="' . get_msg("content_button_content_list") . '" class="tooltip" alt="-" /></a> <a href="' . ADMIN_FILE_URL . 'Content/" title="' . get_msg("content_button_content_list") . '" class="tooltip' . ($sel_id == 0 ? ' selected' : null) . '">' . get_msg("content_root") . '</a>' . "\n";
 
-            $html .= '    <ol id="tree_0">' . "\n";
+            $html .= '    <ul id="tree_0">' . "\n";
             $html .= $this->_draw_site_tree($sel_id) . "\n";
-            $html .= '    </ol>' . "\n";
+            $html .= '    </ul>' . "\n";
             $html .= '</div>' . "\n";
             $html .= '<!-- /Content Tree -->' . "\n";
             return $html;
@@ -94,12 +94,12 @@
                     $html .= $title . '</a>' . $icon;
                     $html .= $tab . "            </div>" . "\n";
                     // xhtml 1 validation require to have at least one <li>
-                    $html .= $tab . "            <ol id=\"tree_{$content_id}\" class=\"normal\">";
+                    $html .= $tab . "            <ul id=\"tree_{$content_id}\" class=\"normal\">";
                     if ($showChild)
                         $html .= $this->_draw_site_tree($sel_id, $tab .= "\t", $content_id, $orderBy);
                     else
                         $html .= "<li style=\"display:none;\"></li>";
-                    $html .= $tab . "</ol>" . "\n";
+                    $html .= $tab . "</ul>" . "\n";
                     $html .= $tab . "        </li>" . "\n";
                 }
             }
