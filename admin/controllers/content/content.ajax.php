@@ -52,6 +52,10 @@
             if (!$type = Content::get_content_type($type_id))
                 return drawMsg('content type uknown', WARNING, $close = true);
 
+            // If the content is unique, it can't create a new content
+            if( $type['unique'] && Content::get_content_by_type($type_id) )
+                return drawMsg('content type uknown', WARNING, $close = true);
+            
             // CONTENT TEMPLATE
             $template_index = THEMES_DIR . get_setting('theme') . "/" . ( $type['template_index'] ? $type['template_index'] : null );
             $template_list_temp = glob($template_index . "*");
@@ -386,32 +390,35 @@
 
                 $path = $content['path_type'];
 
-                preg_match_all("/\{(.*?)\}/", $path, $match);
-                $key = $match[0];
-                $value = $match[1];
-                for ($i = 0; $i < count($value); $i++) {
-                    switch ($value[$i]) {
-                        case 'title': $v = $content['title'];
-                            break;
-                        case 'content_id': $v = $content_id;
-                            break;
-                        case 'content_id':$v = $content['content_id'];
-                            break;
-                        case 'y': $v = date("Y", $content['date']);
-                            break;
-                        case 'm': $v = date("m", $content['date']);
-                            break;
-                        case 'd': $v = date("d", $content['date']);
-                            break;
-                        default:
-                            trigger_error("<b>Path type wrong: value {$value[$i]} not recognized! Value allowed: {title}, {id}, {content_id}, {y}, {m}, {d}</b>", E_USER_ERROR);
-                            exit;
+                if( $path ){
+                    preg_match_all("/\{(.*?)\}/", $path, $match);
+                    $key = $match[0];
+                    $value = $match[1];
+                    for ($i = 0; $i < count($value); $i++) {
+                        switch ($value[$i]) {
+                            case 'title': $v = $content['title'];
+                                break;
+                            case 'content_id': $v = $content_id;
+                                break;
+                            case 'content_id':$v = $content['content_id'];
+                                break;
+                            case 'y': $v = date("Y", $content['date']);
+                                break;
+                            case 'm': $v = date("m", $content['date']);
+                                break;
+                            case 'd': $v = date("d", $content['date']);
+                                break;
+                            default:
+                                trigger_error("<b>Path type wrong: value {$value[$i]} not recognized! Value allowed: {title}, {id}, {content_id}, {y}, {m}, {d}</b>", E_USER_ERROR);
+                                exit;
+                        }
+                        $special_chars = array('$', '&', '+', ',', '/', ':', ';', '=', '?', '@', '<', '>', '#', '%', '{', '}', '|', '\\', '^', '~', ']', '[', '`');
+                        $v = str_replace($special_chars, '_', trim($v));
+                        $v = str_replace(" ", "-", $v);
+                        $v = str_replace('"', " ", $v);
+                        $path = str_replace($key[$i], $v, $path);
                     }
-                    $special_chars = array('$', '&', '+', ',', '/', ':', ';', '=', '?', '@', '<', '>', '#', '%', '{', '}', '|', '\\', '^', '~', ']', '[', '`');
-                    $v = str_replace($special_chars, '_', trim($v));
-                    $v = str_replace(" ", "-", $v);
-                    $v = str_replace('"', " ", $v);
-                    $path = str_replace($key[$i], $v, $path);
+
                 }
                 if (db::get_row("SELECT * FROM " . DB_PREFIX . "content WHERE path=? AND content_id!=?", array($path, $content_id)))
                     $path .= "-" . $content_id;
