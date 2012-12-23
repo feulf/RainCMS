@@ -6,27 +6,24 @@
 		<div id="upload_button" class="upload_button"><button class="button_upload">{"content_button_upload"|get_msg}</button></div>
 		<div id="upload_list"></div>
 	</div>
-	<div class="text_light">{"drag_drop"|get_msg}</div>
-
 	<ul class="thumbnail_list" id="sortable_file">
-		<li style="display:none"></li>
 		{loop="file_list"}
 		<li class="thumbnail fix_160" id="f_{$value.file_id}">
 			{if="is_file( UPLOADS_DIR . $value.thumb )"}
-				<div class="thumb_tools thumb_tools_{$value.file_id}">
-	                <a href="{#UPLOADS_URL#}{$value.filepath}#" rel="lightbox" title="{$value.name}"><img src="../aimg/preview.gif" alt="preview" class="tooltip" title="{"content_button_file_preview_caption"|get_msg}"/></a>
-	                <a href="javascript:file_edit('{$content_id}','{$value.file_id}')"><img src="../aimg/edit.gif" alt="edit" class="tooltip" title="{"content_button_file_edit_caption"|get_msg}"/></a>
-	                <a href="javascript:file_delete('{$value.file_id}')"><img src="../aimg/del.gif" alt="del" class="tooltip" title="{"content_button_file_delete_caption"|get_msg}"/></a>
-	                <a href="javascript:set_cover('{$value.file_id}')"><img src="../aimg/clicked.gif" alt="del" class="tooltip" title="{"content_button_file_delete_caption"|get_msg}"/></a>
-	            </div>
-				<img id="img_{$value.file_id}" src="{#UPLOADS_URL#}{$value.thumb}#" alt="" class="thumb thumb_image tooltip drag {if="$value.file_id==$file_id"}selected{/if}" title="{$value.name} - {$value.width}x{$value.height}<br>{$value.size|byte_format}"/>
+			<div class="thumb_tools thumb_tools_{$value.file_id}">
+                            <a href="{#UPLOADS_URL#}{$value.filepath}#" rel="lightbox" title="{$value.name}"><img src="../aimg/preview.gif" alt="preview" class="tooltip" title="{"content_button_file_preview_caption"|get_msg}"/></a>
+                            <a href="javascript:file_edit('{$content_id}','{$value.file_id}')"><img src="../aimg/edit.gif" alt="edit" class="tooltip" title="{"content_button_file_edit_caption"|get_msg}"/></a>
+                            <a href="javascript:file_delete('{$value.file_id}')"><img src="../aimg/del.gif" alt="del" class="tooltip" title="{"content_button_file_delete_caption"|get_msg}"/></a>
+                            <a href="javascript:set_cover('{$value.file_id}')"><img src="../aimg/clicked.gif" alt="del" class="tooltip" title="{"content_button_file_delete_caption"|get_msg}"/></a>
+                        </div>
+                        <img id="img_{$value.file_id}" src="{#UPLOADS_URL#}{$value.thumb}#" alt="" class="thumb thumb_image tooltip {if="$value.file_id==$file_id"}selected{/if}" title="{$value.name} - {$value.width}x{$value.height}<br>{$value.size|byte_format}"/>
 			{else}
 			<div class="thumb_tools thumb_tools_{$value.file_id}">
-                <a href="download.php?file_id={$value.file_id}" title="{$value.name}"><img src="../aimg/preview.gif" alt="preview" class="tooltip" title="{"content_button_file_preview_caption"|get_msg}"/></a>
-                <a href="javascript:file_edit('{$value.file_id}')"><img src="../aimg/edit.gif" alt="edit" class="tooltip" title="{"content_button_file_edit_caption"|get_msg}"/></a>
-                <a href="javascript:file_delete('{$value.file_id}')"><img src="../aimg/del.gif" alt="del" class="tooltip" title="{"content_button_file_delete_caption"|get_msg}"/></a>
-            </div>
-			<img id="img_{$value.file_id}" src="{#VIEWS_DIR#}aimg/file/{$value.filepath|file_ext}.png#" alt=""  class="thumb thumb_icon tooltip drag {if="$value.file_id==$file_id"}selected{/if}" title="{$value.name} - {"file_size"|get_msg}: {$value.size|byte_format}"/>
+                            <a href="download.php?file_id={$value.file_id}" title="{$value.name}"><img src="../aimg/preview.gif" alt="preview" class="tooltip" title="{"content_button_file_preview_caption"|get_msg}"/></a>
+                            <a href="javascript:file_edit('{$value.file_id}')"><img src="../aimg/edit.gif" alt="edit" class="tooltip" title="{"content_button_file_edit_caption"|get_msg}"/></a>
+                            <a href="javascript:file_delete('{$value.file_id}')"><img src="../aimg/del.gif" alt="del" class="tooltip" title="{"content_button_file_delete_caption"|get_msg}"/></a>
+                        </div>
+			<img id="img_{$value.file_id}" src="{#VIEWS_DIR#}aimg/file/{$value.filepath|file_ext}.png#" alt=""  class="thumb thumb_icon tooltip {if="$value.file_id==$file_id"}selected{/if}" title="{$value.name} - {"file_size"|get_msg}: {$value.size|byte_format}"/>
 			{/if}
             <div class="thumb_title" id="thumb_name_{$value.file_id}">{$value.name|cut:15}</div>
 		</li>

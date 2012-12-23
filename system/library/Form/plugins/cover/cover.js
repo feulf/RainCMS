@@ -22,15 +22,24 @@ function cover_choose(content_id){
         html += '<div class="bg"></div>'
         html += '</div>'
         $('body').css('overflow','hidden').append( html );
+        
+        $(window).resize(function(){
+            resize_popup();
+        })
+        $.get( admin_file + 'file/file_list/', {content_id:content_id}, function(result){
+                $('#popup .content_inside').hide().html(result).fadeIn();
+                resize_popup();
+        });
     }
     $('#popup').fadeIn("fast");
-    $.get( admin_file + 'file/file_list/', {content_id:content_id}, function(result){
-            $('#popup .content_inside').hide().html(result).fadeIn();
-    });
 }
 
 function cover_popup_close(){
     $('#popup').fadeOut('fast');
     $('body').css('overflow','auto');
     
+}
+
+function resize_popup(){
+    $('#popup .content_inside').css("height", ( $(window).height() - 100) );
 }

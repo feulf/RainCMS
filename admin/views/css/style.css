@@ -75,14 +75,10 @@ a:hover{color:#FF3A00;text-decoration:underline;}
 /* File */
 #upload_list{display:none;margin-top:10px;border:1px solid #ccc;background:#fff;padding:10px;}
 .thumbnail_list{margin:0px;padding:0px;}
-.thumbnail_list li{float:left;list-style:none;margin:10px 10px 0 0;height:160px;}
-.thumbnail_list img.selected{padding:5px;border:1px solid #ff9900;background:#ffeeaa;}
-.thumbnail_list .thumb_image{padding:5px;border:1px solid #cccccc;background:#fff;}
-.thumbnail_list .is_cover{background:#efe;}
-.thumbnail_list .thumb_image:hover{padding:5px;border:1px solid #000066;background:#336699;}
+.thumbnail_list .thumbnail{float:left;list-style:none;margin:15px 15px 0 0;height:160px;position:relative;}
+.thumbnail_list .thumb_tools {position: absolute;background: white;padding: 5px;display: none;}
+.thumbnail_list .thumbnail:hover .thumb_tools {display:block;}
 .thumbnail_list .thumb_icon{padding:5px;border:1px solid #cccccc;background:#fff;}
-.thumbnail_list .thumb_icon:hover{background-color:#336699;padding:5px;border:1px solid #000066;}
-
 
 /* other */
 .stat{padding:10px;font-size:14px;color:#336699;font-weight:bold;}
@@ -122,5 +118,5 @@ a:hover{color:#FF3A00;text-decoration:underline;}
 /* Popup */
 #popup{position:fixed;top:0px;left:0px;z-index:100;width:100%;height:100%;display:none;}
 #popup .content{position:absolute;z-index:100;background:#fff; padding:20px; margin:20px; }
-#popup .content_inside{overflow:auto;float:left;clear:both}
+#popup .content_inside{overflow:auto;float:left;clear:both;height:600px;}
 #popup .bg{position:absolute;top:0px;left:0px;width:100%;height: 100%;background:#000;opacity:0.5;filter:alpha(opacity=50);text-align:left;}
