@@ -53,10 +53,10 @@
             
                 if( !$('#edit_file').html() ){
                     var html =  '<div id="edit_file">'
-                    html += '<div class="content"><button style="float:right" onclick="$(\'#edit_file\').fadeOut(\'fast\');">Close</button><div class="content_inside">Loading</div></div>'
+                    html += '<div class="content"><button style="float:right" onclick="file_edit_close();">Close</button><div class="content_inside">Loading</div></div>'
                     html += '<div class="bg"></div>'
                     html += '</div>'
-                    $('body').append( html );
+                    $('body').append( html ).css("overflow","hidden");
                 }
                 $('#edit_file').fadeIn("fast");
 
@@ -69,6 +69,7 @@
 	
 	function file_edit_close(){
 		$('#edit_file').fadeOut("slow", function(){$('#edit_file').remove()});
+                $('body').css("overflow","auto");
 	}
 
 	// file upload
