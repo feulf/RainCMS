@@ -14,18 +14,18 @@
             $app_download = "http://localhost/RainInstaller/download.php",
             $app_list_url = "http://localhost/RainInstaller/module_list.php";
 
-        function index($selection = "info", $type_id = null) {
-
+        function index($selection = "info", $action = null) {
+            
             $html_info = $html_settings = $html_content_types = $html_languages = $html_modules = $html_themes = $html_layout = $html_files = null;
 
             switch ($selection) {
                 case 'files': $html_files = $this->_files();
                     break;
-                case 'content_types': $html_content_types = $this->_content_types($type_id);
+                case 'content_types': $html_content_types = $this->_content_types($action);
                     break;
                 case 'languages': $html_languages = $this->_languages();
                     break;
-                case 'modules': $html_modules = $this->_modules();
+                case 'modules': $html_modules = $this->_modules( $action );
                     break;
                 case 'pages': $html_layout = $this->_layout();
                     break;
@@ -73,8 +73,8 @@
             $this->index('languages');
         }
 
-        function modules() {
-            $this->index('modules');
+        function modules( $action = null ) {
+            $this->index('modules', $action);
         }
 
         function pages() {
@@ -208,16 +208,15 @@
             return $view->draw("conf/themes.list", $to_string = true);
         }
 
-        protected function _modules() {
-
+        protected function _modules( $action ) {
 
             // installed modules
             $installed_modules = Content::get_module_list();
 
             // available modules
             $available_modules = dir_list( MODULES_DIR );
+            
             $modules_list = array();
-
             foreach( $available_modules as $module_dir ){
                 if( file_exists( $file_manifest = MODULES_DIR . $module_dir . "/install/manifest.json" ) ){
                     $manifest_json = file_get_contents( $file_manifest );
@@ -228,12 +227,31 @@
                 }
             }
 
-            $download_list = json_decode( file_get_contents( $this->app_list_url ), $assoc = true );
 
-            $view = new View;
-            $view->assign("module_list", $modules_list);
-            $view->assign("download_list", $download_list );
-            return $view->draw("conf/modules.list", $to_string = true);
+            // Rain App Store List
+            if( $action == "addModule" ){
+                
+                $download_list = json_decode( file_get_contents( $this->app_list_url ), $assoc = true );
+                foreach( $download_list as $i => $module_row ){
+                    $module = $module_row['module'];
+                    $download_list[$i]['downloaded'] = in_array( $module, $available_modules );
+                    $download_list[$i]['installed'] = isset($installed_modules[$module]) && $installed_modules[$module]["published"] == 1 ? true : false;
+                }
+                
+                
+                $view = new View;
+                $view->assign("download_list", $download_list );
+                return $view->draw("conf/modules-download.list", $to_string = true );
+
+            }
+            
+            // available modules
+            else{
+
+                $view = new View;
+                $view->assign("module_list", $modules_list);
+                return $view->draw("conf/modules.list", $to_string = true);
+            }
 
         }
 

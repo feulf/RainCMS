@@ -1,12 +1,16 @@
+<a class="button" href="{#ADMIN_FILE_URL#}Configure/modules">&laquo; Installed modules</a>
+
 <div class="module_list" id="module_list">
-    <h2>Installed Modules</h2>
-    {loop="module_list"}
-    <div class="row module_{$value.module} row{$counter%2+1}">
-        <div class="title">
-            <h4>{$value.module}<div class="version"> {$value.version}</div></h4> 
-            <div class="description">{$value.description}</div>
-            <div class="action">{if="$value.installed"}<a class="rain_module_deactivate module_{$value.module}">Deactivate</a> <a class="rain_module_remove module_{$value.module}">Remove</a>{else}<a class="rain_module_activate module_{$value.module}">Activate</a>{/if}</div>
+    <h2>Add a new Module</h2>
+    <div>
+        {loop="download_list"}
+        <div class="row module_{$value.module} row{$counter%2+1} {if="$value.downloaded"}downloaded{/if}">
+            <div class="info">
+                <h4>{$value.module}<div class="version"> {$value.version}</div></h4> 
+                <div class="description">{$value.description}</div>
+            </div>
+            <div class="action">{if="$value.installed"}<a class="rain_module_deactivate module_{$value.module}">Deactivate</a> <a class="rain_module_remove module_{$value.module}">Remove</a>{elseif="!$value.downloaded"}<a class="rain_module_download module_{$value.module}">Download</a>{else}<a class="rain_module_activate module_{$value.module}">Activate</a>{/if}</div>
         </div>
-    </div>
-    {/loop}
+        {/loop}
+    </div> 
 </div>

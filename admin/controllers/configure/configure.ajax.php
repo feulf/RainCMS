@@ -165,6 +165,7 @@
 
         function module_download($module) {
 
+            // get the lower case of module
             $module = strtolower($module);
 
             // Download the zip
@@ -176,7 +177,6 @@
 
             $zip_filepath = MODULES_DIR . $module . ".zip";
             $destination_folder = MODULES_DIR;
-
 
 
             // Save on the disk
@@ -197,11 +197,25 @@
 
             } else {
                 // error
+                
+                $result['status']='error';
+                $result['error_code']=$res;
+
+                switch( $res ){
+                    case ZIPARCHIVE::ER_EXISTS: $result['message'] = "Archive exists"; break;
+                    case ZIPARCHIVE::ER_INCONS: $result['message'] = "Archive inconsistent"; break;
+                    case ZIPARCHIVE::ER_INVAL: $result['message'] = "Invalid argument"; break;
+                    case ZIPARCHIVE::ER_MEMORY: $result['message'] = "Memory error"; break;
+                    case ZIPARCHIVE::ER_NOENT: $result['message'] = "No such file"; break;
+                    case ZIPARCHIVE::ER_NOZIP: $result['message'] = "Not a zip archive"; break;
+                    case ZIPARCHIVE::ER_OPEN: $result['message'] = "Can't open file"; break;
+                    case ZIPARCHIVE::ER_READ: $result['message'] = "Read error"; break;
+                    case ZIPARCHIVE::ER_SEEK: $result['message'] = "Seek error"; break;
+                }
+                
             }
 
 
-            // Install 
-            $this->install( $module );
         }
 
 
