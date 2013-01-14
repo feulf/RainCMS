@@ -120,3 +120,20 @@ a:hover{color:#FF3A00;text-decoration:underline;}
 #popup .content{position:absolute;z-index:100;background:#fff; padding:20px; margin:20px; }
 #popup .content_inside{overflow:auto;float:left;clear:both;height:600px;}
 #popup .bg{position:absolute;top:0px;left:0px;width:100%;height: 100%;background:#000;opacity:0.5;filter:alpha(opacity=50);text-align:left;}
+
+/* Button */
+.button,a.button {
+    font-size:12px;line-height:1;text-decoration:none;font-family:Lucida Grande,Helvetica;padding:8px 15px;
+    color:#333;text-shadow:1px 1px 1px #fff;
+    border:1px solid #ccc;  background:#eee; 
+    -moz-border-radius: 5px;border-radius: 5px;display:inline-block;cursor:pointer;
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.25);-webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+}
+.button:hover {background:#ddd;text-decoration:none;}
+.button.green{background:#393;color:#fff;text-shadow:1px 1px 1px #363;border-color:#363;}
+.button.green:hover {background:#373;}
+.button.red{background:#933;color:#fff;text-shadow:1px 1px 1px #633;border-color:#633;}
+.button.red:hover {background:#733;}
+.button.yellow{background:#eb3;color:#fff;text-shadow:1px 1px 1px #b80;border-color:#963;}
+.button.yellow:hover {background:#da3;}
+.button.big{font-size:14px;padding:12px 20px;}
