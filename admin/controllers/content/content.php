@@ -320,7 +320,6 @@
                 $this->form->add_hidden("layout_id", LAYOUT_ID_GENERIC);
             // PAGE LAYOUT
 
-            // CONTENT TEMPLATE
             // MENU
             if ($content_row['parent_id'] == 0)
                 $this->form->add_item("select", "menu_id", "content_form_menu", "content_form_menu_field", $content_row['menu_id'], null, array('options' => array(NO => get_msg("no"), PRINCIPAL_MENU_ID => get_msg("principal_menu"), SECONDARY_MENU_ID => get_msg("secondary_menu"))));
@@ -377,7 +376,8 @@
 
             // 5 minutes
             $time = TIME - ( 5 * MINUTE );
-            $content_row_list = Content::get_childs_and_type($content_id, LANG_ID, $time, $order);
+            // get page 0
+            $content_row_list = Content::get_childs_and_type($content_id, LANG_ID, $time, $order );
 
             // check if the content is sortable
             if ( null==$type['order_by'] OR preg_match('/position/', $type['order_by'] ) ){

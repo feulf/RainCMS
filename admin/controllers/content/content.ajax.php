@@ -56,23 +56,6 @@
             if( $type['unique'] && Content::get_content_by_type($type_id) )
                 return drawMsg('content type uknown', WARNING, $close = true);
             
-            // CONTENT TEMPLATE
-            $template_index = THEMES_DIR . get_setting('theme') . "/" . ( $type['template_index'] ? $type['template_index'] : null );
-            $template_list_temp = glob($template_index . "*");
-            $strlen_index = strlen($template_index);
-            
-            for ($i = 0, $template_list = array(); $i < count($template_list_temp); $i++) {
-                $l = file_name(substr($template_list_temp[$i], $strlen_index));
-                // i get all layout that has not "block." in the name
-                if (!preg_match('#^block\.#', $l) && !is_dir($template_list_temp[$i]))
-                    $template_list[$l] = $l;
-            }
-
-            $template = array_shift($template_list);
-            if (null === $template)
-                $template = "";
-
-            // CONTENT TEMPLATE
             // GET POSITION
             $position = Content::get_content_last_position($parent_id) + 1;
 
@@ -101,7 +84,7 @@
                 // content
                 "title" => $title, "date" => TIME,
                 // settings
-                "template" => $template, "published" => $published, "last_edit_time" => TIME,
+                "published" => $published, "last_edit_time" => TIME,
                 // google sitemap
                 "changefreq" => $changefreq, "priority" => $priority
                     )
@@ -122,7 +105,6 @@
 
             $layout_id = post('layout_id');
             $date = post('date');
-            $template = post('template');
             $read_access = post('read_access');
             $changefreq = post('changefreq');
             $priority = post('priority');
@@ -294,13 +276,12 @@
                                     type_id        = :type_id,
                                     menu_id        = :menu_id, 
                                     date            = :date,
-                                    template        = :template,
                                     read_access     = :read_access,
                                     last_edit_time  = UNIX_TIMESTAMP(),
                                     changefreq      = :changefreq,
                                     priority        = :priority
                                     $query_field
-                                WHERE content_id='$content_id'", array(":layout_id" => $layout_id, ":type_id" => $type_id, ":menu_id" => $menu_id, ":date" => $date, ":template" => $template, ":read_access" => $read_access, ":changefreq" => $changefreq, ":priority" => $priority)
+                       WHERE content_id='$content_id'", array(":layout_id" => $layout_id, ":type_id" => $type_id, ":menu_id" => $menu_id, ":date" => $date, ":read_access" => $read_access, ":changefreq" => $changefreq, ":priority" => $priority)
             );
 
 
