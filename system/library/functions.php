@@ -490,6 +490,7 @@
         }
     }
 
+
     /**
     * Upload one file selected with $file. Use it when you pass only one file with a form.
     * The file is saved into UPLOADS_DIR, the name created as "md5(time()) . file_extension"
@@ -501,23 +502,34 @@
 
         if ($_FILES[$file]["tmp_name"]) {
 
+            $day = date('m');
             $month = date('m');
             $year = date('y');
             $domain = get_setting('website_domain');
 
             $upload_path = "$domain/$year/$month/";
-            $filename = md5(time()) . "." . ( strtolower(file_ext($_FILES[$file]['name'])) );
+            $filename = strtolower($_FILES[$file]['name']);
             $filepath = $upload_path . $filename;
 
             // create the folder if doesn't exists
             if (!is_dir(UPLOADS_DIR . $upload_path))
                 mkdir(UPLOADS_DIR . $upload_path, 0755, $recursive = true);
+            
+            if( file_exists(UPLOADS_DIR . $filepath) ){
+                $hours = date('H');
+                $minutes = date('i');
+                $seconds = date('s');
+                $filepath = $upload_path . $hours . $minutes . $seconds . "-" . $filename;
+            }
+            
+            
 
             move_uploaded_file($_FILES[$file]["tmp_name"], UPLOADS_DIR . $filepath);
 
             return $_FILES[$file] + array("upload_path" => $upload_path, "filename" => $filename, "filepath" => $filepath);
         }
     }
+
 
     /**
     * Upload an image file and create a thumbnail
