@@ -22,7 +22,7 @@ Install
 -------
 
 1. clone Rain in your WWW folder
-git clone https://github.com/rainphp/Rain.git
+git clone https://github.com/rainphp/RainCMS.git
 
 2. create a database rain and import in it the file raincms.sql
 
@@ -33,10 +33,10 @@ git clone https://github.com/rainphp/Rain.git
 Use
 ---
 
-access http://localhost/Rain to navigate the website.
+access http://localhost/RainCMS to navigate the website.
 
 Administration:
-http://localhost/Rain/admin
+http://localhost/RainCMS/admin
 login demo@demo.com
 pw demo
 
