@@ -1,7 +1,7 @@
 <?php
 
     if (!defined("URL")) {
-        $url = ( isset($_SERVER['HTTPS']) ? "https://" : "http://" ) . $_SERVER["SERVER_NAME"] . dirname($_SERVER['SCRIPT_NAME']);
+        $url = ( ( isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) ) ? "https://" : "http://" ).$_SERVER["SERVER_NAME"]. ( ($_SERVER['SERVER_PORT']!="80") ? ":". $_SERVER['SERVER_PORT'] : "" ). dirname($_SERVER['SCRIPT_NAME']);
         if (!preg_match('/.*\/$/', $url))
             $url .= "/";
 
